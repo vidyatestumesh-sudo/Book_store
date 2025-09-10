@@ -16,26 +16,26 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-[#fdfdfd] font-['Poppins'] border-b border-gray-200">
+    <header className="bg-[#fdfdfd] font-figtree border-b border-[rgba(139,9,9,1)]">
       <nav className="max-w-screen-2xl mx-auto px-8 py-4">
         {/* Top Row: Logo + Right Icons */}
         <div className="flex items-center justify-between">
-          {/* Left: Logo text */}
-          <Link
-            to="/"
-          >
-            {/* Logo */}
-            <div className="mb-6">
-              <img
-                src="/ak-logo.webp"
-                alt="Langshott Leadership Foundation"
-                className="h-10 md:h-14"
-              />
-            </div>
-          </Link>
+          <div className="flex items-center justify-between">
+            {/* Left: Logo text */}
+            <Link to="/">
+              {/* Logo */}
+              <div className="mb-0 ml-10 mt-5">  {/* <-- shift right + down */}
+                <img
+                  src="/ak-logo.webp"
+                  alt="Langshott Leadership Foundation"
+                  className="h-10 md:h-14"
+                />
+              </div>
+            </Link>
+          </div>
 
           {/* Right: Icons */}
-          <div className="flex items-center space-x-6 relative">
+          <div className="flex items-center space-x-6 mr-10 relative">
             {/* Login / User */}
             {currentUser ? (
               <div className="relative">
@@ -84,26 +84,24 @@ const Navbar = () => {
               </Link>
             )}
 
-            {/* Cart → show only if logged in */}
-            {currentUser && (
-              <Link
-                to="/cart"
-                className="relative flex items-center text-gray-700 hover:text-[#8c6239]"
-                aria-label="Cart"
-              >
-                <HiOutlineShoppingCart className="text-2xl" />
-                {cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#8c2f2f] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartItems.length}
-                  </span>
-                )}
-              </Link>
-            )}
+            {/* Cart → always visible */}
+            <Link
+              to="/cart"
+              className="relative flex items-center text-gray-700 font-figtree hover:text-[#8c6239]"
+              aria-label="Cart"
+            >
+              <HiOutlineShoppingCart className="text-2xl" />
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#8c2f2f] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItems.length}
+                </span>
+              )}
+            </Link>
 
             {/* Contact Me */}
             <Link
               to="/contact"
-              className="text-sm text-gray-700 hover:text-[#8c6239]"
+              className="text-sm text-gray-700 font-figtree hover:text-[#8c6239]"
             >
               Contact Me
             </Link>
@@ -111,7 +109,7 @@ const Navbar = () => {
         </div>
 
         {/* Second Row: Menu links aligned right */}
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 mr-10 flex justify-end">
           <ul className="flex space-x-10 text-[15px] font-medium text-gray-800">
             <li>
               <Link to="/aboutauthorpage" className="hover:text-[#8c6239]">

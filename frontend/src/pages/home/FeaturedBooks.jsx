@@ -28,7 +28,7 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-16 font-serif">
+    <div className="max-w-6xl mx-auto px-6 py-16 font-Figtree">
       {/* Title */}
       <div className="flex justify-center items-center mb-12 relative">
         <h2 className="text-3xl font-bold text-center">Featured Books</h2>

@@ -13,10 +13,10 @@ export default {
         Favorite: '#FF5841',
       },
       fontFamily: {
-        primary: ["Montserrat", "sans-serif"],
-        secondary: ["Nunito Sans", "sans-serif"],
-        poppins: ["Poppins", "sans-serif"],
+        figtree: ['Figtree', 'sans-serif'],
+        playfair: ['Playfair Display', 'serif'],
       },
+
       keyframes: {
         'fade-in': {
           '0%': { opacity: 0 },
