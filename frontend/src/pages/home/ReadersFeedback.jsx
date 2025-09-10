@@ -46,30 +46,36 @@ const ReadersFeedback = () => {
             Readers Feedback
           </h2>
           <img
-            src="/feather.png"
+            src="/motif.webp"
             alt="feather"
             className="absolute w-10 -top-6 left-1/2 transform -translate-x-1/2"
           />
         </div>
 
-        {/* Feedback Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-          {feedbacks.slice(currentIndex, currentIndex + 2).map((fb) => (
-            <div key={fb.id} className="space-y-4">
-              {/* Avatar + Name */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-red-700 text-white">
-                  <FaUserAlt size={18} />
-                </div>
-                <span className="italic font-medium text-gray-900">
-                  {fb.name}
-                </span>
-              </div>
-              {/* Feedback Text */}
-              <p className="text-gray-700 leading-relaxed">{fb.text}</p>
-            </div>
-          ))}
+     {/* Feedback Cards */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+  {feedbacks.slice(currentIndex, currentIndex + 2).map((fb) => (
+    <div key={fb.id} className="space-y-4">
+      {/* Avatar + Name */}
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-red-700  bg-red-700 flex-shrink-0">
+          <img
+            src="/readers.webp"
+            alt={fb.name}
+            className="w-full h-full object-cover"
+          />
         </div>
+        <span className="italic font-medium text-gray-900">
+          {fb.name}
+        </span>
+      </div>
+
+      {/* Feedback Text */}
+      <p className="text-gray-700 leading-relaxed">{fb.text}</p>
+    </div>
+  ))}
+</div>
+
 
         {/* Controls */}
         <div className="flex items-center justify-center gap-6 mt-10">

@@ -23,10 +23,15 @@ const Navbar = () => {
           {/* Left: Logo text */}
           <Link
             to="/"
-            className="text-2xl font-semibold text-[#8c2f2f] tracking-wide"
-            style={{ fontFamily: "serif" }}
           >
-            Anil Kumar
+            {/* Logo */}
+            <div className="mb-6">
+              <img
+                src="/ak-logo.webp"
+                alt="Langshott Leadership Foundation"
+                className="h-10 md:h-14"
+              />
+            </div>
           </Link>
 
           {/* Right: Icons */}
@@ -58,13 +63,13 @@ const Navbar = () => {
                     >
                       My Orders
                     </Link>
-                    <Link to="/cart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                    onClick={() => setIsDropdownOpen(false)}> 
-                     Cart </Link> 
-                     
-                     <Link to="/checkout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                     onClick={() => setIsDropdownOpen(false)}> 
-                     Checkout </Link>
+                    <Link to="/cart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}>
+                      Cart </Link>
+
+                    <Link to="/checkout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}>
+                      Checkout </Link>
                     <button
                       onClick={handleLogOut}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

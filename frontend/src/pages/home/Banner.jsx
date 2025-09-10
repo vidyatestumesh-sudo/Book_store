@@ -8,7 +8,7 @@ const Banner = () => {
         {/* Left Image Section */}
         <div className="w-full md:w-1/2">
           <img
-            src="author_logo.png" // replace with your left-side author image
+            src="anil-kumar.webp" 
             alt="Langshott Foundation Author"
             className="w-full h-full object-cover"
           />
@@ -20,7 +20,7 @@ const Banner = () => {
           {/* Logo */}
           <div className="mb-6">
             <img
-              src="/web_logo.png" // replace with actual logo
+              src="/langshott-foundation-logo.webp" 
               alt="Langshott Leadership Foundation"
               className="h-12 md:h-14"
             />

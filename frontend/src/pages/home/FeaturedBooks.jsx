@@ -32,7 +32,7 @@ const FeaturedBooks = () => {
       {/* Title */}
       <div className="flex justify-center items-center mb-12 relative">
         <h2 className="text-3xl font-bold text-center">Featured Books</h2>
-        <img src="/feather.png" alt="feather" className="absolute w-12 -top-8" />
+        <img src="/motif.webp" alt="feather" className="absolute w-12 -top-8"/>
       </div>
 
       {/* Smooth Scroll Container */}

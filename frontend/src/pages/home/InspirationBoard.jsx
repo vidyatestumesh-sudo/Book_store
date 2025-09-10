@@ -6,19 +6,19 @@ const inspirations = [
     id: 1,
     title: "Leave the Mountain, Flow with the River",
     date: "June 9, 2025",
-    image: "/b1.jpg", // update with your actual image
+    image: "/leave-the-mountain.webp", 
   },
   {
     id: 2,
     title: "Be the Open Sky, combat Suffering",
     date: "May 23, 2025",
-    image: "/b2.jpg",
+    image: "/be-the-open-sky.webp",
   },
   {
     id: 3,
     title: "Here Love Is, There God Is Also – Mahatma Gandhi",
     date: "March 20, 2025",
-    image: "/b3.jpg",
+    image: "/where-love-is.webp",
   },
 ];
 
@@ -32,7 +32,7 @@ const InspirationBoard = () => {
             Inspiration Board
           </h2>
           <img
-            src="/assets/feather.png" // feather from assets
+            src="/motif.webp" // feather from assets
             alt="feather"
             className="absolute w-12 -top-8 left-1/2 transform -translate-x-1/2"
           />

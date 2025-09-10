@@ -6,7 +6,7 @@ const corners = [
         title: "Positivity Corner",
         description:
             "The individual who, having confronted the depths of wickedness within, silently commits to its eradication at its very source, initiates an unstoppable ripple effect that dismantles the darkness in countless others.",
-        image: "/b2.jpg",
+        image: "/positivity-corner-1.webp",
         bgColor: "#bc6430",
     },
     {
@@ -14,7 +14,7 @@ const corners = [
         title: "The Sufi Corner",
         description:
             "He that looks at a white wall and sees himself on it has reached the veil between form and formlessness, where the self dissolves into the divine mirror of existence.",
-        image: "/b1.jpg",
+        image: "/the-sufi-corner-1.webp",
         author: "Anil Kumar",
         bgColor: "#8c2f24",
     },
@@ -22,7 +22,7 @@ const corners = [
 
 const Corners = () => {
     return (
-        <section className="bg-[#e9e0d4] py-16 px-6 font-serif">
+        <section className="bg-white py-16 px-6 font-serif">
             {/* Cards */}
             <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
                 {corners.map((corner) => (
@@ -72,7 +72,7 @@ const Corners = () => {
                                     {/* Decorative feather (optional) */}
                                     <span className="block w-full h-4 mt-1">
                                         <img
-                                            src="/feather.png"
+                                            src="motif.webp"
                                             alt="decoration"
                                             className="mx-auto opacity-20 w-6"
                                         />

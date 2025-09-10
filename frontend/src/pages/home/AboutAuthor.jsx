@@ -13,7 +13,7 @@ const AboutAuthor = () => {
           <h2 className="text-3xl md:text-4xl font-semibold mb-2 relative inline-block">
             About Author
             <img
-              src="/feather.png"
+              src="/motif.webp"
               alt="feather"
               className="absolute -top-6 left-0 w-10 opacity-30"
             />
@@ -32,7 +32,7 @@ const AboutAuthor = () => {
         {/* Right Image */}
         <div className="w-full md:w-[260px] h-auto">
           <img
-            src="/author_logo.png"
+            src="/about-author-ak .webp"
             alt="Anil Kumar"
             className="object-contain w-full"
           />
@@ -45,7 +45,7 @@ const AboutAuthor = () => {
         {/* Left Image */}
         <div className="w-full md:w-1/2">
           <img
-             src="/b1.jpg"
+             src="/anils-working-creed.webp"
             alt="Working Creed"
             className="rounded-lg w-full h-48 object-cover"
           />
@@ -57,7 +57,7 @@ const AboutAuthor = () => {
           <h2 className="text-2xl md:text-3xl font-semibold relative inline-block mb-4">
             ANIL'S WORKING CREED
             <img
-              src="/feather.png"
+              src="/motif.webp"
               alt="feather"
               className="absolute -bottom-4 left-0 w-12 opacity-20"
             />

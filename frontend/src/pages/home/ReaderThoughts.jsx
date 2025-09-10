@@ -44,7 +44,7 @@ const ReaderThoughts = () => {
         {/* Left Image */}
         <div className="flex justify-center">
           <img
-            src="/reader_thoughts_img.png"
+            src="/my-mind.webp"
             alt="mind illustration"
             className="w-100 h-100 object-contain"
           />
@@ -58,7 +58,7 @@ const ReaderThoughts = () => {
               What’s On My Mind?
             </h2>
             <img
-              src="/feather.png"
+              src="/motif.webp"
               alt="feather"
               className="absolute w-10 -top-6 left-1/2 transform -translate-x-1/2 md:left-auto md:translate-x-0 md:-right-16"
             />
