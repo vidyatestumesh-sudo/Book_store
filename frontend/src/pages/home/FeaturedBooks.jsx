@@ -31,21 +31,25 @@ const FeaturedBooks = () => {
     <div className="max-w-6xl mx-auto px-6 py-16 font-Figtree">
       {/* Title */}
       <div className="flex justify-center items-center mb-12 relative">
-        <h2 className="text-3xl font-bold text-center">Featured Books</h2>
-        <img src="/motif.webp" alt="feather" className="absolute w-12 -top-8"/>
+        <h2 className="text-3xl text-center font-flayfair">Featured Books</h2>
+        <img
+          src="/motif.webp"
+          alt="feather"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-16 h-16 md:w-20 md:h-20 [opacity:0.15]"
+        />
       </div>
 
       {/* Smooth Scroll Container */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden ">
         <div
           className="flex transition-transform duration-700 ease-in-out"
           style={{
-            transform: `translateX(-${startIndex * 25}%)`, // 25% shift because 4 items per view
+            transform: `translateX(-${startIndex * 25}%)`,
           }}
         >
           {books.map((book, index) => (
-            <div key={index} className="w-1/4 px-3 flex-shrink-0">
-              <div className="group relative bg-white overflow-hidden transition-all duration-500">
+            <div key={index} className="w-1/4 px-3 flex-shrink-0 max-w-5x">
+              <div className="group relative bg-white overflow-hidden transition-all duration-500 ">
                 {/* Book Cover */}
                 <Link to={`/books/${book._id}`}>
                   <div className="relative overflow-hidden w-60 h-85 mx-auto">
@@ -85,7 +89,7 @@ const FeaturedBooks = () => {
                       ₹{book?.newPrice}
                     </span>
                     {book?.oldPrice > book?.newPrice && (
-                      <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded">
+                      <span className="text-xs bg-red-500 text-white px-2 py-0.5 ">
                         {Math.round(
                           ((book.oldPrice - book.newPrice) / book.oldPrice) *
                           100

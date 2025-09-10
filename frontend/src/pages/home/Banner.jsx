@@ -3,7 +3,7 @@ import React from "react";
 const Banner = () => {
   return (
 
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row Figtree items-center justify-between">
+    <div className="max-w-6xl mx-auto flex flex-col md:flex-row font-Figtree items-center justify-between">
 
       {/* Left Image Section */}
       <div className="w-full md:w-1/2">
@@ -28,7 +28,7 @@ const Banner = () => {
         {/* Title Section */}
         <div className="flex justify-center items-center font-figtree text-center">
           <div className="relative inline-block font-figtree ">
-            <h1 className="text-3xl md:text-[36px] font-figtree  font-medium leading-snug mb-6">
+            <h1 className="text-3xl  font-flayfair font-medium leading-snug mb-6">
               Langshott Foundation
             </h1>
             <img
