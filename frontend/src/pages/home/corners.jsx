@@ -80,7 +80,7 @@ const Corners = () => {
                                 </h3>
 
                                 {/* Image */}
-                                <div className="w-full h-48 overflow-hidden rounded-md mb-4">
+                                <div className="w-full h-48 overflow-hidden px-5 rounded-md mb-4">
                                     <img
                                         src={corner.image}
                                         alt={corner.title}
@@ -96,28 +96,31 @@ const Corners = () => {
                                     <p className="mt-4 italic text-sm text-right">– {corner.author}</p>
                                 )}
 
-                                {/* Arrows */}
-                                <div className="flex justify-center gap-4 mt-6">
-                                    <button className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#bc6430] transition">
-                                        ←
-                                    </button>
-                                    <button className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#bc6430] transition">
-                                        →
-                                    </button>
-                                </div>
-
-                                {/* Read More (for non-author card) */}
-                                {!corner.author && (
-                                    <div className="mt-4 text-center">
+                                {/* Footer Row: Read More + Arrows */}
+                                <div className="mt-6 flex items-center justify-between px-2">
+                                    {/* Read More */}
+                                    {!corner.author ? (
                                         <a
                                             href="#"
-                                            className="inline-flex items-center gap-1 text-white hover:underline"
+                                            className="inline-flex items-center gap-1 text-white hover:underline text-sm"
                                         >
-                                            Read More
-                                            <span className="text-lg">→</span>
+                                            Read More <span className="text-lg">→</span>
                                         </a>
+                                    ) : (
+                                        <span></span> // keeps spacing even if no Read More
+                                    )}
+
+                                    {/* Arrows */}
+                                    <div className="flex gap-3">
+                                        <button className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#bc6430] transition">
+                                            ←
+                                        </button>
+                                        <button className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#bc6430] transition">
+                                            →
+                                        </button>
                                     </div>
-                                )}
+                                </div>
+
                             </div>
                         </div>
                     </div>

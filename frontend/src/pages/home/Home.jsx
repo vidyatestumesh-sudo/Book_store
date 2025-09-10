@@ -19,8 +19,8 @@ const Home = () => {
         <InspirationBoard />
         <Corners />
         <AboutAuthor />
-        <BlogsPage />
-        <Testimonials />
+        {/* <BlogsPage /> */}
+        {/* <Testimonials /> */}
     </>
   )
 }
