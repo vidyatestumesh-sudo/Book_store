@@ -23,7 +23,6 @@ const feedbacks = [
     name: "John Doe, London",
     text: "Every reflection feels personal and deep. It’s a book that grows with you as you read it again and again."
   }
-  // ➝ Add more feedback here
 ];
 
 const ReadersFeedback = () => {
@@ -37,52 +36,50 @@ const ReadersFeedback = () => {
     if (currentIndex + 2 < feedbacks.length) setCurrentIndex(currentIndex + 2);
   };
 
+  const currentPage = Math.floor(currentIndex / 2) + 1;
+  const totalPages = Math.ceil(feedbacks.length / 2);
+
   return (
-    <div className="bg-white py-16 font-serif">
-      <div className="w-full max-w-6xl mx-auto px-6 text-center">
-        {/* Heading */}
-        <div className="relative mb-12 inline-block">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+    <div className="bg-white font-playfair relative min-h-[480px]">
+      <div className="w-full max-w-7xl mx-auto px-6">
+        {/* Heading - Top Left */}
+        <div className="relative mb-12 inline-block text-left">
+          <h2 className="text-[50px] font-playfair font-display leading-snug mb-5 mt-0">
             Readers Feedback
           </h2>
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute w-10 -top-6 left-1/2 transform -translate-x-1/2"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-0"
           />
         </div>
 
-     {/* Feedback Cards */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-  {feedbacks.slice(currentIndex, currentIndex + 2).map((fb) => (
-    <div key={fb.id} className="space-y-4">
-      {/* Avatar + Name */}
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-red-700  bg-red-700 flex-shrink-0">
-          <img
-            src="/readers.webp"
-            alt={fb.name}
-            className="w-full h-full object-cover"
-          />
+        {/* Feedback Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left mt-0">
+          {feedbacks.slice(currentIndex, currentIndex + 2).map((fb) => (
+            <div key={fb.id} className="space-y-4">
+              {/* Avatar + Name */}
+              <div className="flex items-center gap-3">
+                <div className="w-13 h-13 flex items-center justify-center bg-[#993333] rounded-full text-white">
+                  <img src="/readers.webp" alt={fb.name} className="w-full h-full object-cover" />
+                </div>
+                <span className="italic text-xl font-bold text-gray-900 font-figtree break-words">
+                  {fb.name}
+                </span>
+              </div>
+
+              {/* Feedback Text */}
+              <p className="font-figtree text-xl text-gray-700">{fb.text}</p>
+            </div>
+          ))}
         </div>
-        <span className="italic font-medium text-gray-900">
-          {fb.name}
-        </span>
-      </div>
 
-      {/* Feedback Text */}
-      <p className="text-gray-700 leading-relaxed">{fb.text}</p>
-    </div>
-  ))}
-</div>
-
-
-        {/* Controls */}
-        <div className="flex items-center justify-center gap-6 mt-10">
+        {/* Controls fixed bottom-left */}
+        <div className="absolute bottom-10 left-26 flex items-center gap-4 font-figtree">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 disabled:opacity-30"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
           >
             <FiChevronLeft size={20} />
           </button>
@@ -90,10 +87,14 @@ const ReadersFeedback = () => {
           <button
             onClick={handleNext}
             disabled={currentIndex + 2 >= feedbacks.length}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 disabled:opacity-30"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
           >
             <FiChevronRight size={20} />
           </button>
+
+          <span className="text-gray-700 font-medium select-none">
+            {currentPage.toString().padStart(2, "0")} / {totalPages.toString().padStart(2, "0")}
+          </span>
         </div>
       </div>
     </div>

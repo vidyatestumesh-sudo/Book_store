@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const thoughts = [
@@ -80,53 +80,49 @@ const thoughts = [
 ];
 
 
-const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
-
 const ReaderThoughts = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
 
-  // Word count helper
-  const wordCount = (text) => text.trim().split(/\s+/).length;
+  // Handle responsive layout based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth >= 1450 ? 2 : 1);
+    };
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  // Responsive: Get slice of 1 or 2 depending on word count
-  const getVisibleThoughts = () => {
-    const first = thoughts[currentIndex];
-    const firstWords = wordCount(first.text);
-
-    if (isMobile() || firstWords > 60) {
-      return [first];
-    }
-
-    const second = thoughts[currentIndex + 1];
-    const secondWords = second ? wordCount(second.text) : 0;
-
-    if (second && secondWords <= 60) {
-      return [first, second];
-    }
-
-    return [first];
-  };
-
-  const visibleThoughts = getVisibleThoughts();
+  const visibleThoughts = thoughts.slice(
+    currentIndex,
+    currentIndex + itemsPerPage
+  );
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      // Go back by one if current thought is single
-      setCurrentIndex(currentIndex - 1);
+    if (currentIndex === 0) {
+      // Go to last chunk
+      const lastIndex =
+        thoughts.length - (thoughts.length % itemsPerPage || itemsPerPage);
+      setCurrentIndex(lastIndex);
+    } else {
+      setCurrentIndex(currentIndex - itemsPerPage);
     }
   };
 
   const handleNext = () => {
-    const nextIndex = currentIndex + visibleThoughts.length;
-    if (nextIndex < thoughts.length) {
+    const nextIndex = currentIndex + itemsPerPage;
+    if (nextIndex >= thoughts.length) {
+      // Go to beginning
+      setCurrentIndex(0);
+    } else {
       setCurrentIndex(nextIndex);
     }
   };
 
-return (
-    <div className="min-h-screen py-16 font-serif">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
-        
+  return (
+    <div className="min-h-screen py-16">
+      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
@@ -137,29 +133,26 @@ return (
         </div>
 
         {/* Right Content */}
-        <div className="relative bg-[#e6e8da] p-10 flex flex-col justify-center">
+        <div className="relative bg-[#e6e8da] p-10 flex flex-col h-full">
           {/* Gradient overlay */}
-          <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
+          <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           {/* Title */}
-          <div className="relative mb-12 text-left z-10 mt-2">
-            <div className="relative inline-block">
-              <img
-                src="/motif.webp"
-                alt="feather"
-                className="absolute top-1/2 left-1/2 w-20 md:w-28 transform -translate-x-1/2 -translate-y-1/2 opacity-20 z-0"
-              />
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-playfair relative z-10">
-                What’s On My Mind?
-              </h2>
-            </div>
+          <div className="relative inline-block">
+            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
+              What’s On My Mind?
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-2"
+            />
           </div>
 
-          {/* Thought Grid */}
+          {/* Thoughts Grid - Flex-grow makes it scrollable if needed */}
           <div
-            className={`grid ${
-              visibleThoughts.length === 2 ? "grid-cols-2" : "grid-cols-1"
-            } gap-8 z-10`}
+            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+              } gap-8 z-10 flex-grow overflow-y-auto`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
@@ -174,33 +167,33 @@ return (
             ))}
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-start gap-6 mt-10 z-10">
+          {/* Navigation Buttons - Fixed to bottom */}
+          <div className="flex items-center justify-start gap-6 pt-6 mt-8 z-10">
             <button
               onClick={handlePrev}
-              disabled={currentIndex === 0}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 disabled:opacity-30"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
             >
-              ←
+              <FiChevronLeft size={20} />
             </button>
 
             <button
               onClick={handleNext}
-              disabled={currentIndex + 2 >= thoughts.length}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 disabled:opacity-30"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
             >
-              →
+              <FiChevronRight size={20}/>
             </button>
 
             <span className="text-gray-700 text-sm font-figtree">
-              {String(Math.ceil((currentIndex + 1) / 2)).padStart(2, "0")} /{" "}
-              {String(Math.ceil(thoughts.length / 2)).padStart(2, "0")}
+              {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
+                2,
+                "0"
+              )}{" "}
+              / {String(Math.ceil(thoughts.length / itemsPerPage)).padStart(2, "0")}
             </span>
           </div>
         </div>
       </div>
     </div>
-
   );
 };
 

@@ -24,11 +24,11 @@ const inspirations = [
 
 const InspirationBoard = () => {
   return (
-    <div className="bg-[#e9e0d4] py-16 font-serif">
-      <div className="max-w-6xl mx-auto px-6 text-center">
+    <div className="w-full bg-[#e9e0d4] py-20 font-playfair text-gray-900">
+      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 text-center">
         {/* Title */}
         <div className="relative mb-12 inline-block">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold">
             Inspiration Board
           </h2>
           <img
