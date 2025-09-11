@@ -124,9 +124,8 @@ const ReaderThoughts = () => {
   };
 
 return (
-    <div className="min-h-screen py-16 font-serif">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
-        
+    <div className="min-h-screen py-16">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
@@ -135,21 +134,20 @@ return (
             className="w-full h-full object-cover"
           />
         </div>
-
         {/* Right Content */}
         <div className="relative bg-[#e6e8da] p-10 flex flex-col justify-center">
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           {/* Title */}
-          <div className="relative mb-12 text-left z-10 mt-2">
+          <div className="relative mb-12 text-left z-10 mt-2 text-[50px] font-playfair font-display">
             <div className="relative inline-block">
               <img
                 src="/motif.webp"
                 alt="feather"
-                className="absolute top-1/2 left-1/2 w-20 md:w-28 transform -translate-x-1/2 -translate-y-1/2 opacity-20 z-0"
+                className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-2"
               />
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-playfair relative z-10">
+              <h2 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8 relative z-10">
                 What’s On My Mind?
               </h2>
             </div>
