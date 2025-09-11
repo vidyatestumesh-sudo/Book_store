@@ -122,7 +122,7 @@ const ReaderThoughts = () => {
 
   return (
     <div className="min-h-screen py-16">
-      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
+      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
@@ -135,27 +135,24 @@ const ReaderThoughts = () => {
         {/* Right Content */}
         <div className="relative bg-[#e6e8da] p-10 flex flex-col h-full">
           {/* Gradient overlay */}
-          <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
+          <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           {/* Title */}
-          <div className="mb-8 text-left z-10 mt-2 text-[50px] font-playfair font-display">
-            <div className="relative inline-block">
-              <img
-                src="/motif.webp"
-                alt="feather"
-                className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 opacity-15 mb-2"
-              />
-              <h2 className="text-[50px] font-bold font-playfair leading-snug mt-8 relative z-10">
-                What’s On My Mind?
-              </h2>
-            </div>
+          <div className="relative inline-block">
+            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
+              What’s On My Mind?
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-2"
+            />
           </div>
 
           {/* Thoughts Grid - Flex-grow makes it scrollable if needed */}
           <div
-            className={`grid ${
-              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-            } gap-8 z-10 flex-grow overflow-y-auto`}
+            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+              } gap-8 z-10 flex-grow overflow-y-auto`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
