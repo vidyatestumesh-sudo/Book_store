@@ -166,7 +166,7 @@ const Corners = () => {
                                 </div>
 
                                 {/* Bottom Controls (Fixed) */}
-                                <div className="px-5 pb-[10px]">
+                                <div className="px-5 pb-[20px]">
                                     <div className="flex items-center justify-between">
                                         {corner.id === 2 ? (
                                             <a
