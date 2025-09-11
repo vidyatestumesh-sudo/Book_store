@@ -42,14 +42,14 @@ const FeaturedBooks = () => {
       </div>
 
       {/* Wrapper to hold arrows + slider */}
-      <div className="relative w-full flex items-center mt-8">
+      <div className="relative flex items-center mt-8 max-w-7xl">
         {/* Left Arrow */}
         {startIndex > 0 && (
           <button
             onClick={handlePrev}
-            className="absolute left-0 z-10 -translate-x-full text-gray-800 [opacity:0.15] mb-20"
+            className="absolute left-8 z-10 -translate-x-full text-gray-800 [opacity:0.15] mb-24"
           >
-            <FiChevronLeft size={100} />
+            <FiChevronLeft size={70} />
           </button>
         )}
 
@@ -130,9 +130,9 @@ const FeaturedBooks = () => {
         {startIndex + 4 < books.length && (
           <button
             onClick={handleNext}
-            className="absolute right-0 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-20"
+            className="absolute right-8 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-24"
           >
-            <FiChevronRight size={100} />
+            <FiChevronRight size={70}/>
           </button>
         )}
       </div>
