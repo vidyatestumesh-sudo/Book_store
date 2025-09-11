@@ -2,44 +2,43 @@ import React from "react";
 
 const Banner = () => {
   return (
-
-    <div className="max-w-8xl mx-auto flex flex-col md:flex-row font-Figtree items-center justify-between">
-
+    <div className="max-w-screen-2xl mx-auto flex flex-col lg:flex-row font-Figtree items-center justify-between px-4 min-h-screen lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-hidden">
+      
       {/* Left Image Section */}
-      <div className="w-[700px] h-[700px] ">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-8 xl:px-12 2xl:px-16">
         <img
           src="anil-kumar.webp"
           alt="Langshott Foundation Author"
-          className="w-full h-full block mx-auto select-none cursor-zoom-out bg-[hsla(0, 0%, 100%, 1.00)] transition-colors duration-300 mt-4 ml-0"
+          className="w-full max-h-[700px] object-contain mx-auto select-none transition duration-300"
         />
       </div>
 
       {/* Right Text Section */}
-      <div className="w-[700px] h-[700px] px-2 md:px-2 py-0 md:py-15 text-center flex flex-col justify-center items-center">
-
+      <div className="w-full lg:w-1/2 h-auto lg:h-full px-4 lg:py-0 text-center flex flex-col justify-center items-center overflow-y-auto max-w-[700px] xl:max-w-[800px] mx-auto">
+        
         {/* Logo */}
         <div className="mb-6">
           <img
             src="/langshott-foundation-logo.webp"
             alt="Langshott Leadership Foundation"
-            className="h-25 md:h-30 max-h-32 md:max-h-40 w-auto max-w-full block select-none mx-auto mt-0"
+            className="h-28 md:h-28 max-h-32 w-auto block select-none mx-auto mt-0"
           />
         </div>
 
         {/* Title Section */}
-        <div className="relative inline-block">
-          <h1 className="text-[50px] font-playfair font-display leading-snug mb-6 mt-8">
+        <div className="relative inline-block text-center">
+          <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair leading-tight mb-6">
             Langshott Leadership Foundation
           </h1>
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-38 h-36 md:w-38 md:h-22 [opacity:0.15] mb-6"
+            className="absolute left-1/2 -bottom-0 mb-4 transform -translate-x-1/2 w-24 sm:w-24 md:w-32 h-auto opacity-15"
           />
         </div>
 
         {/* Description */}
-        <p className="text-gray-800 text-[20px] leading-relaxed mb-6 max-w-xxl font-figtree font-light">
+        <p className="text-gray-800 text-[15px] sm:text-[17px] md:text-[18px] leading-relaxed mt-10 mb-6 font-light px-2 sm:px-4">
           Welcome to Langshott Leadership Foundation, a charitable organisation
           and provider of mentorship and guidance in personal leadership through
           seminars, workshops, talks, books, inspirational collections, blogs, and
@@ -48,12 +47,11 @@ const Banner = () => {
         </p>
 
         {/* Highlighted Quote */}
-        <p className="text-[20px] md:text-[20px] text-[#8c2f2f] font-figtree italic ml-28 mr-28">
-          "The solutions you’re searching for are within you, we can only help you
-          to get there"
+        <p className="text-[15px] sm:text-[17px] md:text-[19px] text-[#8c2f2f] italic px-4 sm:px-10">
+          "The solutions you’re searching for are within you; we can only help you
+          to get there."
         </p>
       </div>
-
     </div>
   );
 };
