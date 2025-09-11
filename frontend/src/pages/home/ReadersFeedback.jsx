@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { FaUserAlt } from "react-icons/fa";
 
 const feedbacks = [
   {
@@ -27,41 +26,52 @@ const feedbacks = [
 
 const ReadersFeedback = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 2;
+  const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
 
   const handlePrev = () => {
-    if (currentIndex > 0) setCurrentIndex(currentIndex - 2);
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex - itemsPerPage;
+      return newIndex < 0 ? (totalPages - 1) * itemsPerPage : newIndex;
+    });
   };
 
   const handleNext = () => {
-    if (currentIndex + 2 < feedbacks.length) setCurrentIndex(currentIndex + 2);
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex + itemsPerPage;
+      return newIndex >= feedbacks.length ? 0 : newIndex;
+    });
   };
 
-  const currentPage = Math.floor(currentIndex / 2) + 1;
-  const totalPages = Math.ceil(feedbacks.length / 2);
+  const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
 
   return (
-    <div className="bg-white font-playfair relative min-h-[480px]">
+    <div className="bg-white font-playfair mt-0 mb-6">
       <div className="w-full max-w-7xl mx-auto px-6">
-        {/* Heading - Top Left */}
+        {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[50px] font-playfair font-display leading-snug mb-5 mt-0">
+          <h2 className="text-[36px] sm:text-[42px] md:text-[50px] font-playfair font-display leading-snug mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-0"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-24 md:w-28 h-20 opacity-15"
           />
         </div>
 
         {/* Feedback Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left mt-0">
-          {feedbacks.slice(currentIndex, currentIndex + 2).map((fb) => (
+          {feedbacks.slice(currentIndex, currentIndex + itemsPerPage).map((fb) => (
             <div key={fb.id} className="space-y-4">
               {/* Avatar + Name */}
               <div className="flex items-center gap-3">
-                <div className="w-13 h-13 flex items-center justify-center bg-[#993333] rounded-full text-white">
-                  <img src="/readers.webp" alt={fb.name} className="w-full h-full object-cover" />
+                <div className="w-14 h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center">
+                  <img
+                    src="/readers.webp"
+                    alt={fb.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <span className="italic text-xl font-bold text-gray-900 font-figtree break-words">
                   {fb.name}
@@ -74,26 +84,25 @@ const ReadersFeedback = () => {
           ))}
         </div>
 
-        {/* Controls fixed bottom-left */}
-        <div className="absolute bottom-10 left-26 flex items-center gap-4 font-figtree">
+        {/* Controls */}
+        <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree">
           <button
             onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
           >
             <FiChevronLeft size={20} />
           </button>
 
           <button
             onClick={handleNext}
-            disabled={currentIndex + 2 >= feedbacks.length}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
           >
             <FiChevronRight size={20} />
           </button>
 
-          <span className="text-gray-700 font-medium select-none">
-            {currentPage.toString().padStart(2, "0")} / {totalPages.toString().padStart(2, "0")}
+          <span className="text-gray-700 text-sm font-medium select-none">
+            {String(currentPage).padStart(2, "0")} /{" "}
+            {String(totalPages).padStart(2, "0")}
           </span>
         </div>
       </div>

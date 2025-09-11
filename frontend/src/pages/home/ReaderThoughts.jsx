@@ -79,7 +79,6 @@ const thoughts = [
   },
 ];
 
-
 const ReaderThoughts = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -101,7 +100,6 @@ const ReaderThoughts = () => {
 
   const handlePrev = () => {
     if (currentIndex === 0) {
-      // Go to last chunk
       const lastIndex =
         thoughts.length - (thoughts.length % itemsPerPage || itemsPerPage);
       setCurrentIndex(lastIndex);
@@ -113,7 +111,6 @@ const ReaderThoughts = () => {
   const handleNext = () => {
     const nextIndex = currentIndex + itemsPerPage;
     if (nextIndex >= thoughts.length) {
-      // Go to beginning
       setCurrentIndex(0);
     } else {
       setCurrentIndex(nextIndex);
@@ -121,12 +118,12 @@ const ReaderThoughts = () => {
   };
 
   return (
-    <div className="min-h-screen py-16">
-      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden">
+    <div className="h-full overflow-hidden pt-10 pb-20">
+      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
-            src="/my-mind.webp"
+            src="/1-my-mind.webp"
             alt="mind"
             className="w-full h-full object-cover"
           />
@@ -139,20 +136,21 @@ const ReaderThoughts = () => {
 
           {/* Title */}
           <div className="relative inline-block">
-            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
+            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8 ">
               What’s On My Mind?
             </h1>
             <img
               src="/motif.webp"
               alt="feather"
-              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-2"
+              className="absolute ml-48 -bottom-1 transform -translate-x-1/2 w-24 md:w-28 md:h-22 [opacity:0.15] mb-2"
             />
           </div>
 
-          {/* Thoughts Grid - Flex-grow makes it scrollable if needed */}
+          {/* Thoughts Grid */}
           <div
-            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-              } gap-8 z-10 flex-grow overflow-y-auto`}
+            className={`grid ${
+              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+            } gap-8 z-10 flex-grow overflow-y-auto`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
@@ -167,20 +165,20 @@ const ReaderThoughts = () => {
             ))}
           </div>
 
-          {/* Navigation Buttons - Fixed to bottom */}
+          {/* Navigation Buttons */}
           <div className="flex items-center justify-start gap-6 pt-6 mt-8 z-10">
             <button
               onClick={handlePrev}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
             >
               <FiChevronLeft size={20} />
             </button>
 
             <button
               onClick={handleNext}
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
             >
-              <FiChevronRight size={20}/>
+              <FiChevronRight size={20} />
             </button>
 
             <span className="text-gray-700 text-sm font-figtree">
