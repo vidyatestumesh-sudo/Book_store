@@ -151,7 +151,7 @@ const Corners = () => {
                   </div>
 
                   {/* Text */}
-                  <p className="text-sm leading-relaxed italic whitespace-pre-line font-light text-center">
+                  <p className="text-sm leading-relaxed whitespace-pre-line font-light text-center">
                     {slide.text}
                   </p>
 
