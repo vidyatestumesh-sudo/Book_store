@@ -173,14 +173,14 @@ const ReaderThoughts = () => {
               onClick={handlePrev}
               className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
             >
-              ←
+              <FiChevronLeft size={20} />
             </button>
 
             <button
               onClick={handleNext}
               className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 text-gray-700 hover:border-[#8c2f24] hover:text-[#8c2f24]"
             >
-              →
+              <FiChevronRight size={20}/>
             </button>
 
             <span className="text-gray-700 text-sm font-figtree">
