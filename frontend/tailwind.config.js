@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -16,7 +16,6 @@ export default {
         figtree: ['Figtree', 'sans-serif'],
         playfair: ['Playfair Display', 'serif'],
       },
-
       keyframes: {
         'fade-in': {
           '0%': { opacity: 0 },
