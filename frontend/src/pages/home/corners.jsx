@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const corners = [
   {
@@ -19,19 +20,19 @@ const corners = [
         image: "//langshott.org/wp-content/uploads/2025/02/3.png",
         text:
           "It is human to have fear.\nBut have courage to stand atop your fear\nso cowards never see it.",
-          author: "Anil Kumar",
+        author: "Anil Kumar",
       },
       {
         image: "//langshott.org/wp-content/uploads/2025/02/4.png",
         text:
           "Who forces time is pushed back by time;\nwho yields to time finds time on his side.",
-          author: "The Talmud",
+        author: "The Talmud",
       },
       {
         image: "//langshott.org/wp-content/uploads/2025/02/5.png",
         text:
           "You know you love someone when you know\nyou want them to be happy,\neven if their happiness means\nthat you are not a part of it.",
-          author: "Anonymous",
+        author: "Anonymous",
       },
     ],
     bgColor: "#bc6430",
@@ -76,7 +77,7 @@ const corners = [
 
 const Corners = () => {
   const [slideIndexes, setSlideIndexes] = useState(
-    corners.map(() => 0) // one index per corner
+    corners.map(() => 0)
   );
 
   const handleSlideChange = (cornerIndex, direction) => {
@@ -91,7 +92,7 @@ const Corners = () => {
 
   return (
     <section className="bg-white py-16 px-6 font-figtree font-light">
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
         {corners.map((corner, index) => {
           const slide = corner.slides[slideIndexes[index]];
           return (
@@ -125,24 +126,25 @@ const Corners = () => {
 
               {/* Card */}
               <div
-                className="rounded-lg shadow-md text-white overflow-hidden h-[500px] flex flex-col justify-between"
+                className="rounded-lg shadow-md text-white overflow-hidden min-h-[550px] max-h-[800px] flex flex-col pb-[5px]"
                 style={{ backgroundColor: corner.bgColor }}
               >
-                <div className="px-6 py-8 flex flex-col h-full">
+                {/* Top Content */}
+                <div className="flex-1 flex flex-col px-6 pt-8">
                   {/* Title */}
-                  <h3 className="text-2xl font-semibold mb-4 text-center font-playfair">
-                    {corner.title}
-                    <span className="block w-full h-4 mt-1">
-                      <img
-                        src="motif.webp"
-                        alt="decoration"
-                        className="mx-auto opacity-20 w-6"
-                      />
-                    </span>
-                  </h3>
+                  <div className="relative text-center mb-4">
+                    <h3 className="relative z-10 font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[50px]">
+                      {corner.title}
+                    </h3>
+                    <img
+                      src="/motif.webp"
+                      alt="decoration"
+                      className="absolute top-1/2 left-1/2 w-10 sm:w-12 md:w-16 opacity-15 transform -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
+                    />
+                  </div>
 
                   {/* Image */}
-                  <div className="w-full h-48 overflow-hidden px-5 rounded-md mb-4">
+                  <div className="w-full h-40 sm:h-48 overflow-hidden px-5 rounded-md mb-4">
                     <img
                       src={slide.image}
                       alt={corner.title}
@@ -151,20 +153,21 @@ const Corners = () => {
                   </div>
 
                   {/* Text */}
-                  <p className="text-sm leading-relaxed whitespace-pre-line font-light text-center">
-                    {slide.text}
-                  </p>
-
-                  {/* Author */}
-                  {slide.author && (
-                    <p className="mt-4 italic text-sm text-right font-light">
-                      – {slide.author}
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-xs sm:text-sm md:text-base leading-relaxed whitespace-pre-line font-light text-center line-clamp-5">
+                      {slide.text}
                     </p>
-                  )}
+                    {slide.author && (
+                      <p className="mt-4 italic text-xs sm:text-sm text-right font-light">
+                        – {slide.author}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-                  {/* Bottom Controls */}
-                  <div className="mt-auto pt-6 flex items-center px-2 justify-between">
-                    {/* Read More only for Sufi */}
+                {/* Fixed Bottom Controls */}
+                <div className="px-6 pt-4 pb-[15px]">
+                  <div className="flex items-center justify-between">
                     {corner.id === 2 ? (
                       <a
                         href="#"
@@ -176,7 +179,6 @@ const Corners = () => {
                       <span></span>
                     )}
 
-                    {/* Arrows always visible */}
                     <div
                       className={`flex gap-3 ${
                         corner.id === 1 ? "mx-auto" : ""
@@ -186,13 +188,13 @@ const Corners = () => {
                         onClick={() => handleSlideChange(index, -1)}
                         className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
                       >
-                        ←
+                        <FiChevronLeft size={20} />
                       </button>
                       <button
                         onClick={() => handleSlideChange(index, 1)}
                         className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
                       >
-                        →
+                        <FiChevronRight size={20} />
                       </button>
                     </div>
                   </div>
