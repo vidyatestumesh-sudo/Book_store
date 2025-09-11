@@ -17,25 +17,25 @@ const Navbar = () => {
 
   return (
     <header className="bg-[#fdfdfd] font-figtree border-b border-[rgba(139,9,9,1)]">
-      <nav className="max-w-screen-2xl mx-auto px-8 py-4">
+      <nav className="max-w-screen-3xl mx-auto px-4 py-4">
         {/* Top Row: Logo + Right Icons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-between">
             {/* Left: Logo text */}
             <Link to="/">
               {/* Logo */}
-              <div className="mb-0 ml-10 mt-5">  {/* <-- shift right + down */}
+              <div className="mb-0 ml-32 mt-5">
                 <img
                   src="/ak-logo.webp"
                   alt="Langshott Leadership Foundation"
-                  className="h-10 md:h-14"
+                  className="h-12 md:h-16"
                 />
               </div>
             </Link>
           </div>
 
           {/* Right: Icons */}
-          <div className="flex items-center space-x-6 mr-10 relative">
+          <div className="flex items-center space-x-6 mr-28 relative">
             {/* Login / User */}
             {currentUser ? (
               <div className="relative">
@@ -101,7 +101,7 @@ const Navbar = () => {
             {/* Contact Me */}
             <Link
               to="/contact"
-              className="text-sm text-gray-700 font-figtree hover:text-[#8c6239]"
+              className="text-lg text-gray-700 font-figtree hover:text-[#8c6239]"
             >
               Contact Me
             </Link>
@@ -109,7 +109,7 @@ const Navbar = () => {
         </div>
 
         {/* Second Row: Menu links aligned right */}
-        <div className="mt-3 mr-10 flex justify-end">
+        <div className="mt-3 mr-28 flex justify-end">
           <ul className="flex space-x-10 text-[15px] font-medium text-gray-800">
             <li>
               <Link to="/aboutauthorpage" className="hover:text-[#8c6239]">

@@ -3,32 +3,32 @@ import React from "react";
 const Banner = () => {
   return (
 
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row font-Figtree items-center justify-between">
+    <div className="max-w-8xl mx-auto flex flex-col md:flex-row font-Figtree items-center justify-between">
 
       {/* Left Image Section */}
-      <div className="w-full md:w-1/2">
+      <div className="w-[700px] h-[700px] ">
         <img
           src="anil-kumar.webp"
           alt="Langshott Foundation Author"
-          className="w-full h-full object-cover block mx-auto select-none cursor-zoom-out bg-[hsla(0, 0%, 100%, 1.00)] transition-colors duration-300"
+          className="w-full h-full block mx-auto select-none cursor-zoom-out bg-[hsla(0, 0%, 100%, 1.00)] transition-colors duration-300 mt-4 ml-0"
         />
       </div>
 
       {/* Right Text Section */}
-      <div className="w-full md:w-1/2  px-6 md:px-12 py-12 md:py-20 text-left">
+      <div className="w-[700px] h-[700px]  px-2 md:px-2 py-2 md:py-20 text-left">
 
         {/* Logo */}
         <div className="mb-6">
           <img
             src="/langshott-foundation-logo.webp"
             alt="Langshott Leadership Foundation"
-            className="h-25 md:h-30 max-h-32 md:max-h-40 w-auto max-w-full block select-none mx-auto cursor-zoom-out transition-colors duration-300"
+            className="h-25 md:h-30 max-h-32 md:max-h-40 w-auto max-w-full block select-none mx-auto cursor-zoom-out transition-colors duration-300 mt-0"
           />
         </div>
         {/* Title Section */}
         <div className="flex justify-center items-center font-figtree text-center">
           <div className="relative inline-block font-figtree ">
-            <h1 className="text-3xl  font-flayfair font-medium leading-snug mb-6">
+            <h1 className="text-5xl font-flayfair font-medium leading-snug mb-6">
               Langshott Foundation
             </h1>
             <img
