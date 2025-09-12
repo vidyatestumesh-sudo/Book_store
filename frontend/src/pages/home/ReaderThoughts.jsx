@@ -118,7 +118,7 @@ const ReaderThoughts = () => {
   };
 
   return (
-    <div className="h-full overflow-hidden pt-10 pb-20">
+    <div className="h-full overflow-hidden pt-10 pb-20 px-3">
       <div className="max-w-9xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
         {/* Left Image */}
         <div className="relative w-full h-full">
