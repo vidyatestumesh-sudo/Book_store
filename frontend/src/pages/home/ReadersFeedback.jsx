@@ -100,7 +100,7 @@ const ReadersFeedback = () => {
             <FiChevronRight size={20} />
           </button>
 
-          <span className="text-gray-700 text-sm font-medium select-none">
+          <span className="text-gray-700 text-xl font-medium select-none">
             {String(currentPage).padStart(2, "0")} /{" "}
             {String(totalPages).padStart(2, "0")}
           </span>

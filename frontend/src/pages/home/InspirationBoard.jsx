@@ -62,7 +62,7 @@ const InspirationBoard = () => {
               {/* Read More */}
               <button className="flex items-center gap-2 no-underline font- mx-auto transition font-figtree text-[18px]">
                 <span className="text-black">Read More</span>
-                <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-20 group-hover:translate-x-[15px]">
+                <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-20 group-hover:translate-x-[18px]">
                   →</span>
               </button>
             </div>

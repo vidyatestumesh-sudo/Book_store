@@ -47,7 +47,7 @@ const Banner = () => {
         </p>
 
         {/* Highlighted Quote */}
-        <p className="text-[20px]  text-[#8c2f2f] italic px-4 sm:px-10 font-regular">
+        <p className="text-[25px]  text-[#8c2f2f] italic px-4 sm:px-10 font-regular">
           "The solutions you’re searching for are within you; we can only help you
           to get there."
         </p>

@@ -150,20 +150,20 @@ const FeaturedBooks = () => {
 
                   {/* Info */}
                   <div className="text-center mt-6 px-4">
-                    <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-4 font-figtree break-words">
+                    <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-4 font-figtree break-words">
                       {book?.title}
                     </h3>
 
                     {/* Price Section */}
                     <div className="inline-flex justify-center items-center gap-4 w-full">
-                      <span className="text-gray-500 line-through text-base md:text-lg font-figtree">
+                      <span className="text-gray-500 line-through text-base md:text-lg font-figtree font-lite">
                         ₹{book?.oldPrice}
                       </span>
-                      <span className="text-[#993333] font-bold text-lg md:text-xl font-figtree">
+                      <span className="text-[#993333] font-lite text-lg md:text-xl font-figtree">
                         ₹{book?.newPrice}
                       </span>
                       {book?.oldPrice > book?.newPrice && (
-                        <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0 font-figtree ">
+                        <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0 font-figtree font-lite">
                           {Math.round(
                             ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
                           )}

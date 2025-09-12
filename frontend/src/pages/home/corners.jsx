@@ -127,7 +127,7 @@ const Corners = () => {
               </div>
 
               {/* Card */}
-              <div className="px-4 sm:px-8">
+              <div className="px-4 sm:px-8 ">
                 <div
                   className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
@@ -149,7 +149,7 @@ const Corners = () => {
 
                     {/* Image with adaptive size */}
                     <div className="w-full flex justify-center px-5">
-                      <div className="w-[360px] h-[260px] flex items-center justify-center overflow-hidden">
+                      <div className="max-w-[479px] max-h-[285px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
                             key={`${corner.id}-${slideIndexes[index]}`}
@@ -193,9 +193,8 @@ const Corners = () => {
                     )}
 
                     <div
-                      className={`flex gap-3 ${
-                        corner.id === 1 ? "mx-auto" : ""
-                      }`}
+                      className={`flex gap-3 ${corner.id === 1 ? "mx-auto" : ""
+                        }`}
                     >
                       <button
                         aria-label={`Previous slide in ${corner.title}`}
