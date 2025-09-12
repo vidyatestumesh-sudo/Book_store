@@ -39,7 +39,6 @@ const AboutAuthor = () => {
             alt="Anil Kumar"
             className="w-[300px] md:w-[320px] lg:w-[360px] object-contain"
           />
-          <div className="w-full border-b-[2px] border-[#8c6239] opacity-60 mt-[1px]" />
         </div>
       </div>
 

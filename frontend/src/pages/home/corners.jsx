@@ -171,7 +171,7 @@ const Corners = () => {
                                         {corner.id === 2 ? (
                                             <a
                                                 href="#"
-                                                className="inline-flex items-center gap-1 text-white hover:underline text-sm font-light"
+                                                className="inline-flex items-center gap-1 no-underline text-white hover:underline text-sm font-light"
                                             >
                                                 Read More <span className="text-lg">→</span>
                                             </a>
