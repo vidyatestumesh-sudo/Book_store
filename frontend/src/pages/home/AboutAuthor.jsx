@@ -24,10 +24,10 @@ const AboutAuthor = () => {
         <div className="flex-1 px-2 md:px-5">
           <SectionHeading>About Author</SectionHeading>
 
-          <p className="text-base leading-relaxed font-figtree font-normal mb-4 text-[25px]">
+          <p className="text-base leading-relaxed font-figtree font-normal mb-4 !text-[25px]">
             This is me in the given picture. You and I are one.
           </p>
-          <p className="italic text-base leading-relaxed font-figtree font-normal text-[21px] text-black/80">
+          <p className="italic text-base leading-relaxed font-figtree font-normal !text-[21px] text-black/80">
             At a very young age Anil Kumar sensed conflict, physical, social and
             psychological, both inside and around him, and discovered a secret
             ally which he calls Nature that has always given him the strength to
@@ -62,7 +62,7 @@ const AboutAuthor = () => {
   <div className="w-full lg:w-1/2 text-left px-2 md:px-4">
     <SectionHeading showMotif={false}>Anil's Working Creed</SectionHeading>
 
-    <p className="text-black/80 mb-4 text-base leading-relaxed font-figtree text-[21px]">
+    <p className="text-black/80 mb-4 text-base leading-relaxed font-figtree !text-[21px]">
       The following words are my statement of beliefs that I seek to hold as my constant companion.
     </p>
 
@@ -70,7 +70,7 @@ const AboutAuthor = () => {
       to="/aboutauthorpage"
       className="group inline-block text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
     >
-      <span className="text-black text-[18px]">Read More</span>
+      <span className="text-black !text-[18px]">Read More</span>
       <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-200 group-hover:translate-x-[5px] text-[21px]">
         →
       </span>
