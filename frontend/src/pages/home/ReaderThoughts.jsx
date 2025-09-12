@@ -168,18 +168,18 @@ const ReaderThoughts = () => {
           {/* Navigation Buttons */}
           <div className="flex items-center justify-start gap-6 pt-6 mt-8 z-10">
             <button
-              onClick={handlePrev}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
-            >
-              <FiChevronLeft size={20} />
-            </button>
+        onClick={handlePrev}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+      >
+        <FiChevronLeft size={20} />
+      </button>
 
-            <button
-              onClick={handleNext}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
-            >
-              <FiChevronRight size={20} />
-            </button>
+      <button
+        onClick={handleNext}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+      >
+        <FiChevronRight size={20} />
+      </button>
 
             <span className="text-gray-700 text-sm font-figtree">
               {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
