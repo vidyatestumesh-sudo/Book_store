@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Menu, MenuItem, IconButton, Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -15,6 +15,9 @@ const Navbar = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const menuRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -30,6 +33,29 @@ const Navbar = () => {
     logout();
     handleMenuClose();
   };
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onPointerDown = (event) => {
+      const target = event.target;
+      if (menuRef.current && menuRef.current.contains(target)) return;
+      if (hamburgerRef.current && hamburgerRef.current.contains(target)) return;
+      setMenuOpen(false);
+    };
+
+    const onScroll = () => setMenuOpen(false);
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="navbar-header">
@@ -124,9 +150,15 @@ const Navbar = () => {
 
               {/* Hamburger toggle (mobile) */}
               <div className="hamburger-wrapper">
+                {/* 
+                  onPointerDown stops the pointer event from bubbling to document
+                  so the document listener won't treat this click as an "outside" click.
+                */}
                 <button
+                  ref={hamburgerRef}
                   className="hamburger-btn"
-                  onClick={() => setMenuOpen(!menuOpen)}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => setMenuOpen((v) => !v)}
                   aria-label="Toggle menu">
                   {menuOpen ? (
                     <CloseIcon className="hamburger-icon" />
@@ -162,7 +194,9 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Hamburger Menu */}
-      <div className={`navbar-mobile-menu ${menuOpen ? "menu-open" : ""}`}>
+      <div
+        ref={menuRef}
+        className={`navbar-mobile-menu ${menuOpen ? "menu-open" : ""}`}>
         <ul className="navbar-menu">
           <li>
             <Link to="/aboutauthorpage">ABOUT</Link>

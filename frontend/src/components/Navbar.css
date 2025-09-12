@@ -228,7 +228,6 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: none;
   flex-direction: column;
-  padding: 20px 0;
   z-index: 1000;
 }
 
@@ -291,6 +290,10 @@
     display: none;
   }
 
+  .navbar-menu {
+    gap: 0px;
+  }
+
   .navbar-desktop-menu {
     display: none;
   }
@@ -333,6 +336,10 @@
     min-width: 16px;
     top: -5px;
     right: -8px;
+  }
+
+  .navbar-mobile-menu li {
+    padding: 5px 0px;
   }
 }
 

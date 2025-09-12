@@ -1,12 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaXTwitter,
-  FaYoutube,
-} from "react-icons/fa6";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import TwitterIcon from "@mui/icons-material/Twitter"; // for X (Twitter)
+import PinterestIcon from "@mui/icons-material/Pinterest";
 import "./Footer.css";
 
 const Footer = () => {
@@ -63,20 +61,40 @@ const Footer = () => {
                 <Link to="/disclaimer">Disclaimer</Link>
               </div>
               <div className="social-icons">
-                <a href="#" aria-label="Twitter">
-                  <FaXTwitter />
+                <a
+                  href="https://www.instagram.com/langshottleadershipfoundation/"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <InstagramIcon />
                 </a>
-                <a href="#" aria-label="LinkedIn">
-                  <FaLinkedin />
+                <a
+                  href="https://www.linkedin.com/company/langshott-leadership-foundation/"
+                  aria-label="LinkedIn"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <LinkedInIcon />
                 </a>
-                <a href="#" aria-label="Instagram">
-                  <FaInstagram />
+                <a
+                  href="https://in.pinterest.com/langshottleadershipfoundation/"
+                  aria-label="Pinterest"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <PinterestIcon />
                 </a>
-                <a href="#" aria-label="Facebook">
-                  <FaFacebook />
+                <a
+                  href="https://x.com/LangshottLF"
+                  aria-label="Twitter"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <TwitterIcon />
                 </a>
-                <a href="#" aria-label="YouTube">
-                  <FaYoutube />
+                <a
+                  href="https://www.facebook.com/langshottleadershipfoundation1"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <FacebookIcon />
                 </a>
               </div>
             </div>
