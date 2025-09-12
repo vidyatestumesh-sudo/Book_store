@@ -35,6 +35,25 @@ module.exports = {
         'slide-in-left': 'slide-in-left 0.8s ease-out',
         'slide-in-right': 'slide-in-right 0.8s ease-out',
       },
+      // ✅ Add custom maxWidth for 1440px
+      maxWidth: {
+        '8xl': '90rem', // 1440px
+      },
+      // ✅ Add custom screen breakpoint for 1440px
+      screens: {
+        '8xl': '1440px',
+      },
+    },
+    // ✅ Use default container behavior
+    container: {
+      center: true,
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1920px", // Optional: full width container max
+      },
     },
   },
   plugins: [],

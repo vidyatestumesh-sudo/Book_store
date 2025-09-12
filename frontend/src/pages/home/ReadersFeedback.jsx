@@ -47,10 +47,10 @@ const ReadersFeedback = () => {
 
   return (
     <div className="bg-white font-playfair mt-0 mb-6">
-      <div className="w-full max-w-7xl mx-auto px-6">
+      <div className="w-full max-w-8xl mx-auto px-6 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[36px] sm:text-[42px] md:text-[50px] font-playfair font-display leading-snug mb-2 mt-0">
+          <h2 className="text-[50px] md:text-[50px] font-playfair font-display leading-snug mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
@@ -73,13 +73,13 @@ const ReadersFeedback = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="italic text-xl font-bold text-gray-900 font-figtree break-words">
+                <span className="italic text-[25px] font-regular text-black-900 font-figtree break-words">
                   {fb.name}
                 </span>
               </div>
 
               {/* Feedback Text */}
-              <p className="font-figtree text-xl text-gray-700">{fb.text}</p>
+              <p className="font-figtree text-[20px] text-black-700">{fb.text}</p>
             </div>
           ))}
         </div>

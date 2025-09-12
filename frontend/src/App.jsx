@@ -16,14 +16,14 @@ function App() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); 
+    }, 2000);
 
     // Cleanup timer
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return <Loading />; 
+    return <Loading />;
   }
 
 
@@ -32,12 +32,11 @@ function App() {
       <AuthProvide>
         <ScrollToTop />
         <Navbar />
-        <main className='min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-primary'>
+        <main className="min-h-screen max-w-screen-3xl mx-auto px-0 py-3 font-primary">
           <Outlet />
         </main>
         <Footer />
       </AuthProvide>
-
     </>
   )
 }

@@ -15,7 +15,7 @@ const thoughts = [
   {
     id: 3,
     title: "T.E.M.P.L.E.",
-    text: `T.E.M.P.L.E.\nTranquil Embrace of Mindful Presence, Love, and Expansion\nIt is a non-descript sanctuary of silence, presence and conscious growth where one communes with infinite, not through dogma, but through deep inner experience and unity.\n– Anil Kumar`,
+    text: `Tranquil Embrace of Mindful Presence, Love, and Expansion\nIt is a non-descript sanctuary of silence, presence and conscious growth where one communes with infinite, not through dogma, but through deep inner experience and unity.\n– Anil Kumar`,
   },
   {
     id: 4,
@@ -119,13 +119,13 @@ const ReaderThoughts = () => {
 
   return (
     <div className="h-full overflow-hidden pt-10 pb-20">
-      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
             src="/1-my-mind.webp"
             alt="mind"
-            className="w-full h-full object-cover"
+            className="w-full h-full "
           />
         </div>
 
@@ -134,30 +134,29 @@ const ReaderThoughts = () => {
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
-          {/* Title */}
           <div className="relative inline-block">
-            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8 ">
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-playfair font-display leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-center">
               What’s On My Mind?
             </h1>
             <img
               src="/motif.webp"
               alt="feather"
-              className="absolute ml-48 -bottom-1 transform -translate-x-1/2 w-24 md:w-28 md:h-22 [opacity:0.15] mb-2"
-            />
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none" />
           </div>
+
 
           {/* Thoughts Grid */}
           <div
-            className={`grid ${
-              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-            } gap-8 z-10 flex-grow overflow-y-auto`}
+            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+              } gap-8 z-10 flex-grow overflow-y-auto`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
-                <h3 className="text-4xl font-light text-red-700 font-figtree">
+                <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="text-gray-800 leading-relaxed whitespace-pre-line font-figtree">
+                <p className="text-black-800 leading-relaxed whitespace-pre-line font-figtree text-[20px] ">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>
@@ -168,18 +167,18 @@ const ReaderThoughts = () => {
           {/* Navigation Buttons */}
           <div className="flex items-center justify-start gap-6 pt-6 mt-8 z-10">
             <button
-              onClick={handlePrev}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
-            >
-              <FiChevronLeft size={20} />
-            </button>
+        onClick={handlePrev}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+      >
+        <FiChevronLeft size={20} />
+      </button>
 
-            <button
-              onClick={handleNext}
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black"
-            >
-              <FiChevronRight size={20} />
-            </button>
+      <button
+        onClick={handleNext}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+      >
+        <FiChevronRight size={20} />
+      </button>
 
             <span className="text-gray-700 text-sm font-figtree">
               {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
