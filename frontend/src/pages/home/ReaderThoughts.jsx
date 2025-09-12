@@ -134,23 +134,22 @@ const ReaderThoughts = () => {
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
-          {/* Title */}
           <div className="relative inline-block">
-            <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8 ">
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-playfair font-display leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-center">
               What’s On My Mind?
             </h1>
             <img
               src="/motif.webp"
               alt="feather"
-              className="absolute ml-48 -bottom-1 transform -translate-x-1/2 w-24 md:w-28 md:h-22 [opacity:0.15] mb-2"
-            />
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none" />
           </div>
+
 
           {/* Thoughts Grid */}
           <div
-            className={`grid ${
-              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-            } gap-8 z-10 flex-grow overflow-y-auto`}
+            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+              } gap-8 z-10 flex-grow overflow-y-auto`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
