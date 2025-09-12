@@ -92,7 +92,7 @@ const Corners = () => {
 
   return (
     <section className="bg-white py-16 px-6 font-figtree font-light">
-    <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[60px]">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[60px]">
         {corners.map((corner, index) => {
           const slide = corner.slides[slideIndexes[index]];
 
@@ -129,13 +129,13 @@ const Corners = () => {
               {/* Card */}
               <div className="px-4 sm:px-8">
                 <div
-                  className="rounded-lg shadow-md text-white overflow-hidden min-h-[600px] sm:min-h-[700px] w-full max-w-[600px] mx-auto flex flex-col justify-between"
+                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
                 >
                   {/* Card Content */}
-                  <div className="flex-1 flex flex-col px-6 pt-8">
+                  <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     {/* Title */}
-                    <div className="relative text-center mb-4">
+                    <div className="relative text-center">
                       <h3 className="relative z-10 font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[50px] mt-3 mb-3">
                         {corner.title}
                       </h3>
@@ -147,25 +147,27 @@ const Corners = () => {
                       />
                     </div>
 
-                    {/* Image with fade animation */}
-                    <div className="w-full h-[285px] overflow-hidden px-5 rounded-md mb-2 text-center mx-auto">
-                      <AnimatePresence mode="wait">
-                        <motion.img
-                          key={slide.image}
-                          src={slide.image}
-                          alt={`${corner.title} slide image`}
-                          className="w-full h-full object-cover"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.4 }}
-                          loading="lazy"
-                        />
-                      </AnimatePresence>
+                    {/* Image with adaptive size */}
+                    <div className="w-full flex justify-center px-5">
+                      <div className="w-[360px] h-[260px] flex items-center justify-center overflow-hidden">
+                        <AnimatePresence mode="wait">
+                          <motion.img
+                            key={`${corner.id}-${slideIndexes[index]}`}
+                            src={slide.image}
+                            alt={`${corner.title} slide image`}
+                            className="w-full h-full object-contain"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4 }}
+                            loading="lazy"
+                          />
+                        </AnimatePresence>
+                      </div>
                     </div>
 
                     {/* Text */}
-                    <div className="flex-1 overflow-hidden text-[20px]">
+                    <div className="text-[20px]">
                       <p className="text-[20px] leading-relaxed whitespace-pre-line font-light text-center m-2 mx-4">
                         {slide.text}
                       </p>
@@ -177,8 +179,8 @@ const Corners = () => {
                     </div>
                   </div>
 
-                  {/* Bottom Controls (Fixed) */}
-                  <div className="px-5 pb-[20px] flex items-center justify-between">
+                  {/* Bottom Controls */}
+                  <div className="px-5 pb-[20px] flex items-center justify-between mt-auto">
                     {corner.readMoreUrl ? (
                       <a
                         href={corner.readMoreUrl}
