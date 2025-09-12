@@ -50,13 +50,13 @@ const ReadersFeedback = () => {
       <div className="w-full max-w-8xl mx-auto px-6 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[50px] md:text-[50px] font-playfair font-display leading-snug mb-2 mt-0">
+          <h2 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-tight mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-24 md:w-28 h-20 opacity-15"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
           />
         </div>
 

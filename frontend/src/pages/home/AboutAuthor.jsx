@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 const SectionHeading = ({ children }) => (
   <div className="relative inline-block mb-8">
-    <h1 className="text-[50px] font-playfair leading-snug">{children}</h1>
+    <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-snug ">{children}</h1>
     <img
       src="/motif.webp"
       alt="Feather motif decoration"
-      className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 w-20 md:w-28 opacity-15"
+      className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 mb-1"
       loading="lazy"
     />
   </div>

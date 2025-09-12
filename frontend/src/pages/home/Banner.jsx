@@ -2,7 +2,7 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="max-w-screen-2xl mx-auto flex flex-col lg:flex-row font-Figtree items-center justify-between px-4 min-h-screen lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-hidden">
+    <div className="max-w-screen-9xl mx-auto flex flex-col lg:flex-row font-Figtree items-center justify-between px-4 min-h-screen lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-hidden pt-4">
       
       {/* Left Image Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-8 xl:px-12 2xl:px-16">
@@ -27,7 +27,7 @@ const Banner = () => {
 
         {/* Title Section */}
         <div className="relative inline-block text-center">
-          <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair leading-tight mb-6">
+          <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-tight mb-6">
             Langshott Leadership Foundation
           </h1>
           <img

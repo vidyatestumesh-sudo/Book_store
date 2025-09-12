@@ -136,7 +136,7 @@ const ReaderThoughts = () => {
 
           <div className="relative inline-block">
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-playfair font-display leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-center">
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-playfair font-display text-black leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-center">
               What’s On My Mind?
             </h1>
             <img

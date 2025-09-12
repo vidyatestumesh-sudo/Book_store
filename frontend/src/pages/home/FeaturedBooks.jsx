@@ -52,13 +52,13 @@ const FeaturedBooks = () => {
     <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[32px] sm:text-[40px] md:text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
+        <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black font-display leading-snug mb-8 mt-8"> 
           Featured Books
         </h1>
         <img
           src="/motif.webp"
           alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 md:w-28 h-auto [opacity:0.15] mb-2"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto [opacity:0.15] mb-4"
         />
       </div>
 
@@ -68,14 +68,21 @@ const FeaturedBooks = () => {
         {startIndex > 0 && (
           <button
             onClick={handlePrev}
-            className="absolute left-0 z-10 -translate-x-full text-gray-800 opacity-40 hover:opacity-70 transition mb-20"
+            className="
+        left-arrow absolute left-0 -translate-y-1/2 z-10
+        text-gray-900 opacity-70 hover:opacity-100 transition
+        translate-x-[-30%] sm:translate-x-[-50%] md:translate-x-[-40%] lg:translate-x-[-30%]
+        xl:translate-x-[-50%] 2xl:translate-x-[-90%]
+      "
+            style={{ top: "220px", touchAction: "manipulation" }}  // Changed top to 100px
+            aria-label="Previous books"
           >
-            <FiChevronLeft size={50} />
+            <FiChevronLeft size={80} /> {/* Changed size to 70 */}
           </button>
         )}
 
         {/* Slider */}
-        <div className="overflow-hidden w-full">
+        <div className="overflow-hidden w-full px-2 sm:px-4">
           <div
             className="flex transition-transform duration-700 ease-in-out"
             style={{
@@ -85,15 +92,14 @@ const FeaturedBooks = () => {
             {books.map((book, index) => (
               <div
                 key={index}
-                className={`px-2 flex-shrink-0 ${
-                  itemsPerView === 4
+                className={`px-2 flex-shrink-0 ${itemsPerView === 4
                     ? "w-1/4"
                     : itemsPerView === 3
-                    ? "w-1/3"
-                    : itemsPerView === 2
-                    ? "w-1/2"
-                    : "w-full"
-                }`}
+                      ? "w-1/3"
+                      : itemsPerView === 2
+                        ? "w-1/2"
+                        : "w-full"
+                  }`}
               >
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
@@ -159,8 +165,7 @@ const FeaturedBooks = () => {
                       {book?.oldPrice > book?.newPrice && (
                         <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0 font-figtree ">
                           {Math.round(
-                            ((book.oldPrice - book.newPrice) / book.oldPrice) *
-                              100
+                            ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
                           )}
                           % off
                         </span>
@@ -177,11 +182,19 @@ const FeaturedBooks = () => {
         {startIndex + itemsPerView < books.length && (
           <button
             onClick={handleNext}
-            className="absolute right-0 z-10 translate-x-full text-gray-800 opacity-40 hover:opacity-70 transition mb-20"
+            className="
+        right-arrow absolute right-0 -translate-y-1/2 z-10
+        translate-x-[30%] sm:translate-x-[50%] md:translate-x-[40%] lg:translate-x-[30%]
+        xl:translate-x-[50%] 2xl:translate-x-[90%]
+        text-gray-900 opacity-70 hover:opacity-100 transition
+      "
+            style={{ top: "220px", touchAction: "manipulation" }}  // Changed top to 100px
+            aria-label="Next books"
           >
-            <FiChevronRight size={50} />
+            <FiChevronRight size={80} /> {/* Changed size to 70 */}
           </button>
         )}
+
       </div>
     </div>
   );

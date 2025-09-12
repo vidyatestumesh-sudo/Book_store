@@ -136,13 +136,13 @@ const Corners = () => {
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     {/* Title */}
                     <div className="relative text-center">
-                      <h3 className="relative z-10 font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[50px] mt-3 mb-3">
+                      <h3 className="relative z-10 text-[26px] sm:text-[36px] md:text-[50px] font-playfair font-display mt-3 mb-3">
                         {corner.title}
                       </h3>
                       <img
                         src="/motif.webp"
                         alt="Decorative motif"
-                        className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 h-20 opacity-15 pointer-events-none select-none"
+                        className="absolute left-1/2 -bottom-1 mb-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none select-none"
                         aria-hidden="true"
                       />
                     </div>
