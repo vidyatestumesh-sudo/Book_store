@@ -28,7 +28,7 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center">
+    <div className="max-w-6xl mx-auto py-16 text-center flex flex-col justify-center items-center">
       {/* Title Section */}
       <div className="relative inline-block">
         <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
@@ -56,7 +56,7 @@ const FeaturedBooks = () => {
         {/* Smooth Scroll Container */}
         <div className="overflow-hidden w-full">
           <div
-            className="flex transition-transform duration-700 ease-in-out"
+            className="flex transition-transform duration-700 ease-in-out gap-x-5"
             style={{
               transform: `translateX(-${startIndex * 25}%)`,
             }}
