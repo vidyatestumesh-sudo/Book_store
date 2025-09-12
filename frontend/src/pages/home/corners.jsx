@@ -92,7 +92,7 @@ const Corners = () => {
 
     return (
         <section className="bg-white py-16 px-6 font-figtree font-light">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-[60px]">
                 {corners.map((corner, index) => {
                     const slide = corner.slides[slideIndexes[index]];
                     return (
@@ -123,77 +123,77 @@ const Corners = () => {
                                     />
                                 </svg>
                             </div>
-
                             {/* Card */}
-                            <div
-                                className="rounded-lg shadow-md text-white overflow-hidden min-h-[540px] max-h-[600px] flex flex-col justify-between"
-                                style={{ backgroundColor: corner.bgColor }}
-                            >
-                                {/* Card Content */}
-                                <div className="flex-1 flex flex-col px-6 pt-8">
-                                    {/* Title */}
-                                    <div className="relative text-center mb-4">
-                                        <h3 className="relative z-10 font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[50px] mt-3 mb-3">
-                                            {corner.title}
-                                        </h3>
-                                        <img
-                                            src="/motif.webp"
-                                            alt="decoration"
-                                            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 h-20 opacity-15"
-                                        />
-                                    </div>
+                            <div className="px-8">
+                                <div
+                                    className="rounded-lg shadow-md text-white overflow-hidden min-h-[700px] min-w-[600px] md:min-w-[600px] max-h-[700px] flex flex-col justify-between"
+                                    style={{ backgroundColor: corner.bgColor }}>
+                                    {/* Card Content */}
+                                    <div className="flex-1 flex flex-col px-6 pt-8">
+                                        {/* Title */}
+                                        <div className="relative text-center mb-4">
+                                            <h3 className="relative z-10 font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-[50px] mt-3 mb-3">
+                                                {corner.title}
+                                            </h3>
+                                            <img
+                                                src="/motif.webp"
+                                                alt="decoration"
+                                                className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 h-20 opacity-15"
+                                            />
+                                        </div>
 
-                                    {/* Image */}
-                                    <div className="w-full h-40 sm:h-48 overflow-hidden px-5 rounded-md mb-2">
-                                        <img
-                                            src={slide.image}
-                                            alt={corner.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
+                                        {/* Image */}
+                                        <div className="w-[580px] h-[285px] overflow-hidden px-5 rounded-md mb-2 text-center mx-auto">
+                                            <img
+                                                src={slide.image}
+                                                alt={corner.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
 
-                                    {/* Text */}
-                                    <div className="flex-1 overflow-hidden">
-                                        <p className="text-xs sm:text-sm md:text-base leading-relaxed whitespace-pre-line font-light text-center line-clamp-5 m-2 mx-4">
-                                            {slide.text}
-                                        </p>
-                                        {slide.author && (
-                                            <p className="mt-4 italic text-xs sm:text-sm text-right font-light px-5">
-                                                – {slide.author}
+                                        {/* Text */}
+                                        <div className="flex-1 overflow-hidden text-[20px]">
+                                            <p className=" text-[20px] leading-relaxed whitespace-pre-line font-light text-center line-clamp-5 m-2 mx-4">
+                                                {slide.text}
                                             </p>
-                                        )}
+                                            {slide.author && (
+                                                <p className="mt-4 italic text-right text-[20px] font-light px-5">
+                                                    – {slide.author}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Bottom Controls (Fixed) */}
-                                <div className="px-5 pb-[20px]">
-                                    <div className="flex items-center justify-between">
-                                        {corner.id === 2 ? (
-                                            <a
-                                                href="#"
-                                                className="inline-flex items-center gap-1 no-underline text-white hover:underline text-sm font-light"
+                                    {/* Bottom Controls (Fixed) */}
+                                    <div className="px-5 pb-[20px]">
+                                        <div className="flex items-center justify-between">
+                                            {corner.id === 2 ? (
+                                                <a
+                                                    href="#"
+                                                    className="inline-flex items-center gap-1 no-underline text-white text-[18px] font-light"
+                                                >
+                                                    Read More <span className="text-[18px]">→</span>
+                                                </a>
+                                            ) : (
+                                                <span></span>
+                                            )}
+                                            <div
+                                                className={`flex gap-3 ${corner.id === 1 ? "mx-auto" : ""
+                                                    }`}
                                             >
-                                                Read More <span className="text-lg">→</span>
-                                            </a>
-                                        ) : (
-                                            <span></span>
-                                        )}
-                                        <div
-                                            className={`flex gap-3 ${corner.id === 1 ? "mx-auto" : ""
-                                                }`}
-                                        >
-                                            <button
-                                                onClick={() => handleSlideChange(index, -1)}
-                                                className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
-                                            >
-                                                <FiChevronLeft size={20} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleSlideChange(index, 1)}
-                                                className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
-                                            >
-                                                <FiChevronRight size={20} />
-                                            </button>
+                                                <button
+                                                    onClick={() => handleSlideChange(index, -1)}
+                                                    className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
+                                                >
+                                                    <FiChevronLeft size={20} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleSlideChange(index, 1)}
+                                                    className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
+                                                >
+                                                    <FiChevronRight size={20} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const AboutAuthor = () => {
   return (
-    <section className="max-w-6xl mx-auto px-6 py-16 font-serif space-y-16">
+    <section className="max-w-8xl mx-auto px-6 py-16 font-serif space-y-16">
 
       {/* ========== About Author Section ========== */}
       <div className="bg-[#e9ebec] rounded-xl p-10 px-5 flex flex-col md:flex-row items-center md:items-start gap-8">
@@ -21,10 +21,10 @@ const AboutAuthor = () => {
             />
           </div>
 
-          <p className="text-base leading-relaxed font-figtree mb-4 text-[20px]">
+          <p className="text-base leading-relaxed font-figtree font-regular mb-4 text-[25px]">
             This is me in the given picture. You and I are one.
           </p>
-          <p className="italic text-base leading-relaxed font-figtree font-light text-[18px]">
+          <p className="italic text-base leading-relaxed font-figtree font-regular text-[21px] text-black-500">
             At a very young age Anil Kumar sensed conflict, physical, social and
             psychological, both inside and around him, and discovered a secret
             ally which he calls Nature that has always given him the strength to
@@ -37,7 +37,7 @@ const AboutAuthor = () => {
           <img
             src="/about-author-ak .webp"
             alt="Anil Kumar"
-            className="w-[300px] md:w-[320px] lg:w-[360px] object-contain"
+            className="w-[470px] md:w-[470px] lg:w-[490px] "
           />
         </div>
       </div>
@@ -67,7 +67,7 @@ const AboutAuthor = () => {
             />
           </div>
 
-          <p className="text-gray-700 mb-4 text-base leading-relaxed font-figtree text-[18px]">
+          <p className="text-black-700 mb-4 text-base leading-relaxed font-figtree text-[21px]">
             The following words are my statement of beliefs that I seek to hold as my constant companion.
           </p>
 
@@ -75,8 +75,8 @@ const AboutAuthor = () => {
             to="/aboutauthorpage"
             className="inline-block text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
           >
-            <span className="text-black">Read More</span>
-            <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-20 group-hover:translate-x-[15px]">
+            <span className="text-black text-[18px]">Read More</span>
+            <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-20 group-hover:translate-x-[15px] text-[21px]">
               →</span>
           </Link>
 

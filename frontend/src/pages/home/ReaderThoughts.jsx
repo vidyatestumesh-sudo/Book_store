@@ -15,7 +15,7 @@ const thoughts = [
   {
     id: 3,
     title: "T.E.M.P.L.E.",
-    text: `T.E.M.P.L.E.\nTranquil Embrace of Mindful Presence, Love, and Expansion\nIt is a non-descript sanctuary of silence, presence and conscious growth where one communes with infinite, not through dogma, but through deep inner experience and unity.\n– Anil Kumar`,
+    text: `Tranquil Embrace of Mindful Presence, Love, and Expansion\nIt is a non-descript sanctuary of silence, presence and conscious growth where one communes with infinite, not through dogma, but through deep inner experience and unity.\n– Anil Kumar`,
   },
   {
     id: 4,
@@ -119,13 +119,13 @@ const ReaderThoughts = () => {
 
   return (
     <div className="h-full overflow-hidden pt-10 pb-20">
-      <div className="max-w-10xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
         {/* Left Image */}
         <div className="relative w-full h-full">
           <img
             src="/1-my-mind.webp"
             alt="mind"
-            className="w-full h-full object-cover"
+            className="w-full h-full "
           />
         </div>
 
@@ -153,10 +153,10 @@ const ReaderThoughts = () => {
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
-                <h3 className="text-4xl font-light text-red-700 font-figtree">
+                <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="text-gray-800 leading-relaxed whitespace-pre-line font-figtree">
+                <p className="text-black-800 leading-relaxed whitespace-pre-line font-figtree text-[20px] ">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>

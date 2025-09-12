@@ -38,7 +38,7 @@ const Banner = () => {
         </div>
 
         {/* Description */}
-        <p className="text-gray-800 text-[15px] sm:text-[17px] md:text-[18px] leading-relaxed mt-10 mb-6 font-light px-2 sm:px-4">
+        <p className="text-black-800 text-[20px] leading-relaxed mt-10 mb-6 font-regular px-2 sm:px-4">
           Welcome to Langshott Leadership Foundation, a charitable organisation
           and provider of mentorship and guidance in personal leadership through
           seminars, workshops, talks, books, inspirational collections, blogs, and
@@ -47,7 +47,7 @@ const Banner = () => {
         </p>
 
         {/* Highlighted Quote */}
-        <p className="text-[15px] sm:text-[17px] md:text-[19px] text-[#8c2f2f] italic px-4 sm:px-10">
+        <p className="text-[20px]  text-[#8c2f2f] italic px-4 sm:px-10 font-regular">
           "The solutions you’re searching for are within you; we can only help you
           to get there."
         </p>
