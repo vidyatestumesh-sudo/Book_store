@@ -28,7 +28,7 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-16 text-center flex flex-col justify-center items-center">
+    <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center">
       {/* Title Section */}
       <div className="relative inline-block">
         <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
@@ -42,21 +42,21 @@ const FeaturedBooks = () => {
       </div>
 
       {/* Wrapper to hold arrows + slider */}
-      <div className="relative flex items-center mt-8 max-w-7xl">
+      <div className="relative w-full flex items-center mt-8">
         {/* Left Arrow */}
         {startIndex > 0 && (
           <button
             onClick={handlePrev}
-            className="absolute left-8 z-10 -translate-x-full text-gray-800 [opacity:0.15] mb-24"
+            className="absolute left-0 z-10 -translate-x-full text-gray-800 [opacity:0.15] mb-20"
           >
-            <FiChevronLeft size={70} />
+            <FiChevronLeft size={100} />
           </button>
         )}
 
         {/* Smooth Scroll Container */}
         <div className="overflow-hidden w-full">
           <div
-            className="flex transition-transform duration-700 ease-in-out gap-x-5"
+            className="flex transition-transform duration-700 ease-in-out"
             style={{
               transform: `translateX(-${startIndex * 25}%)`,
             }}
@@ -66,24 +66,40 @@ const FeaturedBooks = () => {
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
                   <Link to={`/books/${book._id}`}>
-                    <div className="relative overflow-hidden w-[290px] h-[450px] mx-auto">
+                    <div className="relative w-full aspect-[2/3] max-w-[290px] mx-auto overflow-hidden group">
+                      {/* Book Image */}
                       <img
                         src={getImgUrl(book?.coverImage)}
                         alt={book?.title}
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full z-0"
                       />
-
-                      {/* Overlay */}
-                      <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
-                        <span className="z-10 text-white text-lg font-semibold transition duration-500 hover:text-[#cc6633] cursor-pointer">
+                      <div
+                        className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
+                        style={{
+                          backgroundColor: 'rgba(0,0,0,0)',
+                          transition: 'background-color 0.5s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                          e.currentTarget.firstChild.style.opacity = '1';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0)';
+                          e.currentTarget.firstChild.style.opacity = '0';
+                        }}
+                      >
+                        <span
+                          className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer"
+                          style={{
+                            opacity: 0,
+                            transition: 'opacity 0.5s ease',
+                          }}
+                        >
                           VIEW BOOK
                         </span>
                       </div>
-
-
-
-                      {/* Animated border */}
-                      <div className="book-border absolute inset-5 ">
+                      {/* Border */}
+                      <div className="book-border absolute inset-5 z-20 pointer-events-none">
                         <span className="top"></span>
                         <span className="right"></span>
                         <span className="bottom"></span>
@@ -132,9 +148,9 @@ const FeaturedBooks = () => {
         {startIndex + 4 < books.length && (
           <button
             onClick={handleNext}
-            className="absolute right-8 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-24"
+            className="absolute right-0 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-20"
           >
-            <FiChevronRight size={70} />
+            <FiChevronRight size={100} />
           </button>
         )}
       </div>
