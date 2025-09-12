@@ -44,80 +44,97 @@ const Navbar = () => {
 
           {/* Right Section */}
           <div className="col-lg-8 col-md-8 col-sm-8 col-7">
-            <div className="navbar-icons">
-              {/* User / Login */}
-              {currentUser ? (
-                <>
-                  <IconButton
-                    onClick={handleAvatarClick}
-                    size="small"
-                    className="user-avatar">
-                    <Avatar className="navbar-avatar">
-                      {currentUser.name?.charAt(0).toUpperCase() ||
-                        currentUser.email?.charAt(0).toUpperCase()}
-                    </Avatar>
-                  </IconButton>
+            <div className="navbar-right-wrapper">
+              {/* Icons + Hamburger (flex row on mobile) */}
+              <div className="navbar-icons">
+                {/* User / Login */}
+                {currentUser ? (
+                  <>
+                    <IconButton
+                      onClick={handleAvatarClick}
+                      size="small"
+                      className="user-avatar">
+                      <Avatar className="navbar-avatar">
+                        {currentUser.name?.charAt(0).toUpperCase() ||
+                          currentUser.email?.charAt(0).toUpperCase()}
+                      </Avatar>
+                    </IconButton>
 
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={isMenuOpen}
-                    onClose={handleMenuClose}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                    transformOrigin={{ vertical: "top", horizontal: "right" }}
-                    classes={{ paper: "navbar-menu-dropdown" }}>
-                    <MenuItem
-                      component={Link}
-                      to="/user-dashboard"
-                      onClick={handleMenuClose}
-                      className="navbar-menu-item">
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/orders"
-                      onClick={handleMenuClose}
-                      className="navbar-menu-item">
-                      My Orders
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/cart"
-                      onClick={handleMenuClose}
-                      className="navbar-menu-item">
-                      Cart
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/checkout"
-                      onClick={handleMenuClose}
-                      className="navbar-menu-item">
-                      Checkout
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleLogOut}
-                      className="navbar-menu-item">
-                      Logout
-                    </MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <Link to="/login" aria-label="Login">
-                  <PersonOutlineIcon className="icon" />
-                </Link>
-              )}
-
-              {/* Cart */}
-              <Link to="/cart" className="cart-link" aria-label="Cart">
-                <ShoppingCartOutlinedIcon className="icon" />
-                {cartItems.length > 0 && (
-                  <span className="cart-badge">{cartItems.length}</span>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={isMenuOpen}
+                      onClose={handleMenuClose}
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      transformOrigin={{ vertical: "top", horizontal: "right" }}
+                      classes={{ paper: "navbar-menu-dropdown" }}>
+                      <MenuItem
+                        component={Link}
+                        to="/user-dashboard"
+                        onClick={handleMenuClose}
+                        className="navbar-menu-item">
+                        Profile
+                      </MenuItem>
+                      <MenuItem
+                        component={Link}
+                        to="/orders"
+                        onClick={handleMenuClose}
+                        className="navbar-menu-item">
+                        My Orders
+                      </MenuItem>
+                      <MenuItem
+                        component={Link}
+                        to="/cart"
+                        onClick={handleMenuClose}
+                        className="navbar-menu-item">
+                        Cart
+                      </MenuItem>
+                      <MenuItem
+                        component={Link}
+                        to="/checkout"
+                        onClick={handleMenuClose}
+                        className="navbar-menu-item">
+                        Checkout
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleLogOut}
+                        className="navbar-menu-item">
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Link to="/login" aria-label="Login">
+                    <PersonOutlineIcon className="icon" />
+                  </Link>
                 )}
-              </Link>
 
-              {/* Contact (desktop only) */}
-              <Link to="/contact" className="contact-link">
-                Contact Me
-              </Link>
+                {/* Cart */}
+                <Link to="/cart" className="cart-link" aria-label="Cart">
+                  <ShoppingCartOutlinedIcon className="icon" />
+                  {cartItems.length > 0 && (
+                    <span className="cart-badge">{cartItems.length}</span>
+                  )}
+                </Link>
+
+                {/* Contact (desktop only) */}
+                <Link to="/contact" className="contact-link">
+                  Contact Me
+                </Link>
+              </div>
+
+              {/* Hamburger toggle (mobile) */}
+              <div className="hamburger-wrapper">
+                <button
+                  className="hamburger-btn"
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  aria-label="Toggle menu">
+                  {menuOpen ? (
+                    <CloseIcon className="hamburger-icon" />
+                  ) : (
+                    <MenuIcon className="hamburger-icon" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Desktop Menu (above 991px) */}
@@ -139,20 +156,6 @@ const Navbar = () => {
                   <Link to="/letter">LETTER FROM LANGSHOTT</Link>
                 </li>
               </ul>
-            </div>
-
-            {/* Hamburger toggle (mobile) */}
-            <div className="hamburger-wrapper">
-              <button
-                className="hamburger-btn"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu">
-                {menuOpen ? (
-                  <CloseIcon className="hamburger-icon" />
-                ) : (
-                  <MenuIcon className="hamburger-icon" />
-                )}
-              </button>
             </div>
           </div>
         </div>
