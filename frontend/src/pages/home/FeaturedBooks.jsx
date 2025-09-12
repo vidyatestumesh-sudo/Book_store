@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -10,13 +10,34 @@ const FeaturedBooks = () => {
   const dispatch = useDispatch();
   const { data: books = [] } = useFetchAllBooksQuery();
   const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(4); // default for desktop
 
   const handleAddToCart = (book) => {
     dispatch(addToCart(book));
   };
 
+  // 🔹 Adjust items per view based on screen width
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      const width = window.innerWidth;
+      if (width >= 1440) {
+        setItemsPerView(4);
+      } else if (width >= 1024) {
+        setItemsPerView(3);
+      } else if (width >= 768) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(1);
+      }
+    };
+
+    updateItemsPerView();
+    window.addEventListener("resize", updateItemsPerView);
+    return () => window.removeEventListener("resize", updateItemsPerView);
+  }, []);
+
   const handleNext = () => {
-    if (startIndex + 4 < books.length) {
+    if (startIndex + itemsPerView < books.length) {
       setStartIndex(startIndex + 1);
     }
   };
@@ -28,71 +49,84 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center">
+    <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
+        <h1 className="text-[32px] sm:text-[40px] md:text-[50px] font-playfair font-display leading-snug mb-8 mt-8">
           Featured Books
         </h1>
         <img
           src="/motif.webp"
           alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-25 h-28 md:w-28 md:h-22 [opacity:0.15] mb-2"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 md:w-28 h-auto [opacity:0.15] mb-2"
         />
       </div>
 
-      {/* Wrapper to hold arrows + slider */}
+      {/* Wrapper for arrows + slider */}
       <div className="relative w-full flex items-center mt-8">
         {/* Left Arrow */}
         {startIndex > 0 && (
           <button
             onClick={handlePrev}
-            className="absolute left-0 z-10 -translate-x-full text-gray-800 [opacity:0.15] mb-20"
+            className="absolute left-0 z-10 -translate-x-full text-gray-800 opacity-40 hover:opacity-70 transition mb-20"
           >
-            <FiChevronLeft size={100} />
+            <FiChevronLeft size={50} />
           </button>
         )}
 
-        {/* Smooth Scroll Container */}
+        {/* Slider */}
         <div className="overflow-hidden w-full">
           <div
             className="flex transition-transform duration-700 ease-in-out"
             style={{
-              transform: `translateX(-${startIndex * 25}%)`,
+              transform: `translateX(-${(startIndex * 100) / itemsPerView}%)`,
             }}
           >
             {books.map((book, index) => (
-              <div key={index} className="w-1/4 px-0 flex-shrink-0">
+              <div
+                key={index}
+                className={`px-2 flex-shrink-0 ${
+                  itemsPerView === 4
+                    ? "w-1/4"
+                    : itemsPerView === 3
+                    ? "w-1/3"
+                    : itemsPerView === 2
+                    ? "w-1/2"
+                    : "w-full"
+                }`}
+              >
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
                   <Link to={`/books/${book._id}`}>
                     <div className="relative w-full aspect-[2/3] max-w-[290px] mx-auto overflow-hidden group">
-                      {/* Book Image */}
                       <img
                         src={getImgUrl(book?.coverImage)}
                         alt={book?.title}
                         className="object-cover w-full h-full z-0"
                       />
+                      {/* Hover overlay */}
                       <div
                         className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
                         style={{
-                          backgroundColor: 'rgba(0,0,0,0)',
-                          transition: 'background-color 0.5s ease',
+                          backgroundColor: "rgba(0,0,0,0)",
+                          transition: "background-color 0.5s ease",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)';
-                          e.currentTarget.firstChild.style.opacity = '1';
+                          e.currentTarget.style.backgroundColor =
+                            "rgba(0,0,0,0.5)";
+                          e.currentTarget.firstChild.style.opacity = "1";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0)';
-                          e.currentTarget.firstChild.style.opacity = '0';
+                          e.currentTarget.style.backgroundColor =
+                            "rgba(0,0,0,0)";
+                          e.currentTarget.firstChild.style.opacity = "0";
                         }}
                       >
                         <span
                           className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer"
                           style={{
                             opacity: 0,
-                            transition: 'opacity 0.5s ease',
+                            transition: "opacity 0.5s ease",
                           }}
                         >
                           VIEW BOOK
@@ -109,29 +143,24 @@ const FeaturedBooks = () => {
                   </Link>
 
                   {/* Info */}
-                  <div className="text-center mt-6 px-8">
-                    {/* Title */}
-                    <h3 className="text-xl font-medium text-gray-900 mb-4 font-figtree break-words">
+                  <div className="text-center mt-6 px-4">
+                    <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-4 font-figtree break-words">
                       {book?.title}
                     </h3>
 
                     {/* Price Section */}
                     <div className="inline-flex justify-center items-center gap-4 w-full">
-                      {/* Old Price */}
-                      <span className="text-gray-500 line-through text-lg font-figtree">
+                      <span className="text-gray-500 line-through text-base md:text-lg font-figtree">
                         ₹{book?.oldPrice}
                       </span>
-
-                      {/* New Price */}
-                      <span className="text-[#993333] font-bold text-xl font-figtree">
+                      <span className="text-[#993333] font-bold text-lg md:text-xl font-figtree">
                         ₹{book?.newPrice}
                       </span>
-
-                      {/* Discount */}
                       {book?.oldPrice > book?.newPrice && (
-                        <span className="text-lg bg-[#993333] text-white px-2 py-0 font-figtree">
+                        <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0 font-figtree ">
                           {Math.round(
-                            ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
+                            ((book.oldPrice - book.newPrice) / book.oldPrice) *
+                              100
                           )}
                           % off
                         </span>
@@ -145,12 +174,12 @@ const FeaturedBooks = () => {
         </div>
 
         {/* Right Arrow */}
-        {startIndex + 4 < books.length && (
+        {startIndex + itemsPerView < books.length && (
           <button
             onClick={handleNext}
-            className="absolute right-0 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-20"
+            className="absolute right-0 z-10 translate-x-full text-gray-800 opacity-40 hover:opacity-70 transition mb-20"
           >
-            <FiChevronRight size={100} />
+            <FiChevronRight size={50} />
           </button>
         )}
       </div>
