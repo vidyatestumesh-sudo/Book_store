@@ -21,7 +21,7 @@ const AboutAuthor = () => {
       <article className="bg-[#e9ebec] rounded-xl p-10 px-4 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-8">
 
         {/* Left Side - Text */}
-        <div className="flex-1 px-2 md:px-5">
+        <div className="flex-1 px-2 md:px-5 ps-5">
           <SectionHeading>About Author</SectionHeading>
 
           <p className="text-base leading-relaxed font-figtree font-normal mb-4 !text-[25px]">
