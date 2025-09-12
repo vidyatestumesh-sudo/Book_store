@@ -74,11 +74,13 @@ const FeaturedBooks = () => {
                       />
 
                       {/* Overlay */}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-500">
-                        <span className="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition duration-500 hover:text-[#cc6633] cursor-pointer">
+                      <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
+                        <span className="z-10 text-white text-lg font-semibold transition duration-500 hover:text-[#cc6633] cursor-pointer">
                           VIEW BOOK
                         </span>
                       </div>
+
+
 
                       {/* Animated border */}
                       <div className="book-border absolute inset-5 ">
@@ -132,7 +134,7 @@ const FeaturedBooks = () => {
             onClick={handleNext}
             className="absolute right-8 z-10 translate-x-full text-gray-800 [opacity:0.15] mb-24"
           >
-            <FiChevronRight size={70}/>
+            <FiChevronRight size={70} />
           </button>
         )}
       </div>
