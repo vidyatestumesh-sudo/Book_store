@@ -109,7 +109,7 @@ const FeaturedBooks = () => {
               windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
             }`}
           style={{
-            top: windowWidth > 1024 ? "220px" : "50%",
+            top: windowWidth > 1024 ? "220px" : "40%",
             touchAction: "manipulation",
             transform: windowWidth <= 1024 ? "translateY(-50%)" : undefined,
           }}
@@ -230,7 +230,7 @@ const FeaturedBooks = () => {
                 : ""
             }`}
           style={{
-            top: windowWidth > 1024 ? "220px" : "50%",
+            top: windowWidth > 1024 ? "220px" : "40%",
             touchAction: "manipulation",
             transform: windowWidth <= 1024 ? "translateY(-50%)" : undefined,
           }}
