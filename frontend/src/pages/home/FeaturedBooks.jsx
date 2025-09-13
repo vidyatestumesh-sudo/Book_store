@@ -88,13 +88,13 @@ const FeaturedBooks = () => {
     <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black font-display leading-snug mb-8 mt-8">
+        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug mb-7 mt-8">
           Featured Books
         </h1>
         <img
           src="/motif.webp"
           alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto [opacity:0.15] mb-4"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto [opacity:0.15] mb-4"
         />
       </div>
 

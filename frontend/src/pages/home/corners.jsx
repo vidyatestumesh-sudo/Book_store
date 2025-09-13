@@ -136,7 +136,7 @@ const Corners = () => {
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     {/* Title */}
                     <div className="relative text-center">
-                      <h3 className="relative z-10 text-[26px] sm:text-[36px] md:text-[50px] font-playfair font-display mt-3 mb-3">
+                      <h3 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair leading-tight mt-3 mb-3">
                         {corner.title}
                       </h3>
                       <img
@@ -167,12 +167,12 @@ const Corners = () => {
                     </div>
 
                     {/* Text */}
-                    <div className="text-[20px]">
-                      <p className="text-[20px] leading-relaxed whitespace-pre-line font-light text-center m-2 mx-4">
+                    <div>
+                      <p className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-relaxed whitespace-pre-line font-light text-center m-2 mx-4 leading-snug lg:leading-normal">
                         {slide.text}
                       </p>
                       {slide.author && (
-                        <p className="mt-4 italic text-right text-[20px] font-light px-5">
+                        <p className="mt-4 italic text-right text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-light px-5">
                           – {slide.author}
                         </p>
                       )}
@@ -184,9 +184,9 @@ const Corners = () => {
                     {corner.readMoreUrl ? (
                       <a
                         href={corner.readMoreUrl}
-                        className="inline-flex items-center gap-1 no-underline text-white text-[18px] font-light hover:underline"
+                        className="inline-flex items-center gap-1 no-underline text-white text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-light hover:underline"
                       >
-                        Read More <span className="text-[18px]">→</span>
+                        Read More <span className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px]">→</span>
                       </a>
                     ) : (
                       <span></span>
