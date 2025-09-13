@@ -27,7 +27,7 @@ const Banner = () => {
 
         {/* Title Section */}
         <div className="relative inline-block text-center">
-          <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-tight mt-4 mb-4 sm:mb-6">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black leading-tight mt-4 mb-4 sm:mb-6">
             Langshott Leadership Foundation
           </h1>
           <img
