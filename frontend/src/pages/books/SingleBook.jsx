@@ -10,86 +10,8 @@ import book3 from "../../assets/books/the-attributes-of-a-virtuous-mindset.webp"
 import book4 from "../../assets/books/master-the-rules-of-manifestation.webp";
 
 const SingleBook = () => {
-<<<<<<< HEAD
   // state for read more
   const [showMore, setShowMore] = useState(false);
-=======
-  const { id } = useParams();
-  const { data: book, isLoading, isError, refetch } = useFetchBookByIdQuery(id);
-  const dispatch = useDispatch();
-
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [showAllReviews, setShowAllReviews] = useState(false);
-
-  const { currentUser } = useAuth();
-
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-  };
-
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(`https://bookstore-backend-hshq.onrender.com/api/books/${id}/review`, {
-        user: currentUser?.displayName || currentUser?.email || "Anonymous",
-        rating,
-        comment,
-      });
-      setRating(0);
-      setComment("");
-      refetch();
-      alert("Review submitted!");
-    } catch (error) {
-      console.error("Failed to submit review", error);
-      alert("Failed to submit review");
-    }
-  };
-
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center h-screen text-lg font-semibold">
-        Loading...
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="flex justify-center items-center h-screen text-red-500">
-        Failed to load book details.
-      </div>
-    );
-
-  const reviews = book.reviews || [];
-  const totalReviews = reviews.length;
-  const avgRating =
-    totalReviews > 0
-      ? reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
-      : 0;
-
-  // ✅ Render stars with half-star support
-  const renderStars = (rating) => {
-    return (
-      <div className="flex items-center">
-        {[1, 2, 3, 4, 5].map((star) => {
-          if (rating >= star) {
-            return <FaStar key={star} className="text-yellow-500 text-2xl" />;
-          } else if (rating >= star - 0.5) {
-            return (
-              <FaStarHalfAlt key={star} className="text-yellow-500 text-2xl" />
-            );
-          } else {
-            return <FaRegStar key={star} className="text-gray-300 text-2xl" />;
-          }
-        })}
-      </div>
-    );
-  };
-
-  // Reviews to display (2 recent or all)
-  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 2);
-
->>>>>>> f97c3d52382bf80a25ecdc9d3ceff98b530f4ce0
   return (
     <div className="container">
       {/* Breadcrumb (separate container) */}
