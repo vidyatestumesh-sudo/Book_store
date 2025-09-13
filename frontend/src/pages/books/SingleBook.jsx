@@ -27,7 +27,7 @@ const SingleBook = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/api/books/${id}/review`, {
+      await axios.post(`https://bookstore-backend-hshq.onrender.com/api/books/${id}/review`, {
         user: currentUser?.displayName || currentUser?.email || "Anonymous",
         rating,
         comment,
