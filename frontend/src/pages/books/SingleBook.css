@@ -1,0 +1,253 @@
+@font-face {
+  font-family: "Figtree-Light";
+  src: url("../assets/fonts/Figtree-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Figtree-Regular";
+  src: url("../assets/fonts/Figtree-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Figtree-Medium";
+  src: url("../assets/fonts/Figtree-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PlayfairDisplay-Regular";
+  src: url("../assets/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+h2 {
+  font-family: "PlayfairDisplay-Regular";
+  font-size: 50px;
+  color: black;
+}
+
+p {
+  font-family: "Figtree-Light";
+  font-size: 20px;
+  text-align: justify;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 16px;
+  margin-bottom: 18px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  color: #c6c6c6;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #c6c6c6;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: #7f7f7f;
+  cursor: default;
+}
+
+/* Book Section */
+.book-section {
+  margin-bottom: 50px;
+}
+.book-image img {
+  width: 100%;
+  border: 1px solid #ddd;
+}
+.book-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+.book-buttons button {
+  flex: 1;
+  font-family: "Figtree-Light";
+  padding: 10px 0;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.add-to-cart {
+  background-color: #c86836;
+  color: #fff;
+}
+.buy-now {
+  background-color: #983120;
+  color: #fff;
+}
+
+.about-book {
+  margin-top: 30px;
+}
+
+.about-book h4 {
+  text-align: center;
+  font-size: "Figtree-Light" !important;
+  font-size: 28px;
+  color: #333333;
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
+.author-sign {
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* Book Details */
+.book-details {
+  padding-left: 100px;
+}
+.book-details h2 {
+  margin-bottom: 30px;
+}
+.price {
+  margin-bottom: 20px;
+}
+.current-price {
+  font-family: "Figtree-Light";
+  font-size: 32px;
+  font-weight: bold;
+  color: #99301f;
+  margin-right: 10px;
+}
+.old-price {
+  font-family: "Figtree-Regular";
+  font-size: 20px;
+  text-decoration: line-through;
+  color: #717171;
+  margin-right: 10px;
+}
+.discount {
+  font-family: "Figtree-Light";
+  color: #fff;
+  background-color: #99301f;
+  padding: 2px 10px;
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+.book-desc {
+  line-height: 1.6;
+}
+.book-desc .extra-text {
+  display: block;
+  font-size: 20px;
+}
+
+.book-desc .read-more {
+  font-family: "Figtree-Regular";
+  color: #277ca9;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.book-meta {
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+.book-meta p {
+  margin: 3px 0;
+}
+
+/* Delivery */
+.delivery {
+  margin-bottom: 20px;
+}
+.delivery label {
+  font-family: "Figtree-Regular";
+  font-size: 18px;
+}
+.delivery input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  width: 220px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.check-btn {
+  padding: 8px 15px;
+  border: none;
+  background-color: #99301f;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Share */
+.share {
+  font-family: "Figtree-Light";
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.share-icon {
+  font-size: 18px !important;
+  margin-right: 10px;
+  margin-top: -2px;
+}
+
+/* Recently Viewed */
+.recently-viewed {
+  margin-top: 50px;
+}
+.recently-viewed h3 {
+  font-family: "Figtree-Regular";
+  color: #414141;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+.rv-card {
+  text-align: center;
+  padding: 0 30px;
+}
+.rv-card img {
+  width: 70%;
+  margin: 30px auto !important;
+}
+.rv-card h4 {
+  font-family: "Figtree-Regular";
+  font-size: 20px;
+}
+.rv-card p {
+  font-size: 20px;
+}
+.rv-card .old-price {
+  text-decoration: line-through;
+  color: #717171;
+  margin-right: 5px;
+}
+.rv-card .current-price {
+  font-family: "Figtree-Light" !important;
+  font-size: 18px;
+  color: #99301f;
+  margin-right: 5px;
+}
+.rv-card .discount {
+  background-color: #99301f;
+  color: #fff;
+  padding: 1px 4px;
+  font-size: 18px;
+}
