@@ -88,14 +88,14 @@ const ReadersFeedback = () => {
         <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree">
           <button
             onClick={handlePrev}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
           >
             <FiChevronLeft size={20} />
           </button>
 
           <button
             onClick={handleNext}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
           >
             <FiChevronRight size={20} />
           </button>
