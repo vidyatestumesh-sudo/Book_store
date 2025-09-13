@@ -15,6 +15,7 @@ module.exports = {
       fontFamily: {
         figtree: ['Figtree', 'sans-serif'],
         playfair: ['Playfair Display', 'serif'],
+        bellmt: ['"Bell MT"', 'Georgia', 'serif'],
       },
       keyframes: {
         'fade-in': {
