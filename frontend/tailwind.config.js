@@ -15,6 +15,7 @@ module.exports = {
       fontFamily: {
         figtree: ['Figtree', 'sans-serif'],
         playfair: ['Playfair Display', 'serif'],
+        bellmt: ['"Bell MT"', 'Georgia', 'serif'],
       },
       keyframes: {
         'fade-in': {
@@ -49,6 +50,7 @@ screens: {
     container: {
       center: true,
       screens: {
+        xs: "425px", 
         sm: "640px",
         md: "768px",
         lg: "1024px",

@@ -135,14 +135,17 @@ const ReaderThoughts = () => {
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           <div className="relative inline-block">
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-playfair font-display text-black leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-center">
-              What’s On My Mind?
+            <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-display text-black leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-left">
+              <span className="relative inline-block">
+                What’s On My Mind?
+                <img
+                  src="/motif.webp"
+                  alt="feather"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none z-0"
+                />
+              </span>
             </h1>
-            <img
-              src="/motif.webp"
-              alt="feather"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none" />
+
           </div>
 
 
@@ -156,7 +159,7 @@ const ReaderThoughts = () => {
                 <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="text-black-800 leading-relaxed whitespace-pre-line font-figtree text-[20px] ">
+                <p className="leading-snug lg:leading-normal whitespace-pre-line font-figtree font-regular text-black-900 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] ">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>
@@ -167,20 +170,20 @@ const ReaderThoughts = () => {
           {/* Navigation Buttons */}
           <div className="flex items-center justify-start gap-6 pt-6 mt-8 z-10">
             <button
-        onClick={handlePrev}
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
-      >
-        <FiChevronLeft size={20} />
-      </button>
+              onClick={handlePrev}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+            >
+              <FiChevronLeft size={20} />
+            </button>
 
-      <button
-        onClick={handleNext}
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
-      >
-        <FiChevronRight size={20} />
-      </button>
+            <button
+              onClick={handleNext}
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+            >
+              <FiChevronRight size={20} />
+            </button>
 
-            <span className="text-gray-700 text-sm font-figtree">
+            <span className="text-gray-700 text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[25px] font-figtree">
               {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
                 2,
                 "0"

@@ -50,13 +50,13 @@ const ReadersFeedback = () => {
       <div className="w-full max-w-8xl mx-auto px-6 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-tight mb-2 mt-0">
+          <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-playfair leading-tight mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
           />
         </div>
 
@@ -66,41 +66,41 @@ const ReadersFeedback = () => {
             <div key={fb.id} className="space-y-4">
               {/* Avatar + Name */}
               <div className="flex items-center gap-3">
-                <div className="w-14 h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center ">
                   <img
                     src="/readers.webp"
                     alt={fb.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="italic text-[25px] font-regular text-black-900 font-figtree break-words">
+                <span className="italic text-[20px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[25px] font-regular text-black-900 font-figtree break-words">
                   {fb.name}
                 </span>
               </div>
 
               {/* Feedback Text */}
-              <p className="font-figtree text-[20px] text-black-700">{fb.text}</p>
+              <p className="font-figtree text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black-700">{fb.text}</p>
             </div>
           ))}
         </div>
 
         {/* Controls */}
-        <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree">
+        <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
           <button
             onClick={handlePrev}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
           >
             <FiChevronLeft size={20} />
           </button>
 
           <button
             onClick={handleNext}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-black text-black hover:border-[#8c2f24] hover:text-[#8c2f24]"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
           >
             <FiChevronRight size={20} />
           </button>
 
-          <span className="text-gray-700 text-sm font-medium select-none">
+          <span className="text-gray-700 text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[25px] font-medium select-none">
             {String(currentPage).padStart(2, "0")} /{" "}
             {String(totalPages).padStart(2, "0")}
           </span>

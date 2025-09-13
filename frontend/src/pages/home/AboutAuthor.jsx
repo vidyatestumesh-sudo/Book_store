@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const SectionHeading = ({ children }) => (
   <div className="relative inline-block mb-8">
-    <h1 className="text-[26px] sm:text-[36px] md:text-[50px] font-playfair text-black leading-snug ">{children}</h1>
+    <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black leading-tight ">{children}</h1>
     <img
       src="/motif.webp"
       alt="Feather motif decoration"
@@ -24,10 +24,10 @@ const AboutAuthor = () => {
         <div className="flex-1 px-2 md:px-5 ps-5">
           <SectionHeading>About Author</SectionHeading>
 
-          <p className="text-base leading-relaxed font-figtree font-normal mb-4 !text-[25px]">
+          <p className="text-base leading-relaxed font-figtree font-regular-700 mb-4 text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
             This is me in the given picture. You and I are one.
           </p>
-          <p className="italic text-base leading-relaxed font-figtree font-normal !text-[21px] text-black/80">
+          <p className="italic text-base leading-relaxed font-figtree font-normal text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black/80">
             At a very young age Anil Kumar sensed conflict, physical, social and
             psychological, both inside and around him, and discovered a secret
             ally which he calls Nature that has always given him the strength to
@@ -49,20 +49,20 @@ const AboutAuthor = () => {
       <article className="flex flex-col lg:flex-row items-center lg:items-start gap-8 px-4 md:px-0">
 
   {/* Left Image */}
-  <figure className="w-full lg:w-1/2 rounded-lg overflow-hidden">
+  <figure className="w-full lg:w-1/2 rounded-lg object-cover overflow-hidden">
     <img
       src="/anils-working-creed.webp"
       alt="Illustration of Anil Kumar's working creed"
-      className="w-full h-64 object-cover"
+      className="w-full h-64 sm:w-min-[200px]"
       loading="lazy"
     />
   </figure>
 
   {/* Right Text */}
-  <div className="w-full lg:w-1/2 text-left px-2 md:px-4">
+  <div className="w-full lg:w-1/2 text-left px-2 md:px-4 ">
     <SectionHeading showMotif={false}>Anil's Working Creed</SectionHeading>
 
-    <p className="text-black/80 mb-4 text-base leading-relaxed font-figtree !text-[21px]">
+    <p className="text-black/80 mb-4 text-base leading-relaxed font-figtree text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
       The following words are my statement of beliefs that I seek to hold as my constant companion.
     </p>
 
@@ -70,8 +70,8 @@ const AboutAuthor = () => {
       to="/aboutauthorpage"
       className="group inline-block text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
     >
-      <span className="text-black !text-[18px]">Read More</span>
-      <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-200 group-hover:translate-x-[5px] text-[21px]">
+      <span className="text-black text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">Read More</span>
+      <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-200 group-hover:translate-x-[5px] text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
         →
       </span>
     </Link>
