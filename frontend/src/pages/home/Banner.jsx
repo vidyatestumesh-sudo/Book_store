@@ -27,7 +27,7 @@ const Banner = () => {
 
         {/* Title Section */}
         <div className="relative inline-block text-center">
-          <h1 className="text-[22px] sm:text-[30px] md:text-[50px] font-playfair text-black leading-tight mt-4 mb-4 sm:mb-6">
+          <h1 className="text-[22px] sm:text-[34px] md:text-[50px] font-playfair text-black leading-tight mt-4 mb-4 sm:mb-6">
             Langshott Leadership Foundation
           </h1>
           <img
@@ -46,11 +46,36 @@ const Banner = () => {
           for inspiration and enlightenment.
         </p>
 
+        {/* Stars Divider */}
+        <div className="flex justify-center gap-2 text-gray-600 mb-0 font-bellmt">
+          {/* Always visible (first 5 stars → mobile baseline) */}
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+          <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
+
+          {/* Extra 2 stars → show from md (tablet) */}
+          <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
+          <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
+          <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
+
+          {/* Extra 3 stars → show from lg (desktop) */}
+          <span className="hidden lg:inline text-4xl">*</span>
+          <span className="hidden lg:inline text-4xl">*</span>
+          <span className="hidden lg:inline text-4xl">*</span>
+          <span className="hidden lg:inline text-4xl">*</span>
+          <span className="hidden lg:inline text-4xl">*</span>
+          <span className="hidden lg:inline text-4xl">*</span>
+        </div>
+
         {/* Highlighted Quote */}
         <p className="text-[18px] sm:text-[22px] md:text-[25px] lg:text-[28px] xl:text-[30px] text-[#8c2f2f] italic px-4 sm:px-10 font-regular text-center leading-snug">
           "The solutions you’re searching for are within you; we can only help you
           to get there."
         </p>
+
 
       </div>
     </div>
