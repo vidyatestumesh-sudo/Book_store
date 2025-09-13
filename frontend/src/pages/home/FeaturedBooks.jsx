@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -12,18 +12,18 @@ const FeaturedBooks = () => {
 
   const [startIndex, setStartIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const scrollContainerRef = useRef(null);
 
   const handleAddToCart = (book) => {
     dispatch(addToCart(book));
   };
 
-  // 🔹 Update view settings based on screen width
   useEffect(() => {
     const updateView = () => {
       const width = window.innerWidth;
-
-      setIsDesktop(width > 1024);
+      setWindowWidth(width);
 
       if (width >= 1440) {
         setItemsPerView(4);
@@ -41,23 +41,47 @@ const FeaturedBooks = () => {
     return () => window.removeEventListener("resize", updateView);
   }, []);
 
-  // 🔹 Clamp startIndex to avoid overflow
   useEffect(() => {
     if (startIndex + itemsPerView > books.length) {
       setStartIndex(Math.max(books.length - itemsPerView, 0));
     }
   }, [books.length, itemsPerView, startIndex]);
 
+  // Scroll width of one book card (including padding/margin)
+  const getScrollAmount = () => {
+    if (!scrollContainerRef.current) return 0;
+    const container = scrollContainerRef.current;
+    const firstBook = container.querySelector("div > div > div");
+    if (!firstBook) return 0;
+    return firstBook.offsetWidth + 16; // 16px = 8px padding left + 8px right (adjust if needed)
+  };
+
   const handleNext = () => {
-    if (startIndex + itemsPerView < books.length) {
-      setStartIndex((prev) =>
-        Math.min(prev + 1, books.length - itemsPerView)
-      );
+    if (windowWidth > 1024) {
+      // Desktop: slide by changing startIndex
+      if (startIndex + itemsPerView < books.length) {
+        setStartIndex((prev) => Math.min(prev + 1, books.length - itemsPerView));
+      }
+    } else {
+      // Mobile: scroll container by one item
+      if (scrollContainerRef.current) {
+        const scrollAmount = getScrollAmount();
+        scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
     }
   };
 
   const handlePrev = () => {
-    setStartIndex((prev) => Math.max(prev - 1, 0));
+    if (windowWidth > 1024) {
+      // Desktop: slide by changing startIndex
+      setStartIndex((prev) => Math.max(prev - 1, 0));
+    } else {
+      // Mobile: scroll container by one item left
+      if (scrollContainerRef.current) {
+        const scrollAmount = getScrollAmount();
+        scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      }
+    }
   };
 
   return (
@@ -76,28 +100,35 @@ const FeaturedBooks = () => {
 
       {/* Slider Container */}
       <div className="relative w-full flex items-center mt-8">
-        {/* Left Arrow (Desktop Only) */}
-        {isDesktop && startIndex > 0 && (
-          <button
-            onClick={handlePrev}
-            className="absolute left-0 -translate-y-1/2 z-10 text-gray-900 opacity-70 hover:opacity-100 transition translate-x-[-30%] sm:translate-x-[-50%] md:translate-x-[-40%] lg:translate-x-[-30%] xl:translate-x-[-50%] 2xl:translate-x-[-90%]"
-            style={{ top: "220px", touchAction: "manipulation" }}
-            aria-label="Previous books"
-          >
-            <FiChevronLeft size={80} />
-          </button>
-        )}
+        {/* Left Arrow */}
+        <button
+          onClick={handlePrev}
+          disabled={windowWidth > 1024 ? startIndex === 0 : false} // disable on desktop if at start
+          className={`absolute left-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
+            -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] ${
+              windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
+            }`}
+          style={{
+            top: windowWidth > 1024 ? "220px" : "50%",
+            touchAction: "manipulation",
+            transform: windowWidth <= 1024 ? "translateY(-50%)" : undefined,
+          }}
+          aria-label="Previous books"
+        >
+          <FiChevronLeft size={windowWidth > 1024 ? 80 : 40} />
+        </button>
 
         {/* Slider Track */}
         <div
-          className={`w-full ${isDesktop ? "overflow-hidden" : "overflow-x-auto"} px-2 sm:px-4`}
+          ref={scrollContainerRef}
+          className={`w-full ${windowWidth > 1024 ? "overflow-hidden" : "overflow-x-auto scrollbar-hide"} px-2 sm:px-4`}
+          style={windowWidth <= 1024 ? { scrollPaddingLeft: "50px", scrollPaddingRight: "50px" } : {}}
         >
           <div
-            className={`flex ${isDesktop ? "transition-transform duration-700 ease-in-out" : ""}`}
+            className={`flex ${windowWidth > 1024 ? "transition-transform duration-700 ease-in-out" : ""}`}
             style={{
-              transform: isDesktop
-                ? `translateX(-${(startIndex * 100) / itemsPerView}%)`
-                : "none",
+              transform:
+                windowWidth > 1024 ? `translateX(-${(startIndex * 100) / itemsPerView}%)` : "none",
             }}
           >
             {books.map((book, index) => (
@@ -123,7 +154,7 @@ const FeaturedBooks = () => {
                         className="object-cover w-full h-full z-0"
                       />
                       {/* Hover overlay (Desktop Only) */}
-                      {isDesktop && (
+                      {windowWidth > 1024 && (
                         <div
                           className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
                           style={{
@@ -131,13 +162,11 @@ const FeaturedBooks = () => {
                             transition: "background-color 0.5s ease",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(0,0,0,0.5)";
+                            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
                             e.currentTarget.firstChild.style.opacity = "1";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(0,0,0,0)";
+                            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
                             e.currentTarget.firstChild.style.opacity = "0";
                           }}
                         >
@@ -190,17 +219,25 @@ const FeaturedBooks = () => {
           </div>
         </div>
 
-        {/* Right Arrow (Desktop Only) */}
-        {isDesktop && startIndex + itemsPerView < books.length && (
-          <button
-            onClick={handleNext}
-            className="absolute right-0 -translate-y-1/2 z-10 text-gray-900 opacity-70 hover:opacity-100 transition translate-x-[30%] sm:translate-x-[50%] md:translate-x-[40%] lg:translate-x-[30%] xl:translate-x-[50%] 2xl:translate-x-[90%]"
-            style={{ top: "220px", touchAction: "manipulation" }}
-            aria-label="Next books"
-          >
-            <FiChevronRight size={80} />
-          </button>
-        )}
+        {/* Right Arrow */}
+        <button
+          onClick={handleNext}
+          disabled={windowWidth > 1024 ? startIndex + itemsPerView >= books.length : false} // disable on desktop if at end
+          className={`absolute right-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
+            -translate-y-1/2 translate-x-[20%] sm:translate-x-[40%] ${
+              windowWidth > 1024 && startIndex + itemsPerView >= books.length
+                ? "opacity-30 cursor-not-allowed"
+                : ""
+            }`}
+          style={{
+            top: windowWidth > 1024 ? "220px" : "50%",
+            touchAction: "manipulation",
+            transform: windowWidth <= 1024 ? "translateY(-50%)" : undefined,
+          }}
+          aria-label="Next books"
+        >
+          <FiChevronRight size={windowWidth > 1024 ? 80 : 40} />
+        </button>
       </div>
     </div>
   );
