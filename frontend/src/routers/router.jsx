@@ -18,6 +18,7 @@ import UpdateBook from "../pages/dashboard/EditBook/UpdateBook";
 import UserDashboard from "../pages/dashboard/users/UserDashboard";
 import AboutAuthorPage from "../pages/AboutAuthorPage/AboutAuthorPage";
 import BlogsPage from "../pages/home/BlogsPage";
+import Publications from "../pages/publications/Publications";
 
 const router = createBrowserRouter([
     {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
         path: "/blogs", 
         element: <BlogsPage />,
       },
+      {
+        path: "/publications", 
+        element: <Publications />,
+      }
         
       ]
     },

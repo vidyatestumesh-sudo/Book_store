@@ -85,7 +85,7 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-16 text-center flex flex-col justify-center items-center px-4">
+    <div className="max-w-7xl mx-auto py-4 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
         <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug mb-7 mt-8">
