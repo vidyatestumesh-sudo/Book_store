@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BACKEND_BASE_URL = 'http://localhost:5000'; // change if deployed
+const BACKEND_BASE_URL = 'https://bookstore-backend-hshq.onrender.com';
 
 const ManageLetters = () => {
   const [title, setTitle] = useState('');
