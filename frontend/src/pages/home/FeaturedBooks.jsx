@@ -85,10 +85,10 @@ const FeaturedBooks = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-4 text-center flex flex-col justify-center items-center px-4">
+    <div className="max-w-7xl mx-auto py-2 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug mb-7 mt-8">
+        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
           Featured Books
         </h1>
         <img
@@ -169,7 +169,7 @@ const FeaturedBooks = () => {
                           }}
                         >
                           <span
-                            className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer"
+                            className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer "
                             style={{
                               opacity: 0,
                               transition: "opacity 0.5s ease",

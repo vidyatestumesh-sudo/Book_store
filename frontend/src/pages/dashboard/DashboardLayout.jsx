@@ -90,7 +90,7 @@ const DashboardLayout = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h9l7 7v9a2 2 0 01-2 2z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-8H7v8" />
               </svg>
-              <span className="hidden sm:inline">Add Blogs</span>
+              <span className="hidden sm:inline">Add/manage Blogs</span>
             </Link>
 
             {/* Letter from Langshott */}

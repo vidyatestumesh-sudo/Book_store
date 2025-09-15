@@ -27,7 +27,7 @@ const Banner = () => {
 
         {/* Title Section */}
         <div className="relative inline-block text-center">
-          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black leading-tight mt-4 mb-4 sm:mb-6">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mt-4 mb-4 sm:mb-6">
             Langshott Leadership Foundation
           </h1>
           <img
@@ -38,7 +38,7 @@ const Banner = () => {
         </div>
 
         {/* Description */}
-        <p className="text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal mt-2 lg:mt-4 mb-6 font-regular px-2 sm:px-2 text-center">
+        <p className="text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] mt-2 lg:mt-4 mb-3 px-2 sm:px-2 text-center">
           Welcome to Langshott Leadership Foundation, a charitable organisation
           and provider of mentorship and guidance in personal leadership through
           seminars, workshops, talks, books, inspirational collections, blogs, and
@@ -71,9 +71,8 @@ const Banner = () => {
         </div>
 
         {/* Highlighted Quote */}
-        <p className="text-[18px] sm:text-[22px] md:text-[25px] lg:text-[28px] xl:text-[30px] text-[#8c2f2f] italic px-4 sm:px-10 font-regular text-center leading-snug">
-          "The solutions you’re searching for are within you; we can only help you
-          to get there."
+        <p className="text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight text-[#8c2f2f] italic lg:leading-[1.3] px-4 sm:px-10 text-center">
+          "The solutions you’re searching for are within you; we can only help you to get there."
         </p>
 
 

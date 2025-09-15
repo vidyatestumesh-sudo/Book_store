@@ -47,10 +47,10 @@ const ReadersFeedback = () => {
 
   return (
     <div className="bg-white font-playfair mt-0 mb-6">
-      <div className="w-full max-w-8xl mx-auto px-6 pb-5">
+      <div className="w-full max-w-8xl mx-auto px-4 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-playfair leading-tight mb-2 mt-0">
+          <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
@@ -61,7 +61,7 @@ const ReadersFeedback = () => {
         </div>
 
         {/* Feedback Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left mt-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-10">
           {feedbacks.slice(currentIndex, currentIndex + itemsPerPage).map((fb) => (
             <div key={fb.id} className="space-y-4">
               {/* Avatar + Name */}
@@ -73,13 +73,13 @@ const ReadersFeedback = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="italic text-[20px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[25px] font-regular text-black-900 font-figtree break-words">
+                <span className="italic text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] font-Figtree font-regular leading-snug leading-tight text-black-900 font-figtree break-words">
                   {fb.name}
                 </span>
               </div>
 
               {/* Feedback Text */}
-              <p className="font-figtree text-left text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black-700">{fb.text}</p>
+              <p className="text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">{fb.text}</p>
             </div>
           ))}
         </div>
@@ -95,12 +95,12 @@ const ReadersFeedback = () => {
 
           <button
             onClick={handleNext}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
           >
             <FiChevronRight size={20} />
           </button>
 
-          <span className="text-gray-700 text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[25px] font-medium select-none">
+          <span className="text-gray-700 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[22px] font-Figtree font-regular leading-snug leading-tigh font-figtree">
             {String(currentPage).padStart(2, "0")} /{" "}
             {String(totalPages).padStart(2, "0")}
           </span>

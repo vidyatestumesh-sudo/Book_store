@@ -135,7 +135,7 @@ const ReaderThoughts = () => {
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           <div className="relative inline-block">
-            <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-display text-black leading-snug mb-6 sm:mb-8 mt-4 sm:mt-8 text-left">
+            <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-6 sm:mb-8 mt-4 sm:mt-8 text-left">
               <span className="relative inline-block">
                 What’s On My Mind?
                 <img
@@ -159,7 +159,7 @@ const ReaderThoughts = () => {
                 <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="leading-snug lg:leading-normal whitespace-pre-line text-left font-figtree font-regular text-black-900 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] ">
+                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] ">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>
@@ -183,7 +183,7 @@ const ReaderThoughts = () => {
               <FiChevronRight size={20} />
             </button>
 
-            <span className="text-gray-700 text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[25px] font-figtree">
+            <span className="text-gray-700 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[22px] font-Figtree font-regular leading-snug leading-tigh font-figtree">
               {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
                 2,
                 "0"

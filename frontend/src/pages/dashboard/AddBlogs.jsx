@@ -16,6 +16,7 @@ const AddBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
   const token = localStorage.getItem("adminToken");
 
@@ -73,6 +74,7 @@ const AddBlogs = () => {
         });
         reset();
         setEditingId(null);
+        setShowForm(false);
         fetchBlogs();
       } else {
         Swal.fire("Error", result.message || "Something went wrong", "error");
@@ -90,6 +92,7 @@ const AddBlogs = () => {
     setEditingId(blog._id);
     setValue("title", blog.title);
     setValue("description", blog.description);
+    setShowForm(true);
   };
 
   // Delete blog
@@ -135,11 +138,11 @@ const AddBlogs = () => {
   const BlogDescription = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
     const words = text.split(" ");
-    const isLong = words.length > 50;
+    const isLong = words.length > 40;
 
     return (
       <p className="text-gray-700 leading-relaxed">
-        {expanded || !isLong ? text : words.slice(0, 50).join(" ") + "..."}
+        {expanded || !isLong ? text : words.slice(0, 40).join(" ") + "..."}
         {isLong && (
           <button
             className="ml-2 text-blue-500 font-medium hover:underline"
@@ -153,89 +156,103 @@ const AddBlogs = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      {/* Add/Edit Form */}
-      <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10">
-        <h2 className="text-3xl font-extrabold mb-6 text-blue-800">
-          {editingId ? "✏️ Edit Blog" : "📝 Add New Blog"}
-        </h2>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          encType="multipart/form-data"
-          className="space-y-5"
+    <div className="max-w-7xl mx-auto p-6">
+      {/* Header with Add Blog button */}
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-800">📚 Blogs</h2>
+        <button
+          onClick={() => {
+            setShowForm(!showForm);
+            if (!showForm) reset();
+            setEditingId(null);
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
         >
-          <div>
-            <label className="block font-semibold mb-1 text-gray-800">
-              Title
-            </label>
-            <input
-              type="text"
-              placeholder="Enter blog title"
-              {...register("title", { required: "Title is required" })}
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-gray-800">
-              Description
-            </label>
-            <textarea
-              placeholder="Enter blog description"
-              {...register("description", { required: "Description is required" })}
-              rows={5}
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-gray-800">
-              Image (optional)
-            </label>
-            <input
-              type="file"
-              {...register("image")}
-              className="w-full border rounded-lg px-4 py-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
-          >
-            {isLoading
-              ? editingId
-                ? "Updating..."
-                : "Adding..."
-              : editingId
-              ? "Update Blog"
-              : "Add Blog"}
-          </button>
-        </form>
+          {showForm ? "Close Form ✖️" : "➕ Add Blog"}
+        </button>
       </div>
 
+      {/* Add/Edit Form (toggle) */}
+      {showForm && (
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 transition-all duration-500">
+          <h2 className="text-2xl font-extrabold mb-6 text-blue-800">
+            {editingId ? "✏️ Edit Blog" : "📝 Add New Blog"}
+          </h2>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            encType="multipart/form-data"
+            className="space-y-5"
+          >
+            <div>
+              <label className="block font-semibold mb-1 text-gray-800">
+                Title
+              </label>
+              <input
+                type="text"
+                placeholder="Enter blog title"
+                {...register("title", { required: "Title is required" })}
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1 text-gray-800">
+                Description
+              </label>
+              <textarea
+                placeholder="Enter blog description"
+                {...register("description", { required: "Description is required" })}
+                rows={5}
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1 text-gray-800">
+                Image (optional)
+              </label>
+              <input
+                type="file"
+                {...register("image")}
+                className="w-full border rounded-lg px-4 py-2"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+            >
+              {isLoading
+                ? editingId
+                  ? "Updating..."
+                  : "Adding..."
+                : editingId
+                ? "Update Blog"
+                : "Add Blog"}
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Blogs List */}
-      <h2 className="text-3xl font-extrabold mb-6 text-gray-800">📚 All Blogs</h2>
-      <div className="space-y-8">
+      <div className="space-y-10">
         {blogs.length ? (
           blogs.map((blog, index) => (
             <div
               key={blog._id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden"
+              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 overflow-hidden"
             >
               <div
                 className={`flex flex-col md:flex-row ${
-                  index % 2 === 0
-                    ? "md:flex-row"
-                    : "md:flex-row-reverse"
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
                 {/* Blog Image */}
@@ -244,13 +261,13 @@ const AddBlogs = () => {
                     <img
                       src={`http://localhost:5000${blog.image}`}
                       alt={blog.title}
-                      className="w-full h-72 object-cover md:h-full"
+                      className="w-full h-60 object-cover md:h-60 transition-transform duration-500 hover:scale-105"
                     />
                   </div>
                 )}
 
                 {/* Blog Content */}
-                <div className="md:w-1/2 p-6 flex flex-col justify-between">
+                <div className="md:w-1/2 p-8 flex flex-col justify-between">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-3">
                       {blog.title}

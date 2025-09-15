@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 require('dotenv').config();
 const path = require('path');
+const fs = require('fs'); // ✅ for file system operations
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
@@ -22,7 +23,19 @@ app.use(cors({
     credentials: true
 }));
 
+<<<<<<< Updated upstream
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+=======
+// ✅ Ensure uploads folder exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  console.log("Uploads folder created ✅");
+}
+
+// ✅ Serve uploaded images
+app.use('/uploads', express.static(uploadsDir));
+>>>>>>> Stashed changes
 
 // Routes
 const bookRoutes = require('./src/books/book.route');

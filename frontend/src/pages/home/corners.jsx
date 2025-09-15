@@ -91,8 +91,8 @@ const Corners = () => {
   };
 
   return (
-    <section className="bg-white py-16 px-6 font-figtree font-light">
-      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[60px]">
+    <section className="bg-white py-16 px-0 font-figtree font-light">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[80px]">
         {corners.map((corner, index) => {
           const slide = corner.slides[slideIndexes[index]];
 
@@ -136,7 +136,7 @@ const Corners = () => {
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     {/* Title */}
                     <div className="relative text-center">
-                      <h3 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair leading-tight mt-3 mb-3">
+                      <h3 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-tight mt-3 mb-3">
                         {corner.title}
                       </h3>
                       <img
@@ -168,11 +168,11 @@ const Corners = () => {
 
                     {/* Text */}
                     <div>
-                      <p className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-relaxed whitespace-pre-line font-light text-center m-2 mx-4 leading-snug lg:leading-normal">
+                      <p className="text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] leading-relaxed whitespace-pre-line text-center m-2 mx-4 ">
                         {slide.text}
                       </p>
                       {slide.author && (
-                        <p className="mt-4 italic text-right text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-light px-5">
+                        <p className="mt-4 italic text-right text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] font-light px-5">
                           – {slide.author}
                         </p>
                       )}
@@ -184,9 +184,9 @@ const Corners = () => {
                     {corner.readMoreUrl ? (
                       <a
                         href={corner.readMoreUrl}
-                        className="inline-flex items-center gap-1 no-underline text-white text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] font-light hover:underline"
+                        className="inline-flex items-center gap-1 !no-underline text-white text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline"
                       >
-                        Read More <span className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px]">→</span>
+                        Read More <span className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px]">→</span>
                       </a>
                     ) : (
                       <span></span>
