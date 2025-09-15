@@ -8,12 +8,15 @@ const port = process.env.PORT || 5000;
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs'); // ✅ for file system operations
+<<<<<<< Updated upstream
 
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+=======
+>>>>>>> Stashed changes
 
 app.use(express.json());
 app.use(cors({
@@ -25,8 +28,20 @@ app.use(cors({
     credentials: true
 }));
 
+<<<<<<< Updated upstream
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+=======
+// ✅ Ensure uploads folder exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  console.log("Uploads folder created ✅");
+}
+
+// ✅ Serve uploaded images
+app.use('/uploads', express.static(uploadsDir));
+>>>>>>> Stashed changes
 
 // ✅ Ensure uploads folder exists
 const uploadsDir = path.join(__dirname, 'uploads');
