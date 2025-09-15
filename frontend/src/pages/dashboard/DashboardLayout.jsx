@@ -101,8 +101,8 @@ const DashboardLayout = () => {
 
             {/* Letter from Langshott */}
             <Link
-              to="/dashboard/letter-from-langgshott"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/letter-from-langgshott')
+              to="/dashboard/manage-letters"
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/manage-letters')
                 ? 'bg-purple-600 text-white'
                 : 'hover:bg-purple-600 text-gray-300 hover:text-white'
                 }`}
@@ -120,7 +120,7 @@ const DashboardLayout = () => {
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <span className="hidden sm:inline">Letter from Langshott</span>
+              <span className="hidden sm:inline">Manage Langshott Letters</span>
             </Link>
           </nav>
 
