@@ -1,4 +1,4 @@
-import {createBrowserRouter} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/home/Home";
 import Login from "../components/Login";
@@ -19,93 +19,97 @@ import UserDashboard from "../pages/dashboard/users/UserDashboard";
 import AboutAuthorPage from "../pages/AboutAuthorPage/AboutAuthorPage";
 import BlogsPage from "../pages/home/BlogsPage";
 import Publications from "../pages/publications/Publications";
+import LetterFromLangshott from "../pages/letters/letter-from-langshott";
 
 const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <App/>,
-      children: [
-        {
-            path: "/",
-            element: <Home/>,
-        },
-        {
-            path: "/orders",
-            element: <PrivateRoute><OrderPage/></PrivateRoute>
-        },
-        {
-            path: "/aboutauthorpage",
-            element: <AboutAuthorPage/>,
-        },
-        {
-          path: "/login",
-          element: <Login/>
-        },
-        {
-          path: "/register",
-          element: <Register/>
-        },
-        {
-          path: "/cart",
-          element: <CartPage/>
-        },
-        {
-          path: "/checkout",
-          element: <PrivateRoute><CheckoutPage/></PrivateRoute>
-        },
-        {
-          path: "/books/:id",
-          element: <SingleBook/>
-        },
-        {
-          path: "/user-dashboard",
-          element: <PrivateRoute><UserDashboard/></PrivateRoute>
-        },
-         {
-        path: "/blogs", 
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/orders",
+        element: <PrivateRoute><OrderPage /></PrivateRoute>
+      },
+      {
+        path: "/aboutauthorpage",
+        element: <AboutAuthorPage />,
+      },
+      {
+        path: "/login",
+        element: <Login />
+      },
+      {
+        path: "/register",
+        element: <Register />
+      },
+      {
+        path: "/cart",
+        element: <CartPage />
+      },
+      {
+        path: "/checkout",
+        element: <PrivateRoute><CheckoutPage /></PrivateRoute>
+      },
+      {
+        path: "/books/:id",
+        element: <SingleBook />
+      },
+      {
+        path: "/user-dashboard",
+        element: <PrivateRoute><UserDashboard /></PrivateRoute>
+      },
+      {
+        path: "/blogs",
         element: <BlogsPage />,
       },
       {
-        path: "/publications", 
+        path: "/publications",
         element: <Publications />,
+      },
+      {
+        path: "/letters",
+        element: <LetterFromLangshott />
+      },
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminLogin />
+  },
+  {
+    path: "/dashboard",
+    element: <AdminRoute>
+      <DashboardLayout />
+    </AdminRoute>,
+    children: [
+      {
+        path: "",
+        element: <AdminRoute><Dashboard /></AdminRoute>
+      },
+      {
+        path: "add-new-book",
+        element: <AdminRoute>
+          <AddBook />
+        </AdminRoute>
+      },
+      {
+        path: "edit-book/:id",
+        element: <AdminRoute>
+          <UpdateBook />
+        </AdminRoute>
+      },
+      {
+        path: "manage-books",
+        element: <AdminRoute>
+          <ManageBooks />
+        </AdminRoute>
       }
-        
-      ]
-    },
-    {
-      path: "/admin",
-      element: <AdminLogin/>
-    },
-    {
-      path: "/dashboard",
-      element: <AdminRoute>
-        <DashboardLayout/>
-      </AdminRoute>,
-      children:[
-        {
-          path: "",
-          element: <AdminRoute><Dashboard/></AdminRoute>
-        },
-        {
-          path: "add-new-book",
-          element: <AdminRoute>
-            <AddBook/>
-          </AdminRoute>
-        },
-        {
-          path: "edit-book/:id",
-          element: <AdminRoute>
-            <UpdateBook/>
-          </AdminRoute>
-        },
-        {
-          path: "manage-books",
-          element: <AdminRoute>
-            <ManageBooks/>
-          </AdminRoute>
-        }
-      ]
-    }
-  ]);
+    ]
+  }
+]);
 
-  export default router;
+export default router;

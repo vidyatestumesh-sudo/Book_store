@@ -185,7 +185,7 @@ const Navbar = () => {
                   <Link to="/blogs">BLOGS</Link>
                 </li>
                 <li>
-                  <Link to="/letter">LETTER FROM LANGSHOTT</Link>
+                  <Link to="/letters">LETTER FROM LANGSHOTT</Link>
                 </li>
               </ul>
             </div>
