@@ -79,7 +79,7 @@ const ReadersFeedback = () => {
               </div>
 
               {/* Feedback Text */}
-              <p className="font-figtree text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black-700">{fb.text}</p>
+              <p className="font-figtree text-left text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black-700">{fb.text}</p>
             </div>
           ))}
         </div>

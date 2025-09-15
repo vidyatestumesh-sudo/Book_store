@@ -27,7 +27,7 @@ const AboutAuthor = () => {
           <p className="text-base leading-relaxed font-figtree font-regular-700 mb-4 text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
             This is me in the given picture. You and I are one.
           </p>
-          <p className="italic text-base leading-relaxed font-figtree font-normal text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black/80">
+          <p className="italic text-base leading-relaxed font-figtree font-normal text-left text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal text-black/80">
             At a very young age Anil Kumar sensed conflict, physical, social and
             psychological, both inside and around him, and discovered a secret
             ally which he calls Nature that has always given him the strength to
