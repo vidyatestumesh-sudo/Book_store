@@ -9,10 +9,13 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs'); // ✅ for file system operations
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(express.static(path.join(__dirname, 'public')));
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -28,8 +31,11 @@ app.use(cors({
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 // ✅ Ensure uploads folder exists
@@ -42,6 +48,9 @@ if (!fs.existsSync(uploadsDir)) {
 // ✅ Serve uploaded images
 app.use('/uploads', express.static(uploadsDir));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
