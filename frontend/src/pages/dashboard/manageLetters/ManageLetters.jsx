@@ -39,6 +39,7 @@ const ManageLetters = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('Letter uploaded successfully!');
+      window.location.reload();
       setTitle('');
       setFile(null);
       fetchLetters(); // reload list
@@ -99,7 +100,13 @@ const ManageLetters = () => {
             style={{ marginBottom: '1rem' }}
           />
         </div>
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>Upload</button>
+        <button type="submit" style={{
+    padding: '0.5rem 1rem',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    backgroundColor: '#f5f5f5',
+    cursor: 'pointer'
+  }}>Upload</button>
       </form>
 
       <h3>Uploaded Letters</h3>

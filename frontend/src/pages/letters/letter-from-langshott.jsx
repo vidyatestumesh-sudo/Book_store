@@ -117,6 +117,7 @@ const LetterFromLangshott = () => {
                     href={fullFileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    type="application/pdf"
                     className="inline-flex items-center justify-center gap-2 text-[#3366cc] font-semibold hover:underline"
                     title="View PDF"
                   >

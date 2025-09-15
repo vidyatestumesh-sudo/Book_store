@@ -9,10 +9,17 @@ const router = express.Router();
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: 'letters',
-    resource_type: 'raw',
-    allowed_formats: ['pdf'],
+  params: async (req, file) => {
+    const title = req.body.title || file.originalname;
+    const safeFileName = title.trim().replace(/\s+/g, '_').toLowerCase();
+
+    return {
+      folder: 'letters',
+      resource_type: 'raw',
+      format: 'pdf', // Enforce .pdf format
+      public_id: safeFileName, // e.g., "my_letter"
+      allowed_formats: ['pdf'],
+    };
   },
 });
 
@@ -25,7 +32,16 @@ router.get('/', getAllLetters);
 router.put('/:id', async (req, res) => {
   try {
     const { title } = req.body;
-    const updated = await Letter.findByIdAndUpdate(req.params.id, { title }, { new: true });
+    if (!title) return res.status(400).json({ message: 'Title is required' });
+
+    const updated = await Letter.findByIdAndUpdate(
+      req.params.id,
+      { title },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: 'Letter not found' });
+
     res.status(200).json(updated);
   } catch (error) {
     console.error("Error updating letter:", error);
@@ -38,8 +54,13 @@ router.delete('/:id', async (req, res) => {
     const letter = await Letter.findById(req.params.id);
     if (!letter) return res.status(404).json({ message: 'Letter not found' });
 
-    const publicId = letter.fileUrl.split('/').pop().split('.')[0]; // Extract public ID
-    await cloudinary.uploader.destroy(`letters/${publicId}`, { resource_type: 'raw' });
+    const fileUrlParts = letter.fileUrl.split('/');
+    const fileNameWithExt = fileUrlParts[fileUrlParts.length - 1];
+    const publicId = fileNameWithExt.replace('.pdf', '');
+
+    await cloudinary.uploader.destroy(`letters/${publicId}`, {
+      resource_type: 'raw',
+    });
 
     await Letter.findByIdAndDelete(req.params.id);
 
