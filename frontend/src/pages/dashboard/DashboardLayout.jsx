@@ -21,19 +21,18 @@ const DashboardLayout = () => {
       {/* Sidebar */}
       <aside className="w-20 sm:w-60 bg-gray-800 text-white flex flex-col justify-between py-6 px-3 shadow-lg">
         <div>
-         <Link className="flex items-center justify-center sm:justify-start space-x-2 px-3 mb-10">
-          <img src="/adminprofile.jpg" alt="Logo" className="w-10 h-10 rounded-full" />
-           <span className="hidden sm:inline text-xl font-bold">Admin</span>
-         </Link>
+          <Link className="flex items-center justify-center sm:justify-start space-x-2 px-3 mb-10">
+            <img src="/adminprofile.jpg" alt="Logo" className="w-10 h-10 rounded-full" />
+            <span className="hidden sm:inline text-xl font-bold">Admin</span>
+          </Link>
 
           <nav className="space-y-4">
             <Link
               to="/dashboard"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${
-                isActive('/dashboard')
-                  ? 'bg-purple-600 text-white'
-                  : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-              }`}
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard')
+                ? 'bg-purple-600 text-white'
+                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                }`}
             >
               <svg
                 className="w-6 h-6"
@@ -53,11 +52,10 @@ const DashboardLayout = () => {
 
             <Link
               to="/dashboard/add-new-book"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${
-                isActive('/dashboard/add-new-book')
-                  ? 'bg-purple-600 text-white'
-                  : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-              }`}
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/add-new-book')
+                ? 'bg-purple-600 text-white'
+                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                }`}
             >
               <HiViewGridAdd className="w-6 h-6" />
               <span className="hidden sm:inline">Add Book</span>
@@ -65,16 +63,67 @@ const DashboardLayout = () => {
 
             <Link
               to="/dashboard/manage-books"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${
-                isActive('/dashboard/manage-books')
-                  ? 'bg-purple-600 text-white'
-                  : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-              }`}
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/manage-books')
+                ? 'bg-purple-600 text-white'
+                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                }`}
             >
               <MdOutlineManageHistory className="w-6 h-6" />
               <span className="hidden sm:inline">Manage Books</span>
             </Link>
+
+            {/* Blogs */}
+            <Link
+              to="/dashboard/blogs"
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/blogs')
+                ? 'bg-purple-600 text-white'
+                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                }`}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 20h9" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4h9M4 9h16M4 15h16" />
+              </svg>
+              <span className="hidden sm:inline">Add Blogs</span>
+            </Link>
+
+            {/* Letter from Langshott */}
+            <Link
+              to="/dashboard/letter-from-langgshott"
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/letter-from-langgshott')
+                ? 'bg-purple-600 text-white'
+                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                }`}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+              <span className="hidden sm:inline">Letter from Langshott</span>
+            </Link>
           </nav>
+
         </div>
 
         {/* Logout */}

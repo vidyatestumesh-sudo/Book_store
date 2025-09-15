@@ -105,8 +105,7 @@ const FeaturedBooks = () => {
           onClick={handlePrev}
           disabled={windowWidth > 1024 ? startIndex === 0 : false} // disable on desktop if at start
           className={`absolute left-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
-            -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] ${
-              windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
+            -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] 2xl:translate-x-[-70%] ${windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
             }`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
@@ -134,15 +133,14 @@ const FeaturedBooks = () => {
             {books.map((book, index) => (
               <div
                 key={index}
-                className={`px-2 flex-shrink-0 ${
-                  itemsPerView === 4
-                    ? "w-1/4"
-                    : itemsPerView === 3
+                className={`px-2 flex-shrink-0 ${itemsPerView === 4
+                  ? "w-1/4"
+                  : itemsPerView === 3
                     ? "w-1/3"
                     : itemsPerView === 2
-                    ? "w-1/2"
-                    : "w-full"
-                }`}
+                      ? "w-1/2"
+                      : "w-full"
+                  }`}
               >
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
@@ -222,12 +220,15 @@ const FeaturedBooks = () => {
         {/* Right Arrow */}
         <button
           onClick={handleNext}
-          disabled={windowWidth > 1024 ? startIndex + itemsPerView >= books.length : false} // disable on desktop if at end
+          disabled={
+            windowWidth > 1024
+              ? startIndex + itemsPerView >= books.length
+              : false
+          }
           className={`absolute right-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
-            -translate-y-1/2 translate-x-[20%] sm:translate-x-[40%] ${
-              windowWidth > 1024 && startIndex + itemsPerView >= books.length
-                ? "opacity-30 cursor-not-allowed"
-                : ""
+    -translate-y-1/2 translate-x-[20%] sm:translate-x-[40%] 2xl:translate-x-[70%] ${windowWidth > 1024 && startIndex + itemsPerView >= books.length
+              ? "opacity-30 cursor-not-allowed"
+              : ""
             }`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
@@ -238,6 +239,7 @@ const FeaturedBooks = () => {
         >
           <FiChevronRight size={windowWidth > 1024 ? 80 : 40} />
         </button>
+
       </div>
     </div>
   );

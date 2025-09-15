@@ -8,14 +8,16 @@ const Publications = () => {
 
     return (
         <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
-            <div className="breadcrumb-container w-full text-left mb-0 ml-10">
+            <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-lite">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb m-0 p-0">
                         <li className="breadcrumb-item">
-                            <a href="/">Home</a>
+                            <a href="/" className="text-gray">Home</a>
                         </li>
                         <li className="breadcrumb-item">
-                            <a href="/publications">Publications</a>
+                            <a href="/publications" className="!text-gray-600">
+                                Publications
+                            </a>
                         </li>
                     </ol>
                 </nav>
