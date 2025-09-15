@@ -8,22 +8,12 @@ const port = process.env.PORT || 5000;
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs'); // ✅ for file system operations
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(express.static(path.join(__dirname, 'public')));
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 
 app.use(express.json());
 app.use(cors({
@@ -35,21 +25,9 @@ app.use(cors({
     credentials: true
 }));
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 // ✅ Ensure uploads folder exists
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -59,19 +37,6 @@ if (!fs.existsSync(uploadsDir)) {
 
 // ✅ Serve uploaded images
 app.use('/uploads', express.static(uploadsDir));
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 // Routes
 const bookRoutes = require('./src/books/book.route');
