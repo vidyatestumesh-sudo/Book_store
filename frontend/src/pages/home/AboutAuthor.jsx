@@ -21,7 +21,7 @@ const AboutAuthor = () => {
       <article className="bg-[#e9ebec] rounded-xl p-10 px-4 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-8">
 
         {/* Left Side - Text */}
-        <div className="flex-1 px-2 md:px-5 ps-5">
+        <div className="flex-1 px-2 md:px-2 ps-4">
           <SectionHeading>About Author</SectionHeading>
 
           <p className="text-base leading-relaxed font-figtree font-regular-700 mb-4 text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
@@ -46,7 +46,7 @@ const AboutAuthor = () => {
         </div>
       </article>
 
-      <article className="flex flex-col lg:flex-row items-center lg:items-start gap-8 px-4 md:px-0">
+      <article className="flex flex-col lg:flex-row items-center lg:items-start gap-8 px-2 md:px-0">
 
   {/* Left Image */}
   <figure className="w-full lg:w-1/2 rounded-lg object-cover overflow-hidden">
@@ -59,7 +59,7 @@ const AboutAuthor = () => {
   </figure>
 
   {/* Right Text */}
-  <div className="w-full lg:w-1/2 text-left px-2 md:px-4 ">
+  <div className="w-full lg:w-1/2 text-left px-2 md:px-2 ">
     <SectionHeading showMotif={false}>Anil's Working Creed</SectionHeading>
 
     <p className="text-black/80 mb-4 text-base leading-relaxed font-figtree text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
