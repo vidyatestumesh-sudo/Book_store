@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-// const verifyAdminToken = require('../middleware/verifyAdminToken'); // disabled for testing
+ const verifyAdminToken = require('../middleware/verifyAdminToken'); // disabled for testing
 
 const {
     postABlog,
