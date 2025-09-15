@@ -74,10 +74,10 @@ const DashboardLayout = () => {
 
             {/* Blogs */}
             <Link
-              to="/dashboard/blogs"
+              to="/dashboard/add-blogs"
               className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/blogs')
-                ? 'bg-purple-600 text-white'
-                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
+                  ? 'bg-purple-600 text-white'
+                  : 'hover:bg-purple-600 text-gray-300 hover:text-white'
                 }`}
             >
               <svg
@@ -87,14 +87,8 @@ const DashboardLayout = () => {
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 20h9" />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4h9M4 9h16M4 15h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h9l7 7v9a2 2 0 01-2 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-8H7v8" />
               </svg>
               <span className="hidden sm:inline">Add Blogs</span>
             </Link>

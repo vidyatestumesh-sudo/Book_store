@@ -17,17 +17,19 @@ app.use(cors({
 }));
 
 // Routes
-const bookRoutes = require('./src/books/book.route');
+const bookRoutes = require("./src/books/book.route");
 const orderRoutes = require("./src/orders/order.route");
 const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
 const letterRoutes = require('./src/letters/letter.route');  // <== added
+const blogRoutes = require("./src/blogs/blogRoutes"); // 👈 new import
 
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/letters", letterRoutes);  // <== added
+app.use("/api/blogs", blogRoutes); // 👈 mount blogs API
 
 async function main() {
   await mongoose.connect(process.env.DB_URL);

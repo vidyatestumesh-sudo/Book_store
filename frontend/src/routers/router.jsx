@@ -21,6 +21,7 @@ import BlogsPage from "../pages/home/BlogsPage";
 import Publications from "../pages/publications/Publications";
 import LetterFromLangshott from "../pages/letters/letter-from-langshott";
 import ManageLetters from "../pages/dashboard/manageLetters/ManageLetters";
+import AddBlogs from "../pages/dashboard/AddBlogs";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +113,12 @@ const router = createBrowserRouter([
       {
         path: "manage-letters",
         element: <AdminRoute><ManageLetters /></AdminRoute>
+      },
+      {
+        path: "add-blogs",
+        element: <AdminRoute>
+          <AddBlogs />
+        </AdminRoute>
       }
 
     ]
