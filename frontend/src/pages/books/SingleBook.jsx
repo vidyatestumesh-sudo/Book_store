@@ -8,6 +8,7 @@ import book1 from "../../assets/books/goodbye-mr-patel-1.webp";
 import book2 from "../../assets/books/gentle-breeze-of-daily-wisdom.webp";
 import book3 from "../../assets/books/the-attributes-of-a-virtuous-mindset.webp";
 import book4 from "../../assets/books/master-the-rules-of-manifestation.webp";
+import bookBack from "../../assets/books/back-the-attributes-of-a-virtuous-mindset.webp";
 
 const SingleBook = () => {
   // state for read more
@@ -33,10 +34,19 @@ const SingleBook = () => {
 
       <div className="row book-section">
         {/* Book Image + Buttons */}
-        <div className="col-lg-4 col-md-4 col-sm-12 col-12">
-          <div className="col-lg-12 col-md-12 col-sm-12 col-12">
+        <div className="col-lg-4 col-md-12 col-sm-12 col-12">
+          <div className="col-lg-12 col-md-8 col-sm-8 col-10 book-images">
             <div className="book-image">
-              <img src={bookMain} alt="The Attributes of A Virtuous Mindset" />
+              <div className="book-preview-images">
+                <img src={bookMain} alt="Front View" className="thumb-img" />
+                <img src={bookBack} alt="Back View" className="thumb-img" />
+              </div>
+              <div className="book-main-image">
+                <img
+                  src={bookMain}
+                  alt="The Attributes of A Virtuous Mindset"
+                />
+              </div>
             </div>
             <div className="book-buttons">
               <button className="add-to-cart">ADD TO CART</button>
@@ -64,7 +74,7 @@ const SingleBook = () => {
         </div>
 
         {/* Book Details */}
-        <div className="col-lg-8 col-md-8 col-sm-12 col-12 book-details ">
+        <div className="col-lg-8 col-md-12 col-sm-12 col-12 book-details ">
           <h2>The Attributes of A Virtuous Mindset</h2>
           <div className="price">
             <span className="current-price">₹ 200</span>
@@ -76,8 +86,8 @@ const SingleBook = () => {
             This book will remind you that we are spirit beings masquerading as
             humans. The author believes that the modern man is so caught up in
             making a living that he has no time to truly and deeply think about
-            life — where he’s come from and where he’s heading. His shallow
-            living with murky intentions, self-centeredness, and compulsion to
+            life where he’s come from and where he’s heading. His shallow living
+            with murky intentions, self-centeredness, and compulsion to
             perpetually engage in social networking, so as not to feel isolated,
             leave no time or energy for him to think at a deeper level. The
             result is frustration, confusion, and inner conflict.
@@ -93,7 +103,7 @@ const SingleBook = () => {
                   interact with others, and nurture our own inner peace.
                   <br />
                   By reflecting on these attributes, the reader begins to notice
-                  subtle shifts in perception—conflict transforms into
+                  subtle shifts in perception conflict transforms into
                   understanding, fear gives way to courage, and isolation turns
                   into connection. A virtuous mindset becomes the compass that
                   points us toward a life of meaning and harmony.
@@ -115,26 +125,40 @@ const SingleBook = () => {
           </p>
 
           <div className="book-meta">
-            <p>Author: Anil Kumar</p>
-            <p>Language: English</p>
-            <p>Binding: Paperback</p>
-            <p>Publisher: Langshott Leadership Foundation</p>
-            <p>ISBN: 978-0-9562690-7-0</p>
-            <p>Publishing Date: August 2025</p>
-            <p>Pages: 172</p>
+            <div className="row">
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
+                Author
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
+                Anil Kumar
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
+                Specifications
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
+                <p>Language: English</p>
+                <p>Binding: Paperback</p>
+                <p>Publisher: Langshott Leadership Foundation</p>
+                <p>ISBN: 978-0-9562690-7-0</p>
+                <p>Publishing Date: August 2025</p>
+                <p>Pages: 172</p>
+              </div>
+            </div>
           </div>
 
           <div className="delivery">
-            <label>Delivery</label>
+            <p>Delivery</p>
             <input type="text" placeholder="Enter Delivery Pincode" />
             <button className="check-btn">Check</button>
           </div>
 
           <div className="share">
-            <span>
+            <a>
               <ShareOutlinedIcon className="share-icon" />
               Share
-            </span>
+            </a>
           </div>
         </div>
       </div>
@@ -143,7 +167,7 @@ const SingleBook = () => {
       <div className="recently-viewed">
         <h3>Recently Viewed</h3>
         <div className="row">
-          <div className="col-md-3 col-6">
+          <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="rv-card">
               <img src={book1} alt="Book" />
               <h4>Good-bye, Mr Patel 1 – The Sequel</h4>
@@ -154,7 +178,7 @@ const SingleBook = () => {
               </p>
             </div>
           </div>
-          <div className="col-md-3 col-6">
+          <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="rv-card">
               <img src={book2} alt="Book" />
               <h4>Gentle Breeze of Daily Wisdom</h4>
@@ -165,7 +189,7 @@ const SingleBook = () => {
               </p>
             </div>
           </div>
-          <div className="col-md-3 col-6">
+          <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="rv-card">
               <img src={book3} alt="Book" />
               <h4>The Attributes of A Virtuous Mindset</h4>
@@ -176,7 +200,7 @@ const SingleBook = () => {
               </p>
             </div>
           </div>
-          <div className="col-md-3 col-6">
+          <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="rv-card">
               <img src={book4} alt="Book" />
               <h4>Master the Rules of Manifestation</h4>

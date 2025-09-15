@@ -28,32 +28,31 @@
 
 h2 {
   font-family: "PlayfairDisplay-Regular";
-  font-size: 50px;
   color: black;
 }
 
 p {
   font-family: "Figtree-Light";
-  font-size: 20px;
 }
 
 /* Breadcrumb */
 .breadcrumb {
+  font-family: "Figtree-Light";
   font-size: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
   content: ">";
   color: #c6c6c6;
 }
 
 .breadcrumb a {
   text-decoration: none;
-  color: #c6c6c6;
+  color: #aaaaaa;
 }
 
 .breadcrumb a:hover {
@@ -61,7 +60,7 @@ p {
 }
 
 .breadcrumb-item.active {
-  color: #7f7f7f;
+  color: #757575;
   cursor: default;
 }
 
@@ -69,15 +68,37 @@ p {
 .book-section {
   margin-bottom: 50px;
 }
-.book-image img {
-  width: 100%;
-  border: 1px solid #ddd;
+
+.book-image {
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 20px;
 }
+
+.book-preview-images {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 60px;
+  float: left;
+  margin-right: 30px;
+}
+
+.book-preview-images .thumb-img {
+  width: 100%;
+  cursor: pointer;
+}
+
+.book-main-image img {
+  width: calc(100% - 100px);
+}
+
 .book-buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
+
 .book-buttons button {
   flex: 1;
   font-family: "Figtree-Light";
@@ -87,10 +108,12 @@ p {
   font-size: 18px;
   cursor: pointer;
 }
+
 .add-to-cart {
   background-color: #c86836;
   color: #fff;
 }
+
 .buy-now {
   background-color: #983120;
   color: #fff;
@@ -102,12 +125,17 @@ p {
 
 .about-book h4 {
   text-align: center;
-  font-size: "Figtree-Light" !important;
+  font-family: "Figtree-Light";
   font-size: 28px;
   color: #333333;
   margin-bottom: 20px;
   margin-top: 50px;
 }
+
+.about-book p {
+  font-size: 20px;
+}
+
 .author-sign {
   font-style: italic;
   margin-top: 15px;
@@ -115,14 +143,22 @@ p {
 
 /* Book Details */
 .book-details {
-  padding-left: 100px;
+  padding: 0px 20px 0px 90px;
 }
+
 .book-details h2 {
   margin-bottom: 30px;
+  font-size: 50px;
 }
+
+.book-details p {
+  font-size: 20px;
+}
+
 .price {
   margin-bottom: 20px;
 }
+
 .current-price {
   font-family: "Figtree-Light";
   font-size: 32px;
@@ -130,6 +166,7 @@ p {
   color: #99301f;
   margin-right: 10px;
 }
+
 .old-price {
   font-family: "Figtree-Regular";
   font-size: 20px;
@@ -137,18 +174,15 @@ p {
   color: #717171;
   margin-right: 10px;
 }
+
 .discount {
   font-family: "Figtree-Light";
   color: #fff;
   background-color: #99301f;
   padding: 2px 10px;
   font-size: 24px;
-  margin-left: 10px;
 }
 
-.book-desc {
-  line-height: 1.6;
-}
 .book-desc .extra-text {
   display: block;
   font-size: 20px;
@@ -163,29 +197,59 @@ p {
   gap: 4px;
 }
 
-.book-meta {
+/* .book-meta {
   font-size: 14px;
   margin-bottom: 25px;
 }
+
 .book-meta p {
-  margin: 3px 0;
+  font-size: 20px;
+  margin: 2px 0;
+} */
+
+.book-meta {
+  margin: 20px 0;
+  font-family: "Figtree-Light";
+}
+
+.book-meta .row {
+  margin-bottom: 10px;
+}
+
+.book-meta .label {
+  font-family: "Figtree-Regular";
+  font-size: 20px;
+  color: #333;
+}
+
+.book-meta .value {
+  font-size: 20px;
+  color: #555;
+}
+
+.book-meta .value p {
+  margin: 0 0 5px 0;
+  font-size: 20px;
 }
 
 /* Delivery */
 .delivery {
   margin-bottom: 20px;
 }
-.delivery label {
+
+.delivery p {
   font-family: "Figtree-Regular";
   font-size: 18px;
+  margin-bottom: 5px;
 }
+
 .delivery input {
   padding: 8px;
   border: 1px solid #ccc;
-  width: 220px;
-  margin-left: 10px;
+  max-width: 200px;
   margin-right: 10px;
 }
+
 .check-btn {
   padding: 8px 15px;
   border: none;
@@ -209,44 +273,227 @@ p {
 
 /* Recently Viewed */
 .recently-viewed {
-  margin-top: 50px;
+  margin: 80px 0px;
+  text-align: center;
+  position: relative;
 }
+
 .recently-viewed h3 {
   font-family: "Figtree-Regular";
   color: #414141;
-  text-align: center;
   margin-bottom: 30px;
   font-size: 32px;
+  position: relative;
+  display: inline-block;
+  padding: 0 20px;
 }
+
+.recently-viewed h3::before,
+.recently-viewed h3::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 0.1px;
+  background: black;
+}
+
+.recently-viewed h3::before {
+  left: -100px;
+}
+
+.recently-viewed h3::after {
+  right: -100px;
+}
+
 .rv-card {
   text-align: center;
   padding: 0 30px;
 }
+
 .rv-card img {
   width: 70%;
   margin: 30px auto !important;
 }
+
 .rv-card h4 {
   font-family: "Figtree-Regular";
   font-size: 20px;
 }
+
 .rv-card p {
   font-size: 20px;
 }
+
 .rv-card .old-price {
   text-decoration: line-through;
   color: #717171;
   margin-right: 5px;
 }
+
 .rv-card .current-price {
   font-family: "Figtree-Light" !important;
   font-size: 18px;
   color: #99301f;
   margin-right: 5px;
 }
+
 .rv-card .discount {
   background-color: #99301f;
   color: #fff;
   padding: 1px 4px;
   font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+  .book-details h2 {
+    font-size: 45px;
+  }
+
+  .book-details {
+    padding: 0px 20px 0px 50px;
+  }
+
+  .about-book p,
+  .book-details p,
+  .book-meta p {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .breadcrumb {
+    font-size: 14px;
+  }
+
+  .book-details h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  .book-images {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .book-details {
+    padding: 0px 20px;
+  }
+
+  .book-buttons button {
+    font-size: 16px;
+    padding: 5px 0px;
+  }
+
+  .about-book h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .about-book p,
+  .book-details p,
+  .book-meta p {
+    font-size: 17px !important;
+  }
+
+  .current-price {
+    font-size: 28px;
+  }
+
+  .discount {
+    font-size: 20px;
+  }
+
+  .recently-viewed {
+    margin: 40px 0px;
+  }
+
+  .recently-viewed h3 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .rv-card {
+    padding: 0 20px;
+  }
+
+  .rv-card img {
+    width: 50%;
+    margin: 20px auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .book-details h2 {
+    font-size: 34px;
+  }
+
+  .about-book p,
+  .book-details p,
+  .book-meta p, .book-meta .label, .book-meta .value {
+    font-size: 16px !important;
+  }
+
+  .current-price {
+    font-size: 24px;
+  }
+
+  .discount {
+    font-size: 18px;
+  }
+
+  .recently-viewed {
+    margin: 30px 0px;
+  }
+}
+
+@media (max-width: 575px) {
+  .book-details h2 {
+    font-size: 28px;
+  }
+
+  .about-book p,
+  .book-details p,
+  .book-meta p, .book-meta .label, .book-meta .value {
+    font-size: 15px !important;
+  }
+
+  .book-image {
+    padding: 10px;
+  }
+
+  .book-preview-images {
+    gap: 10px;
+  }
+
+  .book-preview-images .thumb-img {
+    width: 80%;
+  }
+
+  .book-buttons button {
+    font-size: 14px;
+    padding: 5px 0px;
+  }
+
+  .current-price {
+    font-size: 20px;
+  }
+
+  .discount {
+    font-size: 16px;
+  }
+
+  .recently-viewed {
+    margin: 20px 0px;
+  }
+
+  .recently-viewed h3 {
+    padding: 0px;
+  }
+
+  .recently-viewed h3::before,
+  .recently-viewed h3::after {
+    width: 90px;
+  }
 }
