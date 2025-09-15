@@ -58,7 +58,9 @@ const LetterFromLangshott = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb m-0 p-0">
             <li className="breadcrumb-item">
-              <a href="/" className="text-gray">Home</a>
+              <a href="/" className="text-gray">
+                Home
+              </a>
             </li>
             <li className="breadcrumb-item">
               <a href="/publications" className="!text-gray-600">
@@ -88,9 +90,11 @@ const LetterFromLangshott = () => {
       ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-[1200px]">
           {letters.map(({ _id, title, uploadedAt, fileUrl, fileName }) => {
-            const fullFileUrl = fileUrl.startsWith("http")
-              ? fileUrl
-              : `${BACKEND_BASE_URL}${fileUrl.startsWith("/") ? "" : "/"}${fileUrl}`;
+            // Extract publicId from fileUrl
+            const publicId = fileUrl.split('/').pop().replace('.pdf', '');
+
+            // Backend proxy route to view PDF
+            const fullFileUrl = `${BACKEND_BASE_URL}/api/letters/pdf/${publicId}`;
 
             const downloadFileName = fileName
               ? fileName.toLowerCase().endsWith(".pdf")
@@ -126,7 +130,7 @@ const LetterFromLangshott = () => {
                   </a>
 
                   <a
-                    href={fullFileUrl}
+                    href={fileUrl} // use original fileUrl for download
                     download={downloadFileName}
                     className="inline-flex items-center justify-center gap-2 text-[#cc6633] font-semibold hover:underline"
                     title="Download PDF"
