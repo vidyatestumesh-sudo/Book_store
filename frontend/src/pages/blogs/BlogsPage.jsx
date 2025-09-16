@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { CalendarDays } from 'lucide-react';
+
+// 🔹 Utility: remove quill classes but keep HTML structure
+const sanitizeDescription = (html) => {
+  return html
+    .replace(/class="ql-align-[^"]*"/g, "") // remove ql-align-* classes
+    .replace(/style="[^"]*"/g, ""); // remove inline styles if any
+};
 
 const BlogsPage = () => {
   const [blogs, setBlogs] = useState([]);
-  const [expandedBlogId, setExpandedBlogId] = useState(null);
-
-  const handleToggle = (id) => {
-    setExpandedBlogId(expandedBlogId === id ? null : id);
-  };
 
   // ✅ Fetch blogs from backend
   const fetchBlogs = async () => {
@@ -33,9 +37,10 @@ const BlogsPage = () => {
               <a href="/" className="text-gray-500 hover:underline">Home</a>
             </li>
             <li className="breadcrumb-item">
-              <a href="/blogs" className="!text-gray-700 hover:underline">
-                Blogs
-              </a>
+              <a href="/blogs" className="text-gray-500 hover:underline">Blogs</a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/blogs" className="!text-gray-700 hover:underline">Author: Anil Kumar</a>
             </li>
           </ol>
         </nav>
@@ -43,32 +48,30 @@ const BlogsPage = () => {
 
       {/* ✅ Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug mb-7 mt-8">
-          Latest Blogs
+        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
+          Author: Anil Kumar
         </h1>
         <img
           src="/motif.webp"
           alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto [opacity:0.15] mb-4"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
         />
       </div>
 
       {/* ✅ Blogs Section */}
-      <div className="max-w-8xl mx-auto px-6 min-h-screen mt-8">
+      <div className="max-w-8xl mx-auto px-6 min-h-screen mt-12">
         {blogs.length === 0 ? (
           <p className="text-center text-gray-500">No blogs found.</p>
         ) : (
-          <div className="space-y-12">
-            {blogs.map((blog, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className={`group flex flex-col md:flex-row items-center bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2 ${
-                  index % 2 !== 0 ? "md:flex-row-reverse" : ""
-                }`}
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
               >
                 {/* ✅ Blog Image */}
                 {blog.image && (
-                  <div className="w-full md:w-1/2 relative h-64 md:h-80 overflow-hidden">
+                  <div className="relative h-60 overflow-hidden">
                     <img
                       src={`http://localhost:5000${blog.image}`}
                       alt={blog.title}
@@ -79,41 +82,45 @@ const BlogsPage = () => {
                 )}
 
                 {/* ✅ Blog Content */}
-                <div className="w-full md:w-1/2 p-8 space-y-4 text-gray-800 text-left">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-3">
+                <div className="p-6 text-left flex flex-col flex-grow">
+                  <h3 className=" font-semibold text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight mb-3">
                     {blog.title}
                   </h3>
 
-                  {/* ✅ Rich text with line breaks + same look as AddBlogs */}
-                  <div className="prose prose-lg text-gray-700 leading-relaxed font-figtree transition-all duration-500 ease-in-out max-w-none">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          expandedBlogId === blog._id
-                            ? blog.description.replace(/\n/g, "<br/>")
-                            : blog.description
-                                .split(" ")
-                                .slice(0, 40)
-                                .join(" ") + "...",
-                      }}
-                    />
-                  </div>
+                  {/* ✅ Blog Date */}
+                  <p className="flex items-center gap-2 text-gray-400 text-xl mt-3">
+                    <CalendarDays className="w-6 h-6" />
+                    {new Date(blog.createdAt).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+
+                  {/* ✅ Minimal description preview */}
+                  <div
+                    className="prose prose-sm text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] line-clamp-3 mb-4"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeDescription(
+                        blog.description.length > 200
+                          ? blog.description.slice(0, 200) + "..."
+                          : blog.description
+                      ),
+                    }}
+                  />
 
                   {/* ✅ Read More Button */}
-                  <button
-                    onClick={() => handleToggle(blog._id)}
-                    className="mt-2 inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
-                  >
-                    {expandedBlogId === blog._id ? "Read Less" : "Read More"}
-                    <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
-                      →
-                    </span>
-                  </button>
-
-                  {/* ✅ Blog Date */}
-                  <p className="text-gray-400 text-xs mt-3">
-                    Added: {new Date(blog.createdAt).toLocaleString()}
-                  </p>
+                  <div className="mt-auto">
+                    <Link
+                      to={`/blogs/${blog._id}`}
+                      className="inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
+                    >
+                      Read More
+                      <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
+                        →
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
