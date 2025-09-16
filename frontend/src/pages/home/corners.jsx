@@ -129,7 +129,7 @@ const Corners = () => {
               {/* Card */}
               <div className="px-4 sm:px-8 ">
                 <div
-                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[650px] sm:h-[720px] mx-auto flex flex-col justify-between"
+                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[700px] sm:h-[750px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
                 >
                   {/* Card Content */}
@@ -148,7 +148,7 @@ const Corners = () => {
                     </div>
 
                     {/* Image with fixed + responsive size */}
-                    <div className="w-full flex justify-center px-5">
+                    <div className="w-full flex justify-center px-4">
                       <div className="w-[520px] h-[285px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
