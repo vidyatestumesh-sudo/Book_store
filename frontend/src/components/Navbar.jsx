@@ -179,7 +179,7 @@ const Navbar = () => {
                   <Link to="/publications">PUBLICATIONS</Link>
                 </li>
                 <li>
-                  <Link to="/foundation">LANGSHOTT FOUNDATION</Link>
+                  <Link to="/foundation">THE FOUNDATION</Link>
                 </li>
                 <li>
                   <Link to="/blogs">BLOGS</Link>
