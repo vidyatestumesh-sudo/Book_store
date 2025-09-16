@@ -147,8 +147,31 @@ p {
 }
 
 .book-details h2 {
-  margin-bottom: 30px;
+  position: relative;
+  display: inline-block;
+  text-align: left;
   font-size: 50px;
+  margin-bottom: 30px;
+}
+
+.book-details h2::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: url("/motif.webp") no-repeat center;
+  background-size: contain;
+  opacity: 0.15;
+  pointer-events: none;
+  margin: 0 auto;
+}
+
+.book-details img {
+  position: absolute;
+  opacity: 0.15;
 }
 
 .book-details p {
@@ -196,16 +219,6 @@ p {
   align-items: center;
   gap: 4px;
 }
-
-/* .book-meta {
-  font-size: 14px;
-  margin-bottom: 25px;
-}
-
-.book-meta p {
-  font-size: 20px;
-  margin: 2px 0;
-} */
 
 .book-meta {
   margin: 20px 0;
@@ -367,19 +380,24 @@ p {
     font-size: 14px;
   }
 
+  .book-details {
+    padding: 0px 20px;
+  }
+
   .book-details h2 {
     font-size: 40px;
     margin-bottom: 10px;
     margin-top: 20px;
   }
 
+  .book-details h2::after {
+    width: 80px;
+    height: 80px;
+  }
+
   .book-images {
     margin: 0 auto;
     display: block;
-  }
-
-  .book-details {
-    padding: 0px 20px;
   }
 
   .book-buttons button {
@@ -431,6 +449,11 @@ p {
     margin-top: 10px;
   }
 
+  .book-details h2::after {
+    width: 60px;
+    height: 60px;
+  }
+
   .about-book p,
   .book-details p,
   .book-meta p,
@@ -459,6 +482,11 @@ p {
 
   .book-details h2 {
     font-size: 24px;
+  }
+
+  .book-details h2::after {
+    width: 50px;
+    height: 50px;
   }
 
   .about-book p {
@@ -529,5 +557,8 @@ p {
   .book-meta .label,
   .book-meta .value {
     font-size: 14px !important;
+  }
+  .delivery input {
+    max-width: 180px;
   }
 }
