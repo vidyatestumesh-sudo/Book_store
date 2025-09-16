@@ -1,5 +1,5 @@
 import "./SingleBook.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
@@ -22,6 +22,13 @@ const SingleBook = () => {
   // const { currentUser } = useAuth();
 
   const [showMore, setShowMore] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (book?.coverImage) {
+      setSelectedImage(getImgUrl(book.coverImage));
+    }
+  }, [book]);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -61,6 +68,7 @@ const SingleBook = () => {
                     src={getImgUrl(book.coverImage)}
                     alt="Front View"
                     className="thumb-img"
+                    onClick={() => setSelectedImage(getImgUrl(book.coverImage))}
                   />
                 )}
                 {book.backImage && (
@@ -68,11 +76,12 @@ const SingleBook = () => {
                     src={getImgUrl(book.backImage)}
                     alt="Back View"
                     className="thumb-img"
+                    onClick={() => setSelectedImage(getImgUrl(book.backImage))}
                   />
                 )}
               </div>
               <div className="book-main-image">
-                <img src={getImgUrl(book.coverImage)} alt={book.title} />
+                {selectedImage && <img src={selectedImage} alt={book.title} />}
               </div>
             </div>
             <div className="book-buttons">
@@ -156,12 +165,12 @@ const SingleBook = () => {
                 Specifications
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
-                <p>Language: {book.specifications?.language}</p>
-                <p>Binding: {book.specifications?.binding}</p>
-                <p>Publisher: {book.specifications?.publisher}</p>
-                <p>ISBN: {book.specifications?.isbn}</p>
-                <p>Publishing Date: {book.specifications?.publishingDate}</p>
-                <p>Pages: {book.specifications?.pages}</p>
+                <p>Language: {book.language}</p>
+                <p>Binding: {book.binding}</p>
+                <p>Publisher: {book.publisher}</p>
+                <p>ISBN: {book.isbn}</p>
+                <p>Publishing Date: {book.publishingDate}</p>
+                <p>Pages: {book.pages}</p>
               </div>
             </div>
           </div>

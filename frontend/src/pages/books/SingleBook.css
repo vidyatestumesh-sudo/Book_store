@@ -45,7 +45,7 @@ p {
   flex-wrap: wrap;
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
+.breadcrumb-item + .breadcrumb-item::before {
   content: ">";
   color: #c6c6c6;
 }
@@ -370,6 +370,7 @@ p {
   .book-details h2 {
     font-size: 40px;
     margin-bottom: 10px;
+    margin-top: 20px;
   }
 
   .book-images {
@@ -426,12 +427,15 @@ p {
 
 @media (max-width: 767px) {
   .book-details h2 {
-    font-size: 34px;
+    font-size: 32px;
+    margin-top: 10px;
   }
 
   .about-book p,
   .book-details p,
-  .book-meta p, .book-meta .label, .book-meta .value {
+  .book-meta p,
+  .book-meta .label,
+  .book-meta .value {
     font-size: 16px !important;
   }
 
@@ -449,14 +453,34 @@ p {
 }
 
 @media (max-width: 575px) {
+  .breadcrumb {
+    font-size: 12px;
+  }
+
   .book-details h2 {
-    font-size: 28px;
+    font-size: 24px;
+  }
+
+  .about-book p {
+    padding: 0px 10px;
+    margin-bottom: 5px;
   }
 
   .about-book p,
   .book-details p,
-  .book-meta p, .book-meta .label, .book-meta .value {
+  .book-meta p,
+  .book-meta .label,
+  .book-meta .value {
     font-size: 15px !important;
+  }
+
+  .about-book p,
+  .book-details p {
+    text-align: justify;
+  }
+
+  .author-sign {
+    margin: 0px;
   }
 
   .book-image {
@@ -495,5 +519,15 @@ p {
   .recently-viewed h3::before,
   .recently-viewed h3::after {
     width: 90px;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-book p,
+  .book-details p,
+  .book-meta p,
+  .book-meta .label,
+  .book-meta .value {
+    font-size: 14px !important;
   }
 }
