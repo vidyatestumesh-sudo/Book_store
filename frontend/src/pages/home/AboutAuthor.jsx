@@ -15,7 +15,7 @@ const SectionHeading = ({ children }) => (
 
 const AboutAuthor = () => {
   return (
-    <section className="max-w-8xl mx-auto px-4 md:px-6 py-10 font-serif space-y-16">
+    <section className="max-w-8xl mx-auto px-4 md:px-6 md:py-0 py-10 font-Figtree space-y-16">
       {/* ========== About Author Section ========== */}
       <article className="bg-[#e9ebec] rounded-xl p-4 py-5 sm:p-6 md:p-10 px-3 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-10 md:gap-20">
         {/* Left Side - Text */}
@@ -56,7 +56,7 @@ const AboutAuthor = () => {
         </figure>
 
         {/* Right Text */}
-        <div className="w-full lg:w-1/2 text-left px-2 py-5 md:px-2 md:py-5 ">
+        <div className="w-full lg:w-1/2 text-left px-0 lg:py-10 [@media(min-width:2561px)]:py-0">
           <SectionHeading showMotif={false}>Anil's Working Creed</SectionHeading>
 
           <p className="text-black/80 mb-4 sm:mr-8 text-base leading-relaxed font-figtree text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 leading-snug lg:leading-normal font-regular leading-tight lg:leading-[1.3">
