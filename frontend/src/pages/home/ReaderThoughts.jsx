@@ -119,21 +119,19 @@ const ReaderThoughts = () => {
 
   return (
     <div className="h-full overflow-hidden pt-10 pb-20 px-3">
-      <div className="max-w-9xl mx-auto grid grid-cols-1 md:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
+      <div className="max-w-9xl mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
+
         {/* Left Image */}
-        <div className="relative w-full h-full">
+        <div className="relative w-full">
           <img
             src="/1-my-mind.webp"
             alt="mind"
-            className="w-full h-full "
-          />
+            className="w-full h-[250px] sm:h-[350px] md:h-[450px]  lg:h-[600px]  xl:h-[720px]  2xl:h-[700px]  object-cover"/>
         </div>
-
         {/* Right Content */}
-        <div className="relative bg-[#e6e8da] p-10 flex flex-col h-full">
+        <div className="relative bg-[#e6e8da] p-4 sm:p-6 md:p-10 flex flex-col h-[650px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
-
           <div className="relative inline-block">
             <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-6 sm:mb-8 mt-4 sm:mt-8 text-left">
               <span className="relative inline-block">
@@ -141,13 +139,12 @@ const ReaderThoughts = () => {
                 <img
                   src="/motif.webp"
                   alt="feather"
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none z-0"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-0 pointer-events-none z-0"
                 />
               </span>
             </h1>
 
           </div>
-
 
           {/* Thoughts Grid */}
           <div

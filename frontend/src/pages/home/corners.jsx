@@ -111,17 +111,17 @@ const Corners = () => {
                     x1="50"
                     y1="0"
                     x2="5"
-                    y2="60"
+                    y2="55"
                     stroke="#d5a56f"
-                    strokeWidth="4"
+                    strokeWidth="3"
                   />
                   <line
                     x1="50"
                     y1="0"
                     x2="95"
-                    y2="60"
+                    y2="55"
                     stroke="#d5a56f"
-                    strokeWidth="4"
+                    strokeWidth="3"
                   />
                 </svg>
               </div>
@@ -129,7 +129,7 @@ const Corners = () => {
               {/* Card */}
               <div className="px-4 sm:px-8 ">
                 <div
-                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] mx-auto flex flex-col justify-between"
+                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[650px] sm:h-[720px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
                 >
                   {/* Card Content */}
@@ -142,20 +142,20 @@ const Corners = () => {
                       <img
                         src="/motif.webp"
                         alt="Decorative motif"
-                        className="absolute left-1/2 -bottom-1 mb-1 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none select-none"
+                        className="absolute left-1/2 -bottom-4 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2 pointer-events-none select-none"
                         aria-hidden="true"
                       />
                     </div>
 
-                    {/* Image with adaptive size */}
+                    {/* Image with fixed + responsive size */}
                     <div className="w-full flex justify-center px-5">
-                      <div className="max-w-[479px] max-h-[285px] flex items-center justify-center overflow-hidden">
+                      <div className="w-[520px] h-[285px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
                             key={`${corner.id}-${slideIndexes[index]}`}
                             src={slide.image}
                             alt={`${corner.title} slide image`}
-                            className="w-full h-full object-contain"
+                            className="w-[520px] sm:h-[285px] sm:w-[550px] h-[240px] object-cover"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -168,11 +168,11 @@ const Corners = () => {
 
                     {/* Text */}
                     <div>
-                      <p className="text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] leading-relaxed whitespace-pre-line text-center m-2 mx-4 ">
+                      <p className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] leading-relaxed whitespace-pre-line text-center m-2 mx-4 ">
                         {slide.text}
                       </p>
                       {slide.author && (
-                        <p className="mt-4 italic text-right text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] font-light px-5">
+                        <p className="mt-4 italic text-right text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] font-light px-5">
                           – {slide.author}
                         </p>
                       )}

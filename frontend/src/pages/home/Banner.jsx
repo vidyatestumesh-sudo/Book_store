@@ -21,7 +21,7 @@ const Banner = () => {
           <img
             src="/langshott-foundation-logo.webp"
             alt="Langshott Leadership Foundation"
-            className="h-24 sm:h-28 max-h-32 w-auto block select-none mx-auto mt-0"
+            className="h-26 sm:h-30 max-h-34 w-auto block select-none mx-auto mt-0"
           />
         </div>
 
@@ -71,7 +71,7 @@ const Banner = () => {
         </div>
 
         {/* Highlighted Quote */}
-        <p className="text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight text-[#8c2f2f] italic lg:leading-[1.3] px-4 sm:px-10 text-center">
+        <p className="text-[17px] sm:text-[21px] md:text-[23px] lg:text-[25px] xl:text-[25px] font-Figtree font-semibold leading-snug leading-tight text-[#8c2f2f] italic lg:leading-[1.3] px-4 sm:px-10 text-center">
           "The solutions you’re searching for are within you; we can only help you to get there."
         </p>
 
