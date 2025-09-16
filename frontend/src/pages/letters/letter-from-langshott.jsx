@@ -128,7 +128,6 @@ const LetterFromLangshott = () => {
                   {/* Download PDF - uses downloadUrl */}
                   <a
                     href={downloadUrl}
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 text-[#cc6633] font-semibold hover:underline"
                     title="Download PDF"
