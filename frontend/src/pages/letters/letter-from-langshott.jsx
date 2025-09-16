@@ -25,7 +25,7 @@ const viewIcon = (
     <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
   </svg>
 );
-const BACKEND_BASE_URL = window.location.hostname === "localhost" ? "http://localhost:5000" : "https://bookstore-backend-hshq.onrender.com";
+const BACKEND_BASE_URL = "https://bookstore-backend-hshq.onrender.com";
 
 const LetterFromLangshott = () => {
   const [letters, setLetters] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BACKEND_BASE_URL = window.location.hostname === "localhost" ? "http://localhost:5000" : "https://bookstore-backend-hshq.onrender.com";
+const BACKEND_BASE_URL = "https://bookstore-backend-hshq.onrender.com";
 
 const ManageLetters = () => {
   const [title, setTitle] = useState('');
