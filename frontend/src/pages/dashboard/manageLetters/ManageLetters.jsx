@@ -170,7 +170,6 @@ const ManageLetters = () => {
 
                     <a
                       href={letter.downloadUrl}
-                      target="_blank"
                       rel="noopener noreferrer"
                       download={letter.fileName || 'letter.pdf'}
                       style={{ marginRight: '1rem' }}
