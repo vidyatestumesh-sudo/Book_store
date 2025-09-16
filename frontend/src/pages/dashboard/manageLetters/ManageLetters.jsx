@@ -167,9 +167,8 @@ const ManageLetters = () => {
                     >
                       View
                     </a>
-
                     <a
-                      href={letter.downloadUrl}
+                      href={letter.downloadUrl} 
                       rel="noopener noreferrer"
                       download={letter.fileName || 'letter.pdf'}
                       style={{ marginRight: '1rem' }}
