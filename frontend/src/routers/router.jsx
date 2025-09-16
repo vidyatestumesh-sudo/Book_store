@@ -17,11 +17,11 @@ import AddBook from "../pages/dashboard/addBook/AddBook";
 import UpdateBook from "../pages/dashboard/EditBook/UpdateBook";
 import UserDashboard from "../pages/dashboard/users/UserDashboard";
 import AboutAuthorPage from "../pages/AboutAuthorPage/AboutAuthorPage";
-import BlogsPage from "../pages/home/BlogsPage";
 import Publications from "../pages/publications/Publications";
 import LetterFromLangshott from "../pages/letters/letter-from-langshott";
 import ManageLetters from "../pages/dashboard/manageLetters/ManageLetters";
 import AddBlogs from "../pages/dashboard/AddBlogs";
+import BlogsPage from "../pages/blogs/BlogsPage";
 
 const router = createBrowserRouter([
   {

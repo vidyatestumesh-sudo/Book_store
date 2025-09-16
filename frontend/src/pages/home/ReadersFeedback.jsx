@@ -46,7 +46,7 @@ const ReadersFeedback = () => {
   const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
 
   return (
-    <div className="bg-white font-playfair mt-0 mb-6">
+    <div className="bg-white font-playfair mt-1 mb-6">
       <div className="w-full max-w-8xl mx-auto px-4 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
@@ -56,12 +56,12 @@ const ReadersFeedback = () => {
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
+            className="absolute left-1/2 -bottom-3 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15]"
           />
         </div>
 
         {/* Feedback Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-[340px] sm:h-[280px] md:h-[200px] lg:h-[200px] xl:h-[220px] 2xl:h-[250px]">
           {feedbacks.slice(currentIndex, currentIndex + itemsPerPage).map((fb) => (
             <div key={fb.id} className="space-y-4">
               {/* Avatar + Name */}

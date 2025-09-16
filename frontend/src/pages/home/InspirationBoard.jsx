@@ -34,7 +34,7 @@ const InspirationBoard = () => {
           <img
             src="/motif.webp"
             alt="feather"
-            className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 w-12 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15 pointer-events-none mb-4"
+            className="absolute left-1/2 -bottom-2 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2 pointer-events-none"
           />
         </div>
 

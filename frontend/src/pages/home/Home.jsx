@@ -2,7 +2,6 @@ import React from 'react'
 import Banner from './Banner'
 import FeaturedBooks from './FeaturedBooks'
 import AboutAuthor from './AboutAuthor'
-import BlogsPage from './BlogsPage'
 import ReaderThoughts from './ReaderThoughts'
 import ReadersFeedback from './ReadersFeedback'
 import InspirationBoard from './InspirationBoard'
@@ -18,8 +17,6 @@ const Home = () => {
         <InspirationBoard />
         <Corners />
         <AboutAuthor />
-        {/* <BlogsPage /> */}
-        {/* <Testimonials /> */}
     </>
   )
 }
