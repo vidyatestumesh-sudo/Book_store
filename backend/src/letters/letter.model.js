@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const letterSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  fileUrl: { type: String, required: true },
-  fileName: { type: String, required: true },
-  uploadedAt: { type: Date, default: Date.now }
+  fileName: String,
+  fileUrl: String,          
+  downloadUrl: String,      
+  driveFileId: String,      
+  uploadedAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Letter', letterSchema);

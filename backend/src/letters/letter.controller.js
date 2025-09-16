@@ -1,21 +1,101 @@
+const fs = require('fs');
 const Letter = require('./letter.model');
+const { google } = require('googleapis');
 
+// Load env variables from .env
+require('dotenv').config();
+
+const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
+
+// OAuth2 Setup
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_OAUTH_CLIENT_ID,
+  process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  process.env.GOOGLE_OAUTH_REDIRECT_URI
+);
+
+// Set the access and refresh tokens
+oauth2Client.setCredentials({
+  access_token: process.env.GOOGLE_OAUTH_ACCESS_TOKEN,
+  refresh_token: process.env.GOOGLE_OAUTH_REFRESH_TOKEN,
+});
+
+// Upload to Google Drive
+async function uploadFileToDrive(filePath, fileName) {
+  const driveService = google.drive({ version: 'v3', auth: oauth2Client });
+
+  const fileMetadata = {
+    name: fileName,
+    parents: [FOLDER_ID],
+  };
+
+  const media = {
+    mimeType: 'application/pdf',
+    body: fs.createReadStream(filePath),
+  };
+
+  const response = await driveService.files.create({
+    resource: fileMetadata,
+    media: media,
+    fields: 'id',
+  });
+
+  const fileId = response.data.id;
+
+  // Make the file public
+  await driveService.permissions.create({
+    fileId: fileId,
+    requestBody: {
+      role: 'reader',
+      type: 'anyone',
+    },
+  });
+
+  // Return both view and download URLs
+  return {
+    viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
+    downloadUrl: `https://drive.google.com/uc?id=${fileId}&export=download`,
+    fileId,
+  };
+}
+
+// Controller for uploading
 const uploadLetter = async (req, res) => {
   try {
     const { title } = req.body;
-    const fileUrl = req.file.path;
-    const fileName = req.file.originalname; 
+    const file = req.file;
 
-    const letter = new Letter({ title, fileUrl,fileName });
+    if (!file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const filePath = file.path;
+    const fileName = file.originalname;
+
+    const { viewUrl, downloadUrl, fileId } = await uploadFileToDrive(filePath, fileName);
+
+    const letter = new Letter({
+      title,
+      fileUrl: viewUrl,         // used for viewing
+      downloadUrl,              // new field for downloading
+      fileName,
+      driveFileId: fileId,      // optional: for deletion or tracking
+    });
+
     await letter.save();
+
+    // Optionally delete file after upload to save space
+    fs.unlinkSync(filePath);
 
     res.status(201).json({ success: true, letter });
   } catch (error) {
-    console.error('Upload failed:', error);
+    console.error('Upload to Google Drive failed:', error);
     res.status(500).json({ success: false, message: 'Upload failed' });
   }
 };
 
+// Controller for getting all letters
 const getAllLetters = async (req, res) => {
   try {
     const letters = await Letter.find().sort({ uploadedAt: -1 });

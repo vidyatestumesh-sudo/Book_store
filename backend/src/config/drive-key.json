@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "book-store-mern-app-f2625",
+  "private_key_id": "6f28fb27233b2571d70c24c73edf3758a18676b5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDucFWi1mdNCXvj\nOsXD3HXAQyy/jGMtwZewQ2h4YyNferGK27FT+SAH4uVCD6hoEnArrhOmyJNpbbLt\nYNWuceCdBW5KAW7r/d/+mR2ksi8qi11//zqZI6Fw3bnC8hJIXTNKSvS9qQDcaJwu\nwnQrFkeu0oXKu1B1CXSZ5ehal0BFMBYGOigPdpECYodbujmPvKMGuCetpjp0/5Q7\n3S+FA+F5cTwLape+VTnXWzRr6TTe1rKVAwKHnw4FHyEA9MRKNIqfezEmNzFiOo6b\n7M/A+txGN+anQ/Q5mnRnLAYDS9kicm7KF8sJJqFOwwftsnxm5DxxqNFLHnZkkGAq\nlOQyV09BAgMBAAECggEAFZ5NxWPXHd78Qo/zmlyEuJfemMdrvpxM2ohiEng6ns+L\nBWIB4/E0fEKQMrsks7roPK2dzoNlCiwOCwO6nARrLxFs/HzAx9jO1FChpWsaZ6sX\nISHM+FGIs6kGzKwSCEma+uNs6T1HfLRnZL3wtm9gtHMV+lmdY98lmUaFGKGaDCux\nJltapR3wcgdK/h4l/zQexNLKLsnskJlQoZw8wMqYPsdyaw4ESiPoVv5uIs9A+cnq\ndub9Hzp9cqOtw9Ra83iWZ9g3/dvh8mx4IBDcyk6rpdoHlID6PObt/M6ExllDcr35\nen5lDr37LlwS7eSq9oqdERK+2KVVY9A3HXpFif72IQKBgQD3X+pbD6NB+YPXGe0N\n7xGXAzrOF/ch1lqoOQy0YMUwIThRJ4yEHbddAQ1g6vL83DlNRrzn70RTBqsx6/qN\n5jCWkKH2Uk+jD3oYyiX1KZvc+nE71gSESaheY7XfWrK6IuaOLdoCBlk01IrG0+aG\nZecn2QVJPqU6cdYG4CeCwP3AxQKBgQD2wKgqCeG3pFM6PBC4R2UUww5pHN/O1r5f\nx1J9gon1GSlxM6ODCJxgi+jKZyNhEQ1mpi/fN5s9ZqpfouNYQvKNlnKG0rQfgA6s\n8Vt0LOSOkWmLxkfZfwR8vC4iUBqNNGQlLbIK9yAPfUSFQnwMRNHXhJH0/TbidUlu\nVBq0EJBETQKBgAgnMSIvMcJK5v1/7UA4UOwZPybrw0lqNzK0LqcDSXx8m86Q7yCr\nmg+GqVo4ZCnRWFIjsrYyPJ4/6gSLMobav183BR+JNva4291VTEr4RBrUZkcClsOF\nafcychwacSmRXOfyuuy2KNqE5s4GzeJAGY5GqNXxKqDyf4tad/LnSXXBAoGBAO5J\n5NwcCN9okHsncFoVkFb5e1wk5zl/Bf/GpDHSs1l/gBby8E/lK+bMlfWInpDpf9CG\nYqqkr4UfNR8AVZ5xoHz9MgJjTlExQHrg5hmOFPZdFNlHlTFDyViP/dljFBES7Dc/\nJrYSKuLqbRZnuxW6DA+d1boKIkuVSmGCVPtZF4jtAoGBAI+uGSWiPLN9V3kkQcMg\nGzM26yU4nEvhqsGc/YGJN2pzjTQtrwSi7AnCiRoGC0cmd7pwy2/qSEVCJiKfiyOp\nlbqtf670FgPvnh5MAOkNPBNEZNMkDHTIxaf7v3XCn5fk2p7pMCdozBoG/0Y6T4QY\nUYNAZx4SSvQemuGuFI3Cb4cY\n-----END PRIVATE KEY-----\n",
+  "client_email": "drive-api-access@book-store-mern-app-f2625.iam.gserviceaccount.com",
+  "client_id": "105290174922443402683",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drive-api-access%40book-store-mern-app-f2625.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
