@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BACKEND_BASE_URL = "https://bookstore-backend-hshq.onrender.com";
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
 
 const ManageLetters = () => {
   const [title, setTitle] = useState('');
@@ -43,7 +46,7 @@ const ManageLetters = () => {
       alert('Letter uploaded successfully!');
       setTitle('');
       setFile(null);
-      fetchLetters(); // reload list
+      fetchLetters();
     } catch (err) {
       console.error('Upload failed', err);
       alert('Upload failed.');
@@ -156,12 +159,24 @@ const ManageLetters = () => {
                   <strong>{letter.title}</strong>{' '}
                   <small>— {new Date(letter.uploadedAt).toLocaleDateString()}</small>
                   <div style={{ marginTop: '0.5rem' }}>
-                    <a href={letter.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginRight: '1rem' }}>
-  View
-</a>
-<a href={letter.downloadUrl} download={letter.fileName || 'letter.pdf'} style={{ marginRight: '1rem' }}>
-  Download
-</a>
+                    <a
+                      href={letter.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ marginRight: '1rem' }}
+                    >
+                      View
+                    </a>
+
+                    <a
+                      href={letter.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download={letter.fileName || 'letter.pdf'}
+                      style={{ marginRight: '1rem' }}
+                    >
+                      Download
+                    </a>
 
                     <button
                       onClick={() => {
