@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const corners = [
   {
@@ -184,10 +185,16 @@ const Corners = () => {
                     {corner.readMoreUrl ? (
                       <a
                         href={corner.readMoreUrl}
-                        className="inline-flex items-center gap-1 !no-underline text-white text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline"
+                        className="inline-flex items-center gap-1 !no-underline text-white text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline group"
                       >
-                        Read More <span className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px]">→</span>
+                        <span className="text-white text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
+                          Read More
+                        </span>
+                        <span className="text-white transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                          <ArrowRight size={20} strokeWidth={2} />
+                        </span>
                       </a>
+
                     ) : (
                       <span></span>
                     )}

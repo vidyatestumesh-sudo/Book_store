@@ -95,17 +95,18 @@ const FeaturedBooks = () => {
           src="/motif.webp"
           alt="feather"
           className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
-        />                                                                  
+        />
       </div>
 
       {/* Slider Container */}
       <div className="relative w-full flex items-center mt-8">
+        
         {/* Left Arrow */}
         <button
           onClick={handlePrev}
           disabled={windowWidth > 1024 ? startIndex === 0 : false} // disable on desktop if at start
           className={`absolute left-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
-            -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] 2xl:translate-x-[-70%] ${windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
+    -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] 2xl:translate-x-[-70%] ${windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
             }`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
@@ -114,7 +115,19 @@ const FeaturedBooks = () => {
           }}
           aria-label="Previous books"
         >
-          <FiChevronLeft size={windowWidth > 1024 ? 80 : 40} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={windowWidth > 1024 ? 80 : 40}
+            height={windowWidth > 1024 ? 80 : 40}
+            viewBox="0 0 24 24"
+            stroke="#999999"
+            strokeWidth="0.8" // thinner stroke
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
         </button>
 
         {/* Slider Track */}
@@ -237,9 +250,20 @@ const FeaturedBooks = () => {
           }}
           aria-label="Next books"
         >
-          <FiChevronRight size={windowWidth > 1024 ? 80 : 40} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={windowWidth > 1024 ? 80 : 40}
+            height={windowWidth > 1024 ? 80 : 40}
+            viewBox="0 0 24 24"
+            stroke="#999999"
+            strokeWidth="0.8" // thinner stroke
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </button>
-
       </div>
     </div>
   );

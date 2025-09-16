@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const SectionHeading = ({ children }) => (
   <div className="relative inline-block mb-6">
@@ -65,13 +66,16 @@ const AboutAuthor = () => {
 
           <Link
             to="/aboutauthorpage"
-            className="group inline-block text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
+            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
           >
-            <span className="text-black text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] leading-snug lg:leading-normal">Read More</span>
-            <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-200 group-hover:translate-x-[5px] text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] leading-snug lg:leading-normal">
-              →
+            <span className="text-black text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
+              Read More
+            </span>
+            <span className="text-[#8c2f24] ml-1 transform transition-transform duration-200 group-hover:translate-x-[5px]">
+              <ArrowRight size={20} strokeWidth={2} />
             </span>
           </Link>
+
         </div>
       </article>
 

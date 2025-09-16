@@ -1,5 +1,6 @@
 import React from "react";
 import { FiArrowRight } from "react-icons/fi";
+import { ArrowRight } from "lucide-react";
 
 const inspirations = [
   {
@@ -50,7 +51,7 @@ const InspirationBoard = () => {
                   className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover"
                 />
                 <div className="absolute bottom-0 text-[16px] py-1 sm:text-[21px] md:text-[18px] lg:text-[18px] xl:text-[18px] text-gray-500 font-regular leading-tight lg:leading-[1.3] left-1/2 transform -translate-x-1/2 bg-[#e9e0d4] px-3  font-figtree rounded-t-lg">
-                  {item.date}                    
+                  {item.date}
                 </div>
               </div>
 
@@ -60,10 +61,13 @@ const InspirationBoard = () => {
               </h3>
 
               {/* Read More */}
-              <button className="flex items-center gap-2 no-underline font- mx-auto transition font-figtree text-[16px] sm:text-[21px] md:text-[20px] lg:text-[18px] xl:text-[18px] ">
-                <span className="text-gray">Read More</span>
-                <span className="text-[#8c2f24] ml-1 inline-block transform transition-transform duration-20 group-hover:translate-x-[18px] text-[16px] sm:text-[19px] md:text-[18px] lg:text-[18px] xl:text-[18px] ">
-                  →</span>
+              <button className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[21px] md:text-[20px] lg:text-[18px] xl:text-[18px] transition group">
+                <span className="text-gray text-[16px] sm:text-[21px] md:text-[20px] lg:text-[18px] xl:text-[18px]">
+                  Read More
+                </span>
+                <span className="text-[#8c2f24] transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                  <ArrowRight size={20} strokeWidth={2} />
+                </span>
               </button>
             </div>
           ))}
