@@ -134,26 +134,40 @@ const AddBlogs = () => {
     }
   };
 
-  // Read more/less component
-  const BlogDescription = ({ text }) => {
-    const [expanded, setExpanded] = useState(false);
-    const words = text.split(" ");
-    const isLong = words.length > 40;
+ // Read more/less with formatted text
+const BlogDescription = ({ text }) => {
+  const [expanded, setExpanded] = useState(false);
 
-    return (
-      <p className="text-gray-700 leading-relaxed">
-        {expanded || !isLong ? text : words.slice(0, 40).join(" ") + "..."}
-        {isLong && (
-          <button
-            className="ml-2 text-blue-500 font-medium hover:underline"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? "Read Less" : "Read More"}
-          </button>
-        )}
-      </p>
-    );
-  };
+  // Preserve newlines if plain text
+  const formattedText = text.replace(/\n/g, "<br />");
+
+  const words = text.split(" ");
+  const isLong = words.length > 40;
+
+  return (
+    <div className="prose prose-lg text-gray-700 leading-relaxed font-figtree">
+      <div
+        dangerouslySetInnerHTML={{
+          __html: expanded || !isLong
+            ? formattedText
+            : words.slice(0, 40).join(" ") + "...",
+        }}
+      />
+      {isLong && (
+        <button
+          className="ml-2 inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "Read Less" : "Read More"}
+          <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
+            →
+          </span>
+        </button>
+      )}
+    </div>
+  );
+};
+
 
   return (
     <div className="max-w-7xl mx-auto p-6">

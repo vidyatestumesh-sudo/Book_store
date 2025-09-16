@@ -370,7 +370,8 @@ p {
 
   .about-book p,
   .book-details p,
-  .book-meta p {
+  .book-meta p,
+  .extra-text {
     font-size: 18px !important;
   }
 }
@@ -412,7 +413,8 @@ p {
 
   .about-book p,
   .book-details p,
-  .book-meta p {
+  .book-meta p, 
+  .extra-text {
     font-size: 17px !important;
   }
 
@@ -457,6 +459,7 @@ p {
   .about-book p,
   .book-details p,
   .book-meta p,
+  .extra-text,
   .book-meta .label,
   .book-meta .value {
     font-size: 16px !important;
@@ -497,6 +500,7 @@ p {
   .about-book p,
   .book-details p,
   .book-meta p,
+  .extra-text,
   .book-meta .label,
   .book-meta .value {
     font-size: 15px !important;
