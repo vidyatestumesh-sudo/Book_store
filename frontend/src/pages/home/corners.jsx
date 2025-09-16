@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const corners = [
   {
@@ -129,7 +130,7 @@ const Corners = () => {
               {/* Card */}
               <div className="px-4 sm:px-8 ">
                 <div
-                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[650px] sm:h-[720px] mx-auto flex flex-col justify-between"
+                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[700px] sm:h-[750px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
                 >
                   {/* Card Content */}
@@ -148,7 +149,7 @@ const Corners = () => {
                     </div>
 
                     {/* Image with fixed + responsive size */}
-                    <div className="w-full flex justify-center px-5">
+                    <div className="w-full flex justify-center px-4">
                       <div className="w-[520px] h-[285px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
@@ -184,10 +185,16 @@ const Corners = () => {
                     {corner.readMoreUrl ? (
                       <a
                         href={corner.readMoreUrl}
-                        className="inline-flex items-center gap-1 !no-underline text-white text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline"
+                        className="inline-flex items-center gap-1 !no-underline text-white text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline group"
                       >
-                        Read More <span className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px]">→</span>
+                        <span className="text-white text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
+                          Read More
+                        </span>
+                        <span className="text-white transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                          <ArrowRight size={20} strokeWidth={2} />
+                        </span>
                       </a>
+
                     ) : (
                       <span></span>
                     )}

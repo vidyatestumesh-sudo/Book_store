@@ -26,7 +26,11 @@ const viewIcon = (
   </svg>
 );
 
-const BACKEND_BASE_URL = "http://localhost:5000"; // Update as needed
+// Define backend base URL based on environment
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
 
 const LetterFromLangshott = () => {
   const [letters, setLetters] = useState([]);
@@ -89,18 +93,10 @@ const LetterFromLangshott = () => {
         <p className="italic text-gray-500">No letters uploaded yet.</p>
       ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-[1200px]">
-          {letters.map(({ _id, title, uploadedAt, fileUrl, fileName }) => {
-            // Extract publicId from fileUrl
-            const publicId = fileUrl.split('/').pop().replace('.pdf', '');
-
-            // Backend proxy route to view PDF
-            const fullFileUrl = `${BACKEND_BASE_URL}/api/letters/pdf/${publicId}`;
-
-            const downloadFileName = fileName
-              ? fileName.toLowerCase().endsWith(".pdf")
-                ? fileName
-                : `${fileName}.pdf`
-              : "download.pdf";
+          {letters.map(({ _id, title, uploadedAt, fileUrl, downloadUrl, fileName }) => {
+            const downloadFileName = fileName?.toLowerCase().endsWith(".pdf")
+              ? fileName
+              : `${fileName || "download"}.pdf`;
 
             return (
               <li
@@ -117,11 +113,11 @@ const LetterFromLangshott = () => {
                 </div>
 
                 <div className="flex justify-center gap-4 mt-auto">
+                  {/* View PDF - direct Google Drive viewUrl */}
                   <a
-                    href={fullFileUrl}
+                    href={fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    type="application/pdf"
                     className="inline-flex items-center justify-center gap-2 text-[#3366cc] font-semibold hover:underline"
                     title="View PDF"
                   >
@@ -129,11 +125,13 @@ const LetterFromLangshott = () => {
                     <span>View PDF</span>
                   </a>
 
+                  {/* Download PDF - uses downloadUrl */}
                   <a
-                    href={fileUrl} // use original fileUrl for download
-                    download={downloadFileName}
+                    href={downloadUrl}
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 text-[#cc6633] font-semibold hover:underline"
                     title="Download PDF"
+                    download={downloadFileName}
                   >
                     {pdfIcon}
                     <span>Download PDF</span>

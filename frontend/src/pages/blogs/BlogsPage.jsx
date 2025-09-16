@@ -1,85 +1,131 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { CalendarDays } from 'lucide-react';
 
-const blogs = [
-  {
-    id: 1,
-    title: "Mindfulness in Daily Life",
-    shortContent:
-      "Discover the transformative power of mindfulness in daily life...",
-    fullContent:
-      "Discover the transformative power of mindfulness in daily life. Learn practical tips to reduce stress, increase focus, and cultivate inner peace. This blog guides readers step-by-step towards living more consciously and intentionally. Learn breathing techniques, how to stay present, and ways to handle distractions throughout your day.",
-    image: "/b1.jpg",
-  },
-  {
-    id: 2,
-    title: "Personal Growth Strategies",
-    shortContent:
-      "Explore effective strategies for personal growth and self-improvement...",
-    fullContent:
-      "Explore effective strategies for personal growth and self-improvement. From developing better habits to mastering productivity techniques, this blog helps readers unlock their potential and achieve their goals in meaningful ways. Includes actionable steps and habit-building systems.",
-    image: "/b2.jpg",
-  },
-  {
-    id: 3,
-    title: "Power of Positive Thinking",
-    shortContent:
-      "Understand the impact of positive thinking and mental resilience...",
-    fullContent:
-      "Understand the impact of positive thinking and mental resilience. This blog offers inspiring examples and actionable advice to overcome challenges, stay motivated, and maintain a healthy mindset in all aspects of life. Learn how to reframe setbacks, practice gratitude, and build grit.",
-    image: "/b3.jpg",
-  },
-];
+// 🔹 Utility: remove quill classes but keep HTML structure
+const sanitizeDescription = (html) => {
+  return html
+    .replace(/class="ql-align-[^"]*"/g, "") // remove ql-align-* classes
+    .replace(/style="[^"]*"/g, ""); // remove inline styles if any
+};
 
 const BlogsPage = () => {
-  const [expandedBlogId, setExpandedBlogId] = useState(null);
+  const [blogs, setBlogs] = useState([]);
 
-  const handleToggle = (id) => {
-    setExpandedBlogId(expandedBlogId === id ? null : id);
+  // ✅ Fetch blogs from backend
+  const fetchBlogs = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/blogs");
+      const data = await res.json();
+      setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch (err) {
+      console.error("Failed to fetch blogs", err);
+    }
   };
 
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
   return (
-    <div className="max-w-6xl mx-auto px-6 py-20 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-100 min-h-screen font-['Poppins']">
-      <h2 className="mb-14 text-5xl font-bold text-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-transparent bg-clip-text animate-text">
-        📝 Latest Blogs
-      </h2>
+    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
+      {/* ✅ Breadcrumb */}
+      <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-light">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb m-0 p-0 flex gap-2 text-sm">
+            <li className="breadcrumb-item">
+              <a href="/" className="text-gray-500 hover:underline">Home</a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/blogs" className="text-gray-500 hover:underline">Blogs</a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/blogs" className="!text-gray-700 hover:underline">Author: Anil Kumar</a>
+            </li>
+          </ol>
+        </nav>
+      </div>
 
-      <div className="space-y-12">
-        {blogs.map((blog) => (
-          <div
-            key={blog.id}
-            className="group flex flex-col md:flex-row items-center bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2"
-          >
-            {/* Blog Image */}
-            <div className="w-full md:w-1/2 relative h-64 md:h-80 overflow-hidden">
-              <img
-                src={blog.image}
-                alt={blog.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </div>
+      {/* ✅ Title Section */}
+      <div className="relative inline-block">
+        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
+          Author: Anil Kumar
+        </h1>
+        <img
+          src="/motif.webp"
+          alt="feather"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
+        />
+      </div>
 
-            {/* Blog Content */}
-            <div className="w-full md:w-1/2 p-8 space-y-4 text-gray-800">
-              <h3 className="text-3xl font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-orange-500 text-transparent bg-clip-text transition duration-300 group-hover:scale-105">
-                {blog.title}
-              </h3>
-
-              <p className="text-gray-600 leading-relaxed text-md transition-all duration-500 ease-in-out">
-                {expandedBlogId === blog.id
-                  ? blog.fullContent
-                  : blog.shortContent}
-              </p>
-
-              <button
-                onClick={() => handleToggle(blog.id)}
-                className="inline-block mt-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-md hover:from-pink-600 hover:to-orange-500 transition-all duration-300"
+      {/* ✅ Blogs Section */}
+      <div className="max-w-8xl mx-auto px-6 min-h-screen mt-12">
+        {blogs.length === 0 ? (
+          <p className="text-center text-gray-500">No blogs found.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {blogs.map((blog) => (
+              <div
+                key={blog._id}
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
               >
-                {expandedBlogId === blog.id ? "Read Less ↑" : "Read More →"}
-              </button>
-            </div>
+                {/* ✅ Blog Image */}
+                {blog.image && (
+                  <div className="relative h-60 overflow-hidden">
+                    <img
+                      src={`http://localhost:5000${blog.image}`}
+                      alt={blog.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                )}
+
+                {/* ✅ Blog Content */}
+                <div className="p-6 text-left flex flex-col flex-grow">
+                  <h3 className=" font-semibold text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight mb-3">
+                    {blog.title}
+                  </h3>
+
+                  {/* ✅ Blog Date */}
+                  <p className="flex items-center gap-2 text-gray-400 text-xl mt-3">
+                    <CalendarDays className="w-6 h-6" />
+                    {new Date(blog.createdAt).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+
+                  {/* ✅ Minimal description preview */}
+                  <div
+                    className="prose prose-sm text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] line-clamp-3 mb-4"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeDescription(
+                        blog.description.length > 200
+                          ? blog.description.slice(0, 200) + "..."
+                          : blog.description
+                      ),
+                    }}
+                  />
+
+                  {/* ✅ Read More Button */}
+                  <div className="mt-auto">
+                    <Link
+                      to={`/blogs/${blog._id}`}
+                      className="inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
+                    >
+                      Read More
+                      <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
+                        →
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

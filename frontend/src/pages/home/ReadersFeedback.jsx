@@ -88,14 +88,14 @@ const ReadersFeedback = () => {
         <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
           <button
             onClick={handlePrev}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da]"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black hover:bg-[#8c2f24] hover:text-white transition"
           >
             <FiChevronLeft size={20} />
           </button>
 
           <button
             onClick={handleNext}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-black text-black hover:bg-[#8c2f24] hover:text-[#e6e8da] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-black hover:bg-[#8c2f24] hover:text-white transition"
           >
             <FiChevronRight size={20} />
           </button>

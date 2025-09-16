@@ -179,7 +179,7 @@ const Navbar = () => {
                   <Link to="/publications">PUBLICATIONS</Link>
                 </li>
                 <li>
-                  <Link to="/foundation">LANGSHOTT FOUNDATION</Link>
+                  <Link to="/foundation">THE FOUNDATION</Link>
                 </li>
                 <li>
                   <Link to="/blogs">BLOGS</Link>
@@ -211,7 +211,7 @@ const Navbar = () => {
             <Link to="/blogs">BLOGS</Link>
           </li>
           <li>
-            <Link to="/letter">LETTER FROM LANGSHOTT</Link>
+            <Link to="/letters">LETTER FROM LANGSHOTT</Link>
           </li>
           {/* Contact (mobile only) */}
           <li className="contact-mobile">

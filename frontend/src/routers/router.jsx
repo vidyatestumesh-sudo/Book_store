@@ -20,8 +20,9 @@ import AboutAuthorPage from "../pages/AboutAuthorPage/AboutAuthorPage";
 import Publications from "../pages/publications/Publications";
 import LetterFromLangshott from "../pages/letters/letter-from-langshott";
 import ManageLetters from "../pages/dashboard/manageLetters/ManageLetters";
-import AddBlogs from "../pages/dashboard/AddBlogs";
 import BlogsPage from "../pages/blogs/BlogsPage";
+import AddBlogs from "../pages/dashboard/manageblogs/AddBlogs";
+import BlogDetailPage from "../pages/blogs/BlogDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
         path: "/letters",
         element: <LetterFromLangshott />
       },
+      {
+         path: "/blogs/:id",
+         element: <BlogDetailPage />
+      }  
     ]
   },
   {

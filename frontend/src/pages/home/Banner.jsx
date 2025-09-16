@@ -2,10 +2,9 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="max-w-screen-9xl mx-auto flex flex-col lg:flex-row font-Figtree items-center justify-between px-4 min-h-screen lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px] overflow-hidden pt-4">
-
+    <div className="max-w-screen-9xl mx-auto font-Figtree overflow-hidden pt-4 px-4 grid grid-cols-1 lg:grid-cols-2 items-stretch min-h-[700px] sm:min-h-[750px] md:min-h-[800px] lg:min-h-[500px] xl:min-h-[600px] 2xl:min-h-[700px]">
       {/* Left Image Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="flex items-center justify-center px-4 lg:px-8 xl:px-12 2xl:px-16 h-full">
         <img
           src="anil-kumar.webp"
           alt="Langshott Foundation Author"
@@ -14,8 +13,7 @@ const Banner = () => {
       </div>
 
       {/* Right Text Section */}
-      <div className="w-full lg:w-1/2 h-auto lg:h-full px-4 lg:py-0 text-center flex flex-col justify-center items-center overflow-y-auto max-w-[700px] xl:max-w-[800px] mx-auto">
-
+      <div className="relative bg-transparent px-4 lg:py-0 text-center flex flex-col justify-center items-center overflow-y-auto max-w-[700px] xl:max-w-[800px] mx-auto h-full">
         {/* Logo */}
         <div className="mb-6 sm:mb-8">
           <img
@@ -48,20 +46,15 @@ const Banner = () => {
 
         {/* Stars Divider */}
         <div className="flex justify-center gap-2 text-gray-600 mb-0 font-bellmt">
-          {/* Always visible (first 5 stars → mobile baseline) */}
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
           <span className="text-2xl sm:text-3xl lg:text-4xl">*</span>
-
-          {/* Extra 2 stars → show from md (tablet) */}
           <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
           <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
           <span className="hidden md:inline text-3xl lg:text-4xl">*</span>
-
-          {/* Extra 3 stars → show from lg (desktop) */}
           <span className="hidden lg:inline text-4xl">*</span>
           <span className="hidden lg:inline text-4xl">*</span>
           <span className="hidden lg:inline text-4xl">*</span>
@@ -74,8 +67,6 @@ const Banner = () => {
         <p className="text-[17px] sm:text-[21px] md:text-[23px] lg:text-[25px] xl:text-[25px] font-Figtree font-semibold leading-snug leading-tight text-[#8c2f2f] italic lg:leading-[1.3] px-4 sm:px-10 text-center">
           "The solutions you’re searching for are within you; we can only help you to get there."
         </p>
-
-
       </div>
     </div>
   );

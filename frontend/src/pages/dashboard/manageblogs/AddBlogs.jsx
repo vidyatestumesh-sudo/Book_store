@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddBlogs = () => {
   const {
@@ -9,6 +11,7 @@ const AddBlogs = () => {
     formState: { errors },
     reset,
     setValue,
+    watch,
   } = useForm({
     defaultValues: { title: "", description: "", image: "" },
   });
@@ -17,6 +20,7 @@ const AddBlogs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [description, setDescription] = useState(""); // 🆕 rich text state
 
   const token = localStorage.getItem("adminToken");
 
@@ -43,7 +47,7 @@ const AddBlogs = () => {
     try {
       const formData = new FormData();
       formData.append("title", data.title);
-      formData.append("description", data.description);
+      formData.append("description", description); // 🆕 use ReactQuill state
       if (data.image && data.image[0]) formData.append("image", data.image[0]);
 
       const url = editingId
@@ -73,6 +77,7 @@ const AddBlogs = () => {
           icon: "success",
         });
         reset();
+        setDescription(""); // reset editor
         setEditingId(null);
         setShowForm(false);
         fetchBlogs();
@@ -91,7 +96,7 @@ const AddBlogs = () => {
   const handleEdit = (blog) => {
     setEditingId(blog._id);
     setValue("title", blog.title);
-    setValue("description", blog.description);
+    setDescription(blog.description); // 🆕 set rich text value
     setShowForm(true);
   };
 
@@ -134,24 +139,35 @@ const AddBlogs = () => {
     }
   };
 
-  // Read more/less component
+  // Read more/less with formatted text
   const BlogDescription = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
+    const formattedText = text.replace(/\n/g, "<br />");
     const words = text.split(" ");
     const isLong = words.length > 40;
 
     return (
-      <p className="text-gray-700 leading-relaxed">
-        {expanded || !isLong ? text : words.slice(0, 40).join(" ") + "..."}
+      <div className="prose prose-lg text-gray-700 leading-relaxed font-figtree">
+        <div
+          dangerouslySetInnerHTML={{
+            __html:
+              expanded || !isLong
+                ? formattedText
+                : words.slice(0, 40).join(" ") + "...",
+          }}
+        />
         {isLong && (
           <button
-            className="ml-2 text-blue-500 font-medium hover:underline"
+            className="ml-2 inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? "Read Less" : "Read More"}
+            <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
+              →
+            </span>
           </button>
         )}
-      </p>
+      </div>
     );
   };
 
@@ -165,6 +181,7 @@ const AddBlogs = () => {
             setShowForm(!showForm);
             if (!showForm) reset();
             setEditingId(null);
+            setDescription(""); // reset description editor
           }}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
         >
@@ -183,6 +200,7 @@ const AddBlogs = () => {
             encType="multipart/form-data"
             className="space-y-5"
           >
+            {/* Title */}
             <div>
               <label className="block font-semibold mb-1 text-gray-800">
                 Title
@@ -198,23 +216,26 @@ const AddBlogs = () => {
               )}
             </div>
 
+            {/* Description - React Quill */}
             <div>
               <label className="block font-semibold mb-1 text-gray-800">
                 Description
               </label>
-              <textarea
-                placeholder="Enter blog description"
-                {...register("description", { required: "Description is required" })}
-                rows={5}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              <ReactQuill
+                theme="snow"
+                value={description}
+                onChange={setDescription}
+                placeholder="Write your blog content here..."
+                className="bg-white rounded"
               />
-              {errors.description && (
+              {!description && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.description.message}
+                  Description is required
                 </p>
               )}
             </div>
 
+            {/* Image */}
             <div>
               <label className="block font-semibold mb-1 text-gray-800">
                 Image (optional)
@@ -226,6 +247,7 @@ const AddBlogs = () => {
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
