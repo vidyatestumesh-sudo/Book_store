@@ -1,17 +1,35 @@
 const Blog = require("./blog.model");
+const cloudinary = require("../config/cloudinary");
+
+// Helper: Upload file buffer to Cloudinary
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "blogs" }, // you can customize the folder
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(fileBuffer);
+  });
+};
 
 // Create blog
 const postABlog = async (req, res) => {
   try {
     const { title, description } = req.body;
+    let imageUrl = null;
 
-    // ✅ Image is optional
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      imageUrl = result.secure_url;
+    }
 
     const newBlog = new Blog({
       title,
       description,
-      image: imagePath,
+      image: imageUrl,
     });
 
     await newBlog.save();
@@ -51,7 +69,8 @@ const updateBlog = async (req, res) => {
     const updateData = { ...req.body };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      const result = await uploadToCloudinary(req.file.buffer);
+      updateData.image = result.secure_url;
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(

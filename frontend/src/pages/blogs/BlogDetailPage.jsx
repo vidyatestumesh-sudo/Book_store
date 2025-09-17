@@ -35,6 +35,14 @@ const BlogDetailPage = () => {
     return <p className="text-center mt-10">Loading blog...</p>;
   }
 
+  // Determine correct image URL
+  const imageUrl =
+    blog.image && blog.image.startsWith("http")
+      ? blog.image // full URL (Cloudinary)
+      : blog.image
+      ? `${BACKEND_BASE_URL}${blog.image.startsWith("/") ? "" : "/"}${blog.image}` // local upload
+      : null;
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
       {/* ✅ Breadcrumb */}
@@ -42,10 +50,14 @@ const BlogDetailPage = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb m-0 p-0 flex gap-2 text-sm">
             <li className="breadcrumb-item">
-              <Link to="/" className="text-gray-500 hover:underline">Home</Link>
+              <Link to="/" className="text-gray-500 hover:underline">
+                Home
+              </Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/blogs" className="text-gray-500 hover:underline">Blogs</Link>
+              <Link to="/blogs" className="text-gray-500 hover:underline">
+                Blogs
+              </Link>
             </li>
             <li className="breadcrumb-item">
               <span className="!text-gray-700"> {blog.title} </span>
@@ -59,15 +71,17 @@ const BlogDetailPage = () => {
         {blog.title}
       </h1>
 
-      {/* ✅ Blog Image */}
       {blog.image && (
-        <img
-          src={`${BACKEND_BASE_URL}${blog.image}`}
-          alt={blog.title}
-          className="w-full rounded-2xl shadow-lg mb-8 object-cover max-h-[500px]"
-        />
-      )}
-
+  <img
+    src={
+      blog.image.startsWith("http")
+        ? blog.image
+        : `${BACKEND_BASE_URL}${blog.image}`
+    }
+    alt={blog.title}
+    className="w-full rounded-2xl shadow-lg mb-8 object-cover max-h-[500px]"
+  />
+)}
       {/* ✅ Full Description */}
       <div
         className="prose max-w-none text-gray-700 leading-relaxed"

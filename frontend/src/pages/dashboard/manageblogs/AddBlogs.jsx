@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-// ✅ Dynamic backend URL based on environment
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
@@ -17,9 +16,8 @@ const AddBlogs = () => {
     formState: { errors },
     reset,
     setValue,
-    watch,
   } = useForm({
-    defaultValues: { title: "", description: "", image: "" },
+    defaultValues: { title: "", description: "", image: null },
   });
 
   const [blogs, setBlogs] = useState([]);
@@ -30,14 +28,12 @@ const AddBlogs = () => {
 
   const token = localStorage.getItem("adminToken");
 
-  // Fetch blogs
+  // Fetch all blogs
   const fetchBlogs = async () => {
     try {
       const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
       const data = await res.json();
-      setBlogs(
-        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      );
+      setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (err) {
       console.error("Failed to fetch blogs", err);
     }
@@ -47,39 +43,40 @@ const AddBlogs = () => {
     fetchBlogs();
   }, []);
 
-  // Add or update blog
+  // Add or Edit blog
   const onSubmit = async (data) => {
     setIsLoading(true);
+
     try {
+      // Create FormData and append fields and file (if any)
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("description", description);
-      if (data.image && data.image[0]) formData.append("image", data.image[0]);
+
+      if (data.image && data.image.length > 0) {
+        formData.append("image", data.image[0]);
+      }
 
       const url = editingId
         ? `${BACKEND_BASE_URL}/api/blogs/edit/${editingId}`
         : `${BACKEND_BASE_URL}/api/blogs/create-blog`;
+
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
+        headers: {
+          Authorization: `Bearer ${token}`, // Do NOT set Content-Type here; browser sets it automatically for multipart
+        },
         body: formData,
-        headers: { Authorization: `Bearer ${token}` },
       });
 
-      let result;
-      try {
-        result = await res.json();
-      } catch {
-        result = {};
-      }
+      const result = await res.json();
 
       if (res.ok) {
         Swal.fire({
           title: editingId ? "Blog Updated" : "Blog Added",
-          text: editingId
-            ? "Blog updated successfully!"
-            : "Blog added successfully!",
+          text: editingId ? "Blog updated successfully!" : "Blog added successfully!",
           icon: "success",
         });
         reset();
@@ -98,7 +95,7 @@ const AddBlogs = () => {
     }
   };
 
-  // Edit blog
+  // Edit handler
   const handleEdit = (blog) => {
     setEditingId(blog._id);
     setValue("title", blog.title);
@@ -106,7 +103,7 @@ const AddBlogs = () => {
     setShowForm(true);
   };
 
-  // Delete blog
+  // Delete handler
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -126,12 +123,7 @@ const AddBlogs = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      let result;
-      try {
-        result = await res.json();
-      } catch {
-        result = {};
-      }
+      const result = await res.json();
 
       if (res.ok) {
         Swal.fire("Deleted!", "Blog has been deleted.", "success");
@@ -145,7 +137,7 @@ const AddBlogs = () => {
     }
   };
 
-  // Blog Description with Read More / Less
+  // Blog Description component remains unchanged
   const BlogDescription = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
     const formattedText = text.replace(/\n/g, "<br />");
@@ -179,7 +171,7 @@ const AddBlogs = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      {/* Header with Add Blog button */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-extrabold text-gray-800">📚 Blogs</h2>
         <button
@@ -195,7 +187,7 @@ const AddBlogs = () => {
         </button>
       </div>
 
-      {/* Add/Edit Form (toggle) */}
+      {/* Add/Edit Form */}
       {showForm && (
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 transition-all duration-500">
           <h2 className="text-2xl font-extrabold mb-6 text-blue-800">
@@ -241,7 +233,7 @@ const AddBlogs = () => {
               )}
             </div>
 
-            {/* Image */}
+            {/* Image Upload */}
             <div>
               <label className="block font-semibold mb-1 text-gray-800">
                 Image (optional)
@@ -253,7 +245,7 @@ const AddBlogs = () => {
               />
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
@@ -270,7 +262,7 @@ const AddBlogs = () => {
         </div>
       )}
 
-      {/* Blogs List */}
+      {/* Blog List */}
       <div className="space-y-10">
         {blogs.length ? (
           blogs.map((blog, index) => (
@@ -287,7 +279,7 @@ const AddBlogs = () => {
                 {blog.image && (
                   <div className="md:w-1/2">
                     <img
-                      src={`${BACKEND_BASE_URL}${blog.image}`}
+                      src={blog.image}
                       alt={blog.title}
                       className="w-full h-60 object-cover md:h-60 transition-transform duration-500 hover:scale-105"
                     />
@@ -306,7 +298,6 @@ const AddBlogs = () => {
                     </p>
                   </div>
 
-                  {/* Buttons */}
                   <div className="mt-6 flex gap-3">
                     <button
                       onClick={() => handleEdit(blog)}
