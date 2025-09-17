@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CalendarDays } from 'lucide-react';
+import { ArrowRight } from "lucide-react";
 
-// 🔹 Utility: remove quill classes but keep HTML structure
 const sanitizeDescription = (html) => {
   return html
     .replace(/class="ql-align-[^"]*"/g, "") // remove ql-align-* classes
@@ -67,7 +67,7 @@ const BlogsPage = () => {
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
+                className="group bg-white rounded-[10px] border-[2px] hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
               >
                 {/* ✅ Blog Image */}
                 {blog.image && (
@@ -99,7 +99,7 @@ const BlogsPage = () => {
 
                   {/* ✅ Minimal description preview */}
                   <div
-                    className="prose prose-sm text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] line-clamp-3 mb-4"
+                    className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-700 font-Figtree font-lite leading-tight lg:leading-[1.3] mt-2 lg:mt-4 mb-3 px-2 sm:px-2"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeDescription(
                         blog.description.length > 200
@@ -110,17 +110,20 @@ const BlogsPage = () => {
                   />
 
                   {/* ✅ Read More Button */}
-                  <div className="mt-auto">
-                    <Link
-                      to={`/blogs/${blog._id}`}
-                      className="inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
-                    >
-                      Read More
-                      <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
-                        →
-                      </span>
-                    </Link>
-                  </div>
+<div className="mt-auto">
+  <Link
+    to={`/blogs/${blog._id}`}
+    className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[21px] md:text-[20px] lg:text-[18px] xl:text-[18px] transition group no-underline"
+  >
+    <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light hover:underline">
+      Read More
+    </span>
+    <span className="text-[#8c2f24] transform transition-transform duration-200 group-hover:translate-x-[5px]">
+      <ArrowRight size={20} strokeWidth={2} />
+    </span>
+  </Link>
+</div>
+
                 </div>
               </div>
             ))}
