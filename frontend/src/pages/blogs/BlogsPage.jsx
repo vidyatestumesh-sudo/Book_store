@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import { CalendarDays } from 'lucide-react';
-import { ArrowRight } from "lucide-react";
-=======
 import { CalendarDays } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 // Define the backend base URL based on hostname
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
     : "https://bookstore-backend-hshq.onrender.com";
->>>>>>> f6d79a23bdf396502a205605af7119513369069b
 
 const sanitizeDescription = (html) => {
   return html
