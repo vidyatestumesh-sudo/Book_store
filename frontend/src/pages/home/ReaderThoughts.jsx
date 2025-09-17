@@ -118,7 +118,7 @@ const ReaderThoughts = () => {
   };
 
   return (
-    <div className="h-full overflow-hidden pt-10 pb-20 px-3">
+    <div className="h-full overflow-hidden pt-10 pb-20 px-4">
       <div className="max-w-9xl mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
 
         {/* Left Image */}
@@ -129,7 +129,7 @@ const ReaderThoughts = () => {
             className="w-full h-[250px] sm:h-[350px] md:h-[450px]  lg:h-[600px]  xl:h-[720px]  2xl:h-[700px]  object-cover"/>
         </div>
         {/* Right Content */}
-        <div className="relative bg-[#e6e8da] p-4 sm:p-6 md:p-10 flex flex-col h-[650px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
+        <div className="relative bg-[#e6e8da] p-4 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
           <div className="relative inline-block">
@@ -156,7 +156,7 @@ const ReaderThoughts = () => {
                 <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
+                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>

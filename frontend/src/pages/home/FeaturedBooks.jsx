@@ -88,7 +88,7 @@ const FeaturedBooks = () => {
     <div className="max-w-8xl mx-auto py-2 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
+        <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
           Featured Books
         </h1>
         <img
@@ -99,7 +99,7 @@ const FeaturedBooks = () => {
       </div>
 
       {/* Slider Container */}
-      <div className="relative w-full flex items-center mt-8">
+      <div className="relative w-full flex items-center mt-8 flex overflow-x-auto scrollbar-hide">
         
         {/* Left Arrow */}
         <button
@@ -204,10 +204,10 @@ const FeaturedBooks = () => {
 
                   {/* Info Section */}
                   <div className="text-center mt-6 px-4">
-                    <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-4 font-figtree break-words">
+                    <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-3 font-figtree break-words">
                       {book?.title}
                     </h3>
-                    <div className="inline-flex justify-center items-center gap-4 w-full">
+                    <div className="inline-flex justify-center items-center gap-3 w-full">
                       <span className="text-gray-500 line-through text-base md:text-lg font-figtree font-lite">
                         ₹{book?.oldPrice}
                       </span>

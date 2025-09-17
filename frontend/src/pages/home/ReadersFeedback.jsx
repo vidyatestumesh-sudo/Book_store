@@ -46,8 +46,8 @@ const ReadersFeedback = () => {
   const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
 
   return (
-    <div className="bg-white font-playfair mt-1 mb-6">
-      <div className="w-full max-w-8xl mx-auto px-16 pb-5">
+    <div className="bg-white font-playfair mt-0 mb-2">
+      <div className="w-full max-w-8xl mx-auto pb-5 px-14 xl:px-4">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
           <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-2 mt-0">
@@ -61,7 +61,7 @@ const ReadersFeedback = () => {
         </div>
 
         {/* Feedback Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-[340px] sm:h-[280px] md:h-[200px] lg:h-[200px] xl:h-[220px] 2xl:h-[250px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-[450px] sm:h-[280px] md:h-[240px] lg:h-[220px] xl:h-[220px] 2xl:h-[250px]">
           {feedbacks.slice(currentIndex, currentIndex + itemsPerPage).map((fb) => (
             <div key={fb.id} className="space-y-4">
               {/* Avatar + Name */}
@@ -79,7 +79,7 @@ const ReadersFeedback = () => {
               </div>
 
               {/* Feedback Text */}
-              <p className="text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">{fb.text}</p>
+              <p className="text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">{fb.text}</p>
             </div>
           ))}
         </div>
