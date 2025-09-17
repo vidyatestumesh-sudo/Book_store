@@ -12,7 +12,6 @@ const createAOrder = async (req, res) => {
       totalPrice,
     } = req.body;
 
-    // ✅ Generate guest order code (optional for non-logged-in users)
     const guestOrderCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
     const newOrder = new Order({
@@ -38,6 +37,7 @@ const createAOrder = async (req, res) => {
   }
 };
 
+// ✅ Get orders by user email
 const getOrderByEmail = async (req, res) => {
   try {
     const { email } = req.params;
@@ -55,7 +55,44 @@ const getOrderByEmail = async (req, res) => {
   }
 };
 
+// ✅ Get all orders (Admin)
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching all orders", error);
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
+};
+
+// ✅ Update order by ID (Admin)
+const updateOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({
+      message: "Order updated successfully",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error updating order", error);
+    res.status(500).json({ message: "Failed to update order" });
+  }
+};
+
 module.exports = {
   createAOrder,
-  getOrderByEmail
+  getOrderByEmail,
+  getAllOrders,
+  updateOrderById,
 };
