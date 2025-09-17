@@ -190,12 +190,12 @@ const SingleBook = () => {
             </div>
           </div>
 
-          {/* Delivery */}
-          <div className="delivery">
+           {/* Delivery */}
+          {/* <div className="delivery">
             <p>Delivery</p>
             <input type="text" placeholder="Enter Delivery Pincode" />
             <button className="check-btn">Check</button>
-          </div>
+          </div> */}
 
           {/* Share */}
           <div className="share">
