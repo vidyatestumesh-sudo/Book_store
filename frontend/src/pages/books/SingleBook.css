@@ -207,7 +207,7 @@ p {
 }
 
 .book-desc .extra-text {
-  display: block;
+  display: inline;
   font-size: 20px;
 }
 
@@ -330,6 +330,11 @@ p {
   margin: 30px auto !important;
 }
 
+.rv-card a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .rv-card h4 {
   font-family: "Figtree-Regular";
   font-size: 20px;
@@ -413,7 +418,7 @@ p {
 
   .about-book p,
   .book-details p,
-  .book-meta p, 
+  .book-meta p,
   .extra-text {
     font-size: 17px !important;
   }
@@ -562,6 +567,7 @@ p {
   .book-meta .value {
     font-size: 14px !important;
   }
+
   .delivery input {
     max-width: 180px;
   }

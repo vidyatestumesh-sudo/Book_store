@@ -1,6 +1,6 @@
 import "./SingleBook.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
@@ -10,11 +10,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 
-import book1 from "../../assets/books/goodbye-mr-patel-1.webp";
-import book2 from "../../assets/books/gentle-breeze-of-daily-wisdom.webp";
-import book3 from "../../assets/books/the-attributes-of-a-virtuous-mindset.webp";
-import book4 from "../../assets/books/master-the-rules-of-manifestation.webp";
-
 const SingleBook = () => {
   const { id } = useParams();
   const { data: book, isLoading, isError } = useFetchBookByIdQuery(id);
@@ -23,6 +18,28 @@ const SingleBook = () => {
 
   const [showMore, setShowMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  const WORD_LIMIT = 100;
+  const words = book?.description?.split(" ") || [];
+  const shortText = words.slice(0, WORD_LIMIT).join(" ");
+  const longText = words.slice(WORD_LIMIT).join(" ");
+
+  useEffect(() => {
+    if (book?._id) {
+      let viewed = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+      viewed = viewed.filter((b) => b._id !== book._id);
+      viewed.unshift(book);
+      viewed = viewed.slice(0, 5);
+      localStorage.setItem("recentlyViewed", JSON.stringify(viewed));
+    }
+  }, [book]);
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+    const filtered = stored.filter((b) => b._id !== book?._id);
+    setRecentlyViewed(filtered.slice(0, 4));
+  }, [book]);
 
   useEffect(() => {
     if (book?.coverImage) {
@@ -128,12 +145,10 @@ const SingleBook = () => {
 
           {/* Description with read more */}
           <p className="book-desc">
-            {book.description?.slice(0, 300)}
-            {showMore && (
-              <span className="extra-text">{book.description?.slice(300)}</span>
-            )}
+            {shortText}
+            {showMore && <span className="extra-text"> {longText}</span>}
             <br />
-            {book.description?.length > 300 && (
+            {words.length > WORD_LIMIT && (
               <span
                 className="read-more"
                 onClick={() => setShowMore(!showMore)}>
@@ -192,23 +207,36 @@ const SingleBook = () => {
         </div>
       </div>
 
-      {/* Recently Viewed (Static for now) */}
+      {/* Recently Viewed (Dynamic) */}
       <div className="recently-viewed">
         <h3>Recently Viewed</h3>
         <div className="row">
-          {[book1, book2, book3, book4].map((b, idx) => (
-            <div className="col-lg-3 col-md-6 col-sm-6 col-12" key={idx}>
-              <div className="rv-card">
-                <img src={b} alt="Book" />
-                <h4>Book Title</h4>
-                <p>
-                  <span className="old-price">₹ 400</span>{" "}
-                  <span className="current-price">₹ 200</span>{" "}
-                  <span className="discount">50% off</span>
-                </p>
+          {recentlyViewed.length > 0 ? (
+            recentlyViewed.map((rv) => (
+              <div className="col-lg-3 col-md-6 col-sm-6 col-12" key={rv._id}>
+                <div className="rv-card">
+                  <Link to={`/books/${rv._id}`}>
+                    <img src={getImgUrl(rv.coverImage)} alt={rv.title} />
+                    <h4>{rv.title}</h4>
+                    <p>
+                      <span className="old-price">₹ {rv.oldPrice}</span>{" "}
+                      <span className="current-price">₹ {rv.newPrice}</span>{" "}
+                      {rv.oldPrice > rv.newPrice && (
+                        <span className="discount">
+                          {Math.round(
+                            ((rv.oldPrice - rv.newPrice) / rv.oldPrice) * 100
+                          )}
+                          % off
+                        </span>
+                      )}
+                    </p>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No recently viewed books yet.</p>
+          )}
         </div>
       </div>
     </div>
