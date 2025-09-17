@@ -20,9 +20,8 @@ const AboutAuthor = () => {
       {/* ========== About Author Section ========== */}
       <article className="bg-[#e9ebec] rounded-xl p-4 py-5 sm:p-6 md:p-10 px-3 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-10 md:gap-20">
         {/* Left Side - Text */}
-        <div className="flex-1 px-2 md:px-5">
-          <SectionHeading>About Author</SectionHeading>
-
+        <div className="flex-1 px-2 md:px-5 md:ml-12">
+          <SectionHeading>Anil Kumar</SectionHeading>
           <p className="text-base leading-relaxed leading-snug leading-tight font-figtree font-regular-700 mb-4 text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px]">
             This is me in the given picture. You and I are one.
           </p>
