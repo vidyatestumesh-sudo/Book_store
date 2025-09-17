@@ -48,7 +48,7 @@ const InspirationBoard = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover"
+                  className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover rounded-[8px]"
                 />
                 <div className="absolute bottom-0 text-[16px] py-1 sm:text-[21px] md:text-[18px] lg:text-[18px] xl:text-[18px] text-gray-500 font-regular leading-tight lg:leading-[1.3] left-1/2 transform -translate-x-1/2 bg-[#e9e0d4] px-3  font-figtree rounded-t-lg">
                   {item.date}

@@ -156,7 +156,7 @@ const ReaderThoughts = () => {
                 <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
-                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] ">
+                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>
