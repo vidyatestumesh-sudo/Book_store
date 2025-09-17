@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
+// Define the backend base URL based on hostname
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"

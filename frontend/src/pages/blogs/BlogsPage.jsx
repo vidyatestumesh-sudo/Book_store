@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays } from "lucide-react";
 
+// Define the backend base URL based on hostname
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
@@ -20,7 +21,7 @@ const BlogsPage = () => {
   // ✅ Fetch blogs from backend
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("${BACKEND_BASE_URL}/api/blogs");
+      const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
       const data = await res.json();
       setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (err) {
@@ -39,13 +40,19 @@ const BlogsPage = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb m-0 p-0 flex gap-2 text-sm">
             <li className="breadcrumb-item">
-              <a href="/" className="text-gray-500 hover:underline">Home</a>
+              <a href="/" className="text-gray-500 hover:underline">
+                Home
+              </a>
             </li>
             <li className="breadcrumb-item">
-              <a href="/blogs" className="text-gray-500 hover:underline">Blogs</a>
+              <a href="/blogs" className="text-gray-500 hover:underline">
+                Blogs
+              </a>
             </li>
             <li className="breadcrumb-item">
-              <a href="/blogs" className="!text-gray-700 hover:underline">Author: Anil Kumar</a>
+              <a href="/blogs" className="!text-gray-700 hover:underline">
+                Author: Anil Kumar
+              </a>
             </li>
           </ol>
         </nav>
@@ -88,7 +95,7 @@ const BlogsPage = () => {
 
                 {/* ✅ Blog Content */}
                 <div className="p-6 text-left flex flex-col flex-grow">
-                  <h3 className=" font-semibold text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight mb-3">
+                  <h3 className="font-semibold text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-regular leading-snug leading-tight mb-3">
                     {blog.title}
                   </h3>
 
