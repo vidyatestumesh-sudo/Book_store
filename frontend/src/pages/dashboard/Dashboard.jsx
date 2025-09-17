@@ -80,6 +80,21 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className="mt-10 flex justify-center gap-6">
+  <button
+    onClick={() => navigate('/dashboard/orders')}
+    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+  >
+    Track Orders
+  </button>
+  <button
+    onClick={() => navigate('/dashboard/billing-download')}
+    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+  >
+    Download Billing
+  </button>
+</div>
     </div>
   );
 };

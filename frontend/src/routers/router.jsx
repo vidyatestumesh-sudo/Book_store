@@ -23,6 +23,8 @@ import ManageLetters from "../pages/dashboard/manageLetters/ManageLetters";
 import BlogsPage from "../pages/blogs/BlogsPage";
 import AddBlogs from "../pages/dashboard/manageblogs/AddBlogs";
 import BlogDetailPage from "../pages/blogs/BlogDetailPage";
+import AdminOrderPage from "../pages/dashboard/orders/AdminOrderPage";
+import BillingDownload from "../pages/dashboard/billing-download/BillingDownload";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +57,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <PrivateRoute><CheckoutPage /></PrivateRoute>
+        element: <CheckoutPage />
       },
       {
         path: "/books/:id",
@@ -124,7 +126,23 @@ const router = createBrowserRouter([
         element: <AdminRoute>
           <AddBlogs />
         </AdminRoute>
-      }
+      },
+      {
+        path: "orders",
+        element: (
+          <AdminRoute>
+            <AdminOrderPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "billing-download", 
+        element: (
+          <AdminRoute>
+            <BillingDownload />
+          </AdminRoute>
+        ),
+      },
 
     ]
   }
