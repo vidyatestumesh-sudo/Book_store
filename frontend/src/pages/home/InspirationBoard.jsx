@@ -26,7 +26,7 @@ const inspirations = [
 const InspirationBoard = () => {
   return (
     <div className="w-full bg-[#e9e0d4] font-playfair text-gray-900">
-      <div className="w-full max-w-8xl mx-auto px-14 sm:px-8 lg:px-8 xl:px-4 py-12 text-center">
+      <div className="w-full max-w-8xl mx-auto px-6 sm:px-8 lg:px-8 xl:px-4 py-12 text-center">
         {/* Section Title */}
         <div className="relative inline-block mb-12">
           <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-4">
