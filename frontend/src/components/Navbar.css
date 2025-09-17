@@ -14,12 +14,11 @@
 
 /* -------------------------------Navbar Container--------------------------*/
 .navbar-header {
-  background: #fdfdfd;
+  background: white;
   border-bottom: 1px solid #c86836;
   padding: 30px 0px;
   font-family: "Figtree-Regular";
   position: relative;
-  /* needed for absolute menu */
   z-index: 10;
 }
 
@@ -247,15 +246,17 @@
     padding: 2px 5px;
   }
 }
+
 @media (max-width: 1200px) {
   .navbar-menu-desktop li a {
     font-size: 12px;
   }
+
   .navbar-menu-desktop {
     gap: 10px;
   }
 }
-/* Tablet & Up */
+
 @media (min-width: 992px) {
   .contact-mobile {
     display: none;
@@ -266,22 +267,21 @@
   }
 }
 
-/* Tablets & Small Laptops */
 @media (max-width: 991px) {
   .navbar-header {
     padding: 20px 0px;
   }
 
-   .navbar-right-wrapper {
+  .navbar-right-wrapper {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 15px; /* spacing between icons and hamburger */
+    gap: 15px;
     flex-wrap: nowrap;
   }
 
   .navbar-icons {
-     display: flex;
+    display: flex;
     align-items: center;
     gap: 10px;
   }
@@ -308,7 +308,6 @@
   }
 }
 
-/* Mobile */
 @media (max-width: 575px) {
   .navbar-header {
     padding: 20px 0px;
@@ -319,9 +318,9 @@
     padding: 0px 20px !important;
   }
 
-     .navbar-right-wrapper {
-      margin-top: 20px;
-     }
+  .navbar-right-wrapper {
+    margin-top: 20px;
+  }
 
   .navbar-icons {
     gap: 10px;
@@ -344,14 +343,13 @@
 }
 
 @media (max-width: 480px) {
-   .navbar-right-wrapper {
-      margin-top: 10px;
-     }
+  .navbar-right-wrapper {
+    margin-top: 10px;
+  }
 }
 
-
-  @media (max-width: 360px) {
-    .navbar-right-wrapper {
-      margin-top: 5px;
-     }
+@media (max-width: 360px) {
+  .navbar-right-wrapper {
+    margin-top: 5px;
   }
+}
