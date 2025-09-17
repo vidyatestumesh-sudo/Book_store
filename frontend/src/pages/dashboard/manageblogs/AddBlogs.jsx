@@ -4,6 +4,12 @@ import Swal from "sweetalert2";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+// ✅ Dynamic backend URL based on environment
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
+
 const AddBlogs = () => {
   const {
     register,
@@ -20,14 +26,14 @@ const AddBlogs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [description, setDescription] = useState(""); // 🆕 rich text state
+  const [description, setDescription] = useState("");
 
   const token = localStorage.getItem("adminToken");
 
   // Fetch blogs
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/blogs");
+      const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
       const data = await res.json();
       setBlogs(
         data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -47,12 +53,12 @@ const AddBlogs = () => {
     try {
       const formData = new FormData();
       formData.append("title", data.title);
-      formData.append("description", description); // 🆕 use ReactQuill state
+      formData.append("description", description);
       if (data.image && data.image[0]) formData.append("image", data.image[0]);
 
       const url = editingId
-        ? `http://localhost:5000/api/blogs/edit/${editingId}`
-        : "http://localhost:5000/api/blogs/create-blog";
+        ? `${BACKEND_BASE_URL}/api/blogs/edit/${editingId}`
+        : `${BACKEND_BASE_URL}/api/blogs/create-blog`;
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -77,7 +83,7 @@ const AddBlogs = () => {
           icon: "success",
         });
         reset();
-        setDescription(""); // reset editor
+        setDescription("");
         setEditingId(null);
         setShowForm(false);
         fetchBlogs();
@@ -96,7 +102,7 @@ const AddBlogs = () => {
   const handleEdit = (blog) => {
     setEditingId(blog._id);
     setValue("title", blog.title);
-    setDescription(blog.description); // 🆕 set rich text value
+    setDescription(blog.description);
     setShowForm(true);
   };
 
@@ -115,7 +121,7 @@ const AddBlogs = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -139,7 +145,7 @@ const AddBlogs = () => {
     }
   };
 
-  // Read more/less with formatted text
+  // Blog Description with Read More / Less
   const BlogDescription = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
     const formattedText = text.replace(/\n/g, "<br />");
@@ -181,7 +187,7 @@ const AddBlogs = () => {
             setShowForm(!showForm);
             if (!showForm) reset();
             setEditingId(null);
-            setDescription(""); // reset description editor
+            setDescription("");
           }}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
         >
@@ -216,7 +222,7 @@ const AddBlogs = () => {
               )}
             </div>
 
-            {/* Description - React Quill */}
+            {/* Description */}
             <div>
               <label className="block font-semibold mb-1 text-gray-800">
                 Description
@@ -281,7 +287,7 @@ const AddBlogs = () => {
                 {blog.image && (
                   <div className="md:w-1/2">
                     <img
-                      src={`http://localhost:5000${blog.image}`}
+                      src={`${BACKEND_BASE_URL}${blog.image}`}
                       alt={blog.title}
                       className="w-full h-60 object-cover md:h-60 transition-transform duration-500 hover:scale-105"
                     />
