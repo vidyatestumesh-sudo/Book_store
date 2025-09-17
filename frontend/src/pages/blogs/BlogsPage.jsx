@@ -79,35 +79,33 @@ const BlogsPage = () => {
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="group bg-white rounded-[10px] border-[2px] hover:shadow-[0_6px_14px_rgba(0,0,0,0.12)] transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
-
+                className="group bg-white rounded-[10px] border-[2px] hover:shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
               >
                 {/* ✅ Blog Image */}
-{blog.image && (
-  <div className="relative h-60 overflow-hidden">
-    <img
-      src={
-        blog.image?.startsWith("http")
-          ? blog.image
-          : `${BACKEND_BASE_URL}${blog.image}`
-      }
-      alt={blog.title}
-      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-  </div>
-)}
-
+                {blog.image && (
+                  <div className="relative h-64 overflow-hidden"> {/* Reduced from h-60 */}
+                    <img
+                      src={
+                        blog.image?.startsWith("http")
+                          ? blog.image
+                          : `${BACKEND_BASE_URL}${blog.image}`
+                      }
+                      alt={blog.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                )}
 
                 {/* ✅ Blog Content */}
-                <div className="p-6 text-left flex flex-col flex-grow">
-                  <p className="text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[26px] font-Figtree font-medium leading-snug leading-tight mb-1">
+                <div className="p-4 text-left flex flex-col flex-grow"> {/* Reduced from p-6 */}
+                  <p className="text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-Figtree font-medium leading-snug">
                     {blog.title}
                   </p>
 
                   {/* ✅ Blog Date */}
-                  <p className="flex items-center gap-2 text-gray-400 text-xl mt-3">
-                    <CalendarDays className="w-6 h-6" />
+                  <p className="flex items-center gap-2 text-gray-400 text-lg mt-3 mb-2">
+                    <CalendarDays className="w-5 h-5" />
                     {new Date(blog.createdAt).toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "long",
@@ -117,11 +115,11 @@ const BlogsPage = () => {
 
                   {/* ✅ Minimal description preview */}
                   <div
-                    className="text-[16px] sm:text-[18px] md:text-[19px] lg:text-[20px] xl:text-[21px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] mt-2 lg:mt-4 mb-3 px-2 sm:px-2"
+                    className="text-[15px] sm:text-[17px] md:text-[17px] lg:text-[18px] xl:text-[18px] text-black-800 font-Figtree font-regular leading-snug mt-0 mb-2 px-1 sm:px-1"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeDescription(
-                        blog.description.length > 200
-                          ? blog.description.slice(0, 200) + "..."
+                        blog.description.length > 160
+                          ? blog.description.slice(0, 160) + "..."
                           : blog.description
                       ),
                     }}
@@ -131,12 +129,12 @@ const BlogsPage = () => {
                   <div className="mt-auto">
                     <Link
                       to={`/blogs/${blog._id}`}
-                      className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[21px] md:text-[20px] lg:text-[18px] xl:text-[18px] transition group no-underline"
+                      className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
                     >
-                      <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[18px] font-light no-underline">
+                      <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] font-light no-underline">
                         Read More
                       </span>
-                      <span className="text-[#8c2f24] transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                      <span className="text-black transform transition-transform duration-200 group-hover:translate-x-[5px]">
                         <ArrowRight size={20} strokeWidth={2} />
                       </span>
                     </Link>
