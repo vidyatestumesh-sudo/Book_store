@@ -13,7 +13,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'https://book-app-frontend-tau.vercel.app',
-    'https://bookstore-frontend-9tii.onrender.com'
+    'https://bookstore-frontend-9tii.onrender.com',
+    '*',
   ],
   credentials: true
 }));
