@@ -30,41 +30,30 @@
   background-color: #d7d0c6;
   color: #2b2621;
   font-family: "Figtree-Regular";
-  padding-top: 50px;
+  padding-top: 30px;
 }
 
-.footer .container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+.footer-heading {
+  font-family: "Figtree-Regular";
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #000;
 }
 
-.footer-row {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.footer-col {
-  margin-bottom: 30px;
-  flex: 1;
-}
-
-/* Footer Links */
+/* Links */
 .footer-links {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 35px 0;
 }
 
 .footer-links li {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .footer-links a {
   text-transform: uppercase;
-  font-size: 16px;
-  letter-spacing: 1px;
+  font-size: 15px;
   color: #2b2621;
   text-decoration: none;
 }
@@ -73,67 +62,13 @@
   text-decoration: underline;
 }
 
-/* Newsletter */
-.newsletter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 65px;
-  margin-bottom: 25px;
-}
-
-.newsletter p {
-  font-family: "Figtree-Medium";
-  font-size: 20px;
-  color: black;
-  white-space: nowrap;
-  margin-bottom: 0px;
-  margin-top: 8px;
-}
-
-.newsletter-form {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.newsletter-form input {
-  border-radius: 30px 0 0 30px;
-  padding: 10px 15px;
-  font-size: 16px;
-}
-
-.newsletter-form input:focus {
-  outline: none;
-  box-shadow: none;
-  border-color: #ccc;
-}
-
-.newsletter-form button {
-  font-family: "Figtree-Regular";
-  border-radius: 30px;
-  margin-left: -20px;
-  border: none;
-  padding: 10px 25px;
-  color: white;
-  background-color: #983120;
-  font-size: 20px;
-  transition: background-color 0.3s ease;
-}
-
-.newsletter-form button:hover {
-  background-color: #7a241b;
-}
-
-/* Privacy + Social */
-.privacy-social {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
+/* Privacy */
+.privacy-links {
+  margin: 15px 0;
 }
 
 .privacy-links a {
-  font-size: 18px;
+  font-size: 16px;
   color: #2b2621;
   text-decoration: none;
 }
@@ -142,11 +77,11 @@
   text-decoration: underline;
 }
 
+/* Social Icons */
 .social-icons {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  margin-left: 70px;
 }
 
 .social-icons a {
@@ -159,6 +94,137 @@
   transform: scale(1.3);
 }
 
+/* Featured Books */
+.featured-book {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.featured-book img {
+  width: 70px;
+  height: 90px;
+  margin-right: 20px;
+}
+
+.featured-book p {
+  font-family: "Figtree-Medium";
+  font-size: 18px;
+  margin: 0;
+}
+
+.featured-book span {
+  font-size: 16px;
+}
+
+/* Newsletter */
+.newsletter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.newsletter p {
+  font-family: "Figtree-Regular";
+  font-size: 18px;
+  color: black;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: end;
+}
+
+.newsletter-form input {
+  border-radius: 30px 0 0 30px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
+
+.newsletter-form input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: #aaa;
+}
+
+.newsletter-form button {
+  font-family: "Figtree-Regular";
+  border-radius: 30px;
+  margin-left: -20px;
+  border: none;
+  padding: 10px 25px;
+  color: white;
+  background-color: #983120;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.newsletter-form button:hover {
+  background-color: #7a241b;
+}
+
+/* Popular Posts */
+.footer-posts {
+  margin-bottom: 15px;
+}
+
+.popular-posts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.post {
+  position: relative;
+  flex: 1;
+}
+
+.post img {
+  width: 90%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+.post .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 5px;
+  box-sizing: border-box;
+  color: white;
+}
+
+.post .overlay p {
+  margin: 0;
+  font-size: 17px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.post .overlay span {
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  word-wrap: break-word;
+}
+
 /* Bottom strip */
 .footer-bottom {
   font-family: "Figtree-Light";
@@ -166,6 +232,7 @@
   color: #eeeced;
   font-size: 16px;
   padding: 12px 0;
+  margin-top: 30px;
 }
 
 .footer-bottom .container {
@@ -177,7 +244,7 @@
 
 .footer-bottom p {
   color: #eeeced;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .footer-bottom a {
@@ -185,99 +252,86 @@
   text-decoration: underline;
 }
 
-@media (max-width: 1400px) {
-  .newsletter p {
-    font-size: 18px;
-  }
-  .newsletter-form button {
-    font-size: 18px;
-    padding: 10px 15px;
+@media (max-width: 1366px) {
+  .post .overlay p {
+    font-size: 16px;
   }
 }
 
-@media (min-width: 992px) and (max-width: 1200px) {
-  .newsletter {
-    gap: 20px;
+@media (max-width: 1200px) {
+  .post img {
+    width: 100%;
   }
-  .newsletter-form input {
-    width: 150px;
-  }
-  .newsletter-form button {
-    font-size: 16px;
-    padding: 10px 15px;
-  }
-  .social-icons {
-    margin-left: 20px;
-  }
-  .footer-bottom {
-    font-size: 16px;
+  
+  .post .overlay p {
+    margin: 0;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 991px) {
-  .footer .container {
-    gap: 5px;
+  .footer-heading {
+    font-size: 20px;
   }
-  .footer-links {
-    text-align: center;
-  }
+
   .newsletter {
-    display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-  .newsletter p {
-    margin-top: 0px;
+    align-items: center;
     text-align: center;
   }
+
   .newsletter-form {
     justify-content: center;
   }
-  .privacy-social {
-    display: flex;
-    flex-direction: column;
+
+  .footer-section2 {
+    margin-bottom: 30px;
   }
-  .social-icons {
-    margin-left: 0px;
-  }
-  .footer-bottom {
+
+  .featured-book p {
     font-size: 16px;
+  }
+
+  .featured-book span {
+    font-size: 14px;
+  }
+
+  .popular-posts {
+    justify-content: center;
+  }
+
+  .post img {
+    width: 90%;
+  }
+
+  .post .overlay p {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .post .overlay span {
+    font-size: 14px;
+  }
+
+  .footer-bottom {
+    font-size: 14px;
     text-align: center;
   }
+
   .footer-bottom .container {
-    display: flex;
     flex-direction: column;
+    gap: 10px;
   }
 }
 
-@media (max-width: 575px) {
-  .footer {
-    padding-top: 30px;
-  }
-  .footer-col {
-    margin-bottom: 15px;
-  }
-  .footer-links li {
-    margin-bottom: 8px;
-  }
-  .footer-links a {
-    font-size: 14px;
-  }
-  .newsletter {
-    gap: 10px;
-  }
-  .newsletter p {
+@media (max-width: 767px) {
+  .post .overlay p {
+    margin: 0;
     font-size: 16px;
   }
-  .newsletter-form button {
-    font-size: 14px;
-    padding: 10px 15px;
-  }
-  .privacy-links a {
-    font-size: 16px;
-  }
-  .footer-bottom {
-    font-size: 14px;
+
+  .post .overlay span {
+    font-size: 12px;
   }
 }
 
@@ -285,9 +339,105 @@
   .footer {
     padding-top: 15px;
   }
-  .footer-links li {
-    margin-bottom: 5px;
+
+  .footer-heading {
+    font-size: 18px;
+  }
+
+  .footer-section1 {
+    margin-bottom: 30px;
+  }
+
+  .footer-section2 {
+    margin-bottom: 0px;
+  }
+
+  .footer-section3 {
+    margin-bottom: 20px;
+  }
+
+  .footer-heading {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .footer-links {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+  }
+
+  .privacy-links {
+    text-align: center;
+    margin: 5px 0px;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+
+  .featured-book {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+
+  .featured-book img {
+    width: 50px;
+    height: 70px;
+    margin: 0 auto;
+  }
+
+  .featured-book p {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .featured-book span {
+    display: block;
+    text-align: center;
+  }
+
+  .newsletter p {
+    font-size: 16px;
+  }
+
+  .newsletter-form input {
+    font-size: 14px;
+  }
+
+  .newsletter-form button {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .popular-posts {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .post img {
+    height: 100px;
+    width: 100%;
+  }
+
+  .post .overlay {
+    padding: 5px 2px;
+  }
+
+  .post .overlay p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .post .overlay span {
+    font-size: 12px;
+  }
+
+  .footer-bottom {
+    margin-top: 10px;
   }
 }
-
-
