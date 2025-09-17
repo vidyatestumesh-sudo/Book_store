@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CalendarDays } from 'lucide-react';
 
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
+
 // 🔹 Utility: remove quill classes but keep HTML structure
 const sanitizeDescription = (html) => {
   return html
@@ -15,7 +20,7 @@ const BlogsPage = () => {
   // ✅ Fetch blogs from backend
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/blogs");
+      const res = await fetch("${BACKEND_BASE_URL}/api/blogs");
       const data = await res.json();
       setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (err) {
@@ -73,7 +78,7 @@ const BlogsPage = () => {
                 {blog.image && (
                   <div className="relative h-60 overflow-hidden">
                     <img
-                      src={`http://localhost:5000${blog.image}`}
+                      src={`${BACKEND_BASE_URL}${blog.image}`}
                       alt={blog.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
                     />
