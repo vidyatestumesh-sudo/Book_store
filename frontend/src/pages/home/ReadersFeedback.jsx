@@ -47,7 +47,7 @@ const ReadersFeedback = () => {
 
   return (
     <div className="bg-white font-playfair mt-1 mb-6">
-      <div className="w-full max-w-8xl mx-auto px-4 pb-5">
+      <div className="w-full max-w-8xl mx-auto px-16 pb-5">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
           <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-2 mt-0">

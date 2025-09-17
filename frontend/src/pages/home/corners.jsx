@@ -93,7 +93,7 @@ const Corners = () => {
 
   return (
     <section className="bg-white py-16 px-0 font-figtree font-light">
-      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[80px]">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[50px] px-16">
         {corners.map((corner, index) => {
           const slide = corner.slides[slideIndexes[index]];
 
