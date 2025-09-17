@@ -83,16 +83,21 @@ const BlogsPage = () => {
 
               >
                 {/* ✅ Blog Image */}
-                {blog.image && (
-                  <div className="relative h-60 overflow-hidden">
-                    <img
-                      src={`${BACKEND_BASE_URL}${blog.image}`}
-                      alt={blog.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                )}
+{blog.image && (
+  <div className="relative h-60 overflow-hidden">
+    <img
+      src={
+        blog.image?.startsWith("http")
+          ? blog.image
+          : `${BACKEND_BASE_URL}${blog.image}`
+      }
+      alt={blog.title}
+      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+  </div>
+)}
+
 
                 {/* ✅ Blog Content */}
                 <div className="p-6 text-left flex flex-col flex-grow">
