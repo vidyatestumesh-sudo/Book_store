@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
+// Define the backend base URL based on hostname
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
+
 // 🔹 Utility: remove quill classes but keep HTML structure
 const sanitizeDescription = (html) => {
   return html
@@ -15,7 +21,7 @@ const BlogDetailPage = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/blogs/${id}`);
+        const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`);
         const data = await res.json();
         setBlog(data);
       } catch (err) {
@@ -56,7 +62,7 @@ const BlogDetailPage = () => {
       {/* ✅ Blog Image */}
       {blog.image && (
         <img
-          src={`http://localhost:5000${blog.image}`}
+          src={`${BACKEND_BASE_URL}${blog.image}`}
           alt={blog.title}
           className="w-full rounded-2xl shadow-lg mb-8 object-cover max-h-[500px]"
         />
