@@ -111,7 +111,10 @@ const Footer = () => {
             <h4 className="footer-heading">Featured Books</h4>
             {recentBooks.length > 0 ? (
               recentBooks.map((book, index) => (
-                <div className="featured-book" key={index}>
+                <Link
+                  to={`/books/${book._id}`} // <-- navigate to book details page
+                  key={index}
+                  className="featured-book">
                   <img src={getImgUrl(book?.coverImage)} alt={book?.title} />
                   <div>
                     <p>{book?.title}</p>
@@ -120,7 +123,7 @@ const Footer = () => {
                       {book?.newPrice}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))
             ) : (
               <p>No featured books available</p>
@@ -143,7 +146,10 @@ const Footer = () => {
             <div className="popular-posts">
               {blogs.length > 0 ? (
                 blogs.map((blog, index) => (
-                  <div className="post" key={index}>
+                  <Link
+                    to={`/blogs/${blog._id}`} // <-- navigate to blog details page
+                    key={index}
+                    className="post">
                     <img
                       src={
                         blog.image?.startsWith("http")
@@ -165,7 +171,7 @@ const Footer = () => {
                         )}
                       </span>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <p>No recent blogs available</p>

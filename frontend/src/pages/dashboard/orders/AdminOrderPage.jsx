@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import getBaseUrl from "../../../utils/baseURL";
 
 const AdminOrderPage = () => {
@@ -38,19 +40,19 @@ const AdminOrderPage = () => {
     }
   };
 
-useEffect(() => {
-  const total = orders.reduce((sum, order) => {
-    if (order.status !== "Cancelled") {
-      return sum + (order.totalPrice || 0);
-    }
-    return sum;
-  }, 0);
-  setTotalSales(total);
-}, [orders]);
-
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    const total = orders.reduce((sum, order) => {
+      if (order.status !== "Cancelled") {
+        return sum + (order.totalPrice || 0);
+      }
+      return sum;
+    }, 0);
+    setTotalSales(total);
+  }, [orders]);
 
   const updateOrderField = async (orderId, updatedFields) => {
     try {
@@ -82,6 +84,7 @@ useEffect(() => {
       Swal.fire("Error", "Failed to update status", "error");
     }
   };
+
   const handleTrackingChange = (orderId, value) => {
     setTrackingInputs((prev) => ({
       ...prev,
@@ -108,7 +111,9 @@ useEffect(() => {
 
     try {
       for (const update of updates) {
-        await updateOrderField(update.orderId, { trackingId: update.trackingId });
+        await updateOrderField(update.orderId, {
+          trackingId: update.trackingId,
+        });
       }
 
       await fetchOrders();
@@ -118,6 +123,92 @@ useEffect(() => {
       console.error(error);
     }
   };
+
+const generatePDF = (order) => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("INVOICE", 105, 15, { align: "center" });
+
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+
+  const {
+    name,
+    email,
+    phone,
+    _id,
+    address,
+    totalPrice,
+    products,
+  } = order;
+
+  const fullAddress = [
+    address?.street,
+    address?.city,
+    address?.state,
+    address?.country,
+    address?.zipcode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const details = [
+    `Customer Name: ${name || "N/A"}`,
+    `Phone: ${phone || "N/A"}`,
+    `Email: ${email || "N/A"}`,
+    `Order ID: ${_id}`,
+    `Address: ${fullAddress || "N/A"}`,
+  ];
+
+  let y = 25;
+  details.forEach((line) => {
+    doc.text(line, 14, y);
+    y += 7;
+  });
+
+  const itemRows = (products || []).map((item, index) => [
+    index + 1,
+    item.title || "Untitled Book",
+    1,
+    `₹${(item.price || 0).toFixed(2)}`,
+    `₹${(item.price || 0).toFixed(2)}`,
+  ]);
+
+  autoTable(doc, {
+    head: [["#", "Book Title", "Qty", "Unit Price", "Subtotal"]],
+    body: itemRows,
+    startY: y + 5,
+    styles: { fontSize: 10 },
+    headStyles: {
+      fillColor: [230, 230, 230],
+      textColor: 20,
+      halign: "center",
+      fontStyle: "bold",
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 10 },
+      1: { halign: "left", cellWidth: 80 },
+      2: { halign: "left", cellWidth: 20 },
+      3: { halign: "left", cellWidth: 30 },
+      4: { halign: "left", cellWidth: 30 },
+    },
+  });
+
+  const finalY = doc.lastAutoTable.finalY || y + 30;
+
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text(`Total Amount: ₹${totalPrice?.toFixed(2) || "0.00"}`, 14, finalY + 10);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "italic");
+  doc.text("Thank you for shopping with us!", 105, finalY + 25, { align: "center" });
+
+  doc.save(`Invoice-${_id}.pdf`);
+};
+
 
   if (loading) return <div className="p-6">Loading orders...</div>;
 
@@ -133,10 +224,6 @@ useEffect(() => {
         </button>
       </div>
 
-      <div className="mb-4 font-semibold text-lg">
-        Total Sales: <span className="text-green-600">₹{totalSales.toFixed(2)}</span>
-      </div>
-
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm sm:text-base">
           <thead className="bg-gray-100">
@@ -146,12 +233,13 @@ useEffect(() => {
               <th className="border p-2">Email</th>
               <th className="border p-2">Status</th>
               <th className="border p-2">Tracking ID</th>
+              <th className="border p-2">Download</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center p-4">
+                <td colSpan="6" className="text-center p-4">
                   No orders found.
                 </td>
               </tr>
@@ -164,7 +252,9 @@ useEffect(() => {
                   <td className="border p-2">
                     <select
                       value={order.status}
-                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(order._id, e.target.value)
+                      }
                       className="border p-1 rounded w-full"
                     >
                       <option value="Pending">Pending</option>
@@ -178,10 +268,20 @@ useEffect(() => {
                     <input
                       type="text"
                       value={trackingInputs[order._id] || ""}
-                      onChange={(e) => handleTrackingChange(order._id, e.target.value)}
+                      onChange={(e) =>
+                        handleTrackingChange(order._id, e.target.value)
+                      }
                       className="border p-1 w-full rounded"
                       placeholder="Enter Tracking ID"
                     />
+                  </td>
+                  <td className="border p-2 text-center">
+                    <button
+                      onClick={() => generatePDF(order)}
+                      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
+                    >
+                      Download PDF
+                    </button>
                   </td>
                 </tr>
               ))
