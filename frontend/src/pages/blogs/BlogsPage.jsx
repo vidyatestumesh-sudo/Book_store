@@ -53,7 +53,7 @@ const BlogsPage = () => {
               </a>
             </li>
             <li className="breadcrumb-item">
-              <a href="/blogs" className="!text-gray-700 hover:underline"> Author: Anil Kumar </a>
+              <a href="/blogs" className="!text-gray-700 hover:underline breadcrumb-item truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"> Author: Anil Kumar </a>
             </li>
           </ol>
         </nav>

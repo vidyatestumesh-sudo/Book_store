@@ -108,7 +108,7 @@ const SingleBook = () => {
             <li className="breadcrumb-item">
               <a href="/publications">Publications</a>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className="breadcrumb-item active truncate max-w-[120px] sm:max-w-[200px] md:max-w-full" aria-current="page">
               {book.title}
             </li>
           </ol>

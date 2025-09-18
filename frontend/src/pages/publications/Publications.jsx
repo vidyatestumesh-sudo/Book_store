@@ -15,9 +15,7 @@ const Publications = () => {
                             <a href="/" className="text-gray">Home</a>
                         </li>
                         <li className="breadcrumb-item">
-                            <a href="/publications" className="!text-gray-600">
-                                Publications
-                            </a>
+                            <a href="/publications" className="!text-gray-600">Publications</a>
                         </li>
                     </ol>
                 </nav>

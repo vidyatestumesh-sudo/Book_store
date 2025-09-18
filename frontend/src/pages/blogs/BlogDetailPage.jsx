@@ -24,14 +24,15 @@ const BlogDetailPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
+  // ✅ Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 3; // Adjust as needed
+  const totalPages = Math.ceil(latestBlogs.length / blogsPerPage);
+
   // 🔹 Auto-slide for Featured Books
   useEffect(() => {
     if (books.length === 0) return;
-
-    const interval = setInterval(() => {
-      handleNext();
-    }, 4000);
-
+    const interval = setInterval(() => handleNext(), 4000);
     return () => clearInterval(interval);
   }, [books]);
 
@@ -69,8 +70,7 @@ const BlogDetailPage = () => {
         const data = await res.json();
         const sorted = data
           .filter((b) => b._id !== id)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 3);
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setLatestBlogs(sorted);
       } catch (err) {
         console.error("Failed to fetch latest blogs", err);
@@ -81,9 +81,12 @@ const BlogDetailPage = () => {
     fetchLatestBlogs();
   }, [id]);
 
-  if (!blog) {
-    return <p className="text-center mt-10">Loading blog...</p>;
-  }
+  if (!blog) return <p className="text-center mt-10">Loading blog...</p>;
+
+  // ✅ Calculate blogs for current page
+  const indexOfLast = currentPage * blogsPerPage;
+  const indexOfFirst = indexOfLast - blogsPerPage;
+  const currentBlogs = latestBlogs.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-12">
@@ -112,15 +115,18 @@ const BlogDetailPage = () => {
                 <li className="breadcrumb-item">
                   <a href="/blogs" className="text-gray-500 hover:underline">Blogs</a>
                 </li>
-                <li className="breadcrumb-item">
-                  <a href="/blogs" className="text-gray-500 hover:underline">Author: Anil Kumar</a>
+                <li
+                  className="breadcrumb-item text-gray-300 truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"
+                  title={blog.title} // shows full title on hover
+                >
+                  {blog.title}
                 </li>
-                <li className="breadcrumb-item text-gray-300">{blog.title}</li>
+
               </ol>
             </nav>
           </div>
           {/* Title */}
-          <div className="relative inline-block w-[500px] sm:w-[600px] md:w-[700px] lg:w-[800px] xl:w-[900px] mx-auto text-center">
+          <div className="relative w-full max-w-[900px] mx-auto text-center px-3 sm:px-6 md:px-8 lg:px-0">
             <h1 className="relative text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-snug">
               {blog.title}
               <img
@@ -236,52 +242,92 @@ const BlogDetailPage = () => {
           </aside>
         )}
       </div>
+
       {/* ✅ Latest Blogs Section */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <h2 className="text-2xl md:text-3xl font-playfair font-light text-center mb-10">
+      <div className="max-w-8xl mx-auto py-0">
+        <h2 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-snug mb-8 mt-8">
           Latest Blogs
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {latestBlogs.map((b) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {currentBlogs.map((blog) => (
             <div
-              key={b._id}
-              className="bg-white rounded-lg border hover:shadow-lg transition overflow-hidden flex flex-col"
+              key={blog._id}
+              className="group bg-white rounded-[10px] border-[2px] hover:shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
             >
-              {b.image && (
-                <div className="h-48 w-full overflow-hidden">
+              {blog.image && (
+                <div className="relative h-64 overflow-hidden">
                   <img
-                    src={b.image.startsWith("http") ? b.image : `${BACKEND_BASE_URL}${b.image}`}
-                    alt={b.title}
-                    className="w-full h-full object-cover"
+                    src={
+                      blog.image.startsWith("http")
+                        ? blog.image
+                        : `${BACKEND_BASE_URL}${blog.image}`
+                    }
+                    alt={blog.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               )}
-              <div className="p-5 flex flex-col flex-grow">
-                <h3 className="text-lg md:text-xl font-Figtree font-medium mb-2">
-                  {b.title}
-                </h3>
-                <p className="flex items-center gap-2 text-gray-400 text-sm mb-3">
-                  <CalendarDays className="w-4 h-4" />
-                  {new Date(b.createdAt).toLocaleDateString(undefined, {
+
+              <div className="p-4 text-left flex flex-col flex-grow">
+                <p className="text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-Figtree font-medium leading-snug">
+                  {blog.title}
+                </p>
+                <p className="flex items-center gap-2 text-gray-400 text-lg mt-3 mb-2">
+                  <CalendarDays className="w-5 h-5" />
+                  {new Date(blog.createdAt).toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
                 </p>
-                <p className="text-gray-600 text-sm flex-grow">
-                  {b.description.length > 120
-                    ? b.description.slice(0, 120) + "..."
-                    : b.description}
-                </p>
-                <Link
-                  to={`/blogs/${b._id}`}
-                  className="mt-4 inline-flex items-center gap-1 text-black hover:underline"
-                >
-                  Read More <ArrowRight size={16} />
-                </Link>
+                <div
+                  className="text-[15px] sm:text-[17px] md:text-[17px] lg:text-[18px] xl:text-[18px] text-black-800 font-Figtree font-regular leading-snug mt-0 mb-2 px-1 sm:px-1"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeDescription(
+                      blog.description.length > 160
+                        ? blog.description.slice(0, 160) + "..."
+                        : blog.description
+                    ),
+                  }}
+                />
+                <div className="mt-auto">
+                  <Link
+                    to={`/blogs/${blog._id}`}
+                    className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
+                  >
+                    <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] font-light no-underline">
+                      Read More
+                    </span>
+                    <span className="text-black transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                      <ArrowRight size={20} strokeWidth={2} />
+                    </span>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* ✅ Pagination */}
+        <div className="flex justify-center items-center space-x-3 mt-10">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="w-8 h-8 flex items-center justify-center border border-black rounded-full disabled:opacity-30"
+          >
+            <ArrowLeft size={20} strokeWidth={2} />
+          </button>
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="w-8 h-8 flex items-center justify-center border border-black rounded-full disabled:opacity-30"
+          >
+            <ArrowRight size={20} strokeWidth={2} />
+          </button>
         </div>
       </div>
     </div>
