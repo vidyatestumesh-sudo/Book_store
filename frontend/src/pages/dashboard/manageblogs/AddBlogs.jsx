@@ -45,10 +45,14 @@ const AddBlogs = () => {
 
   // Add or Edit blog
   const onSubmit = async (data) => {
+    if (!description) {
+      Swal.fire("Error", "Description is required", "error");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Create FormData and append fields and file (if any)
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("description", description);
@@ -66,7 +70,7 @@ const AddBlogs = () => {
       const res = await fetch(url, {
         method,
         headers: {
-          Authorization: `Bearer ${token}`, // Do NOT set Content-Type here; browser sets it automatically for multipart
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -137,20 +141,22 @@ const AddBlogs = () => {
     }
   };
 
-  // Blog Description component remains unchanged
+  // Blog Description component
   const BlogDescription = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
-    const formattedText = text.replace(/\n/g, "<br />");
-    const words = text.split(" ");
+
+    const plainText = text.replace(/<[^>]+>/g, ""); // remove HTML tags for word count
+    const words = plainText.split(" ");
     const isLong = words.length > 40;
 
     return (
-      <div className="prose prose-lg text-gray-700 leading-relaxed font-figtree">
+      <div>
         <div
+          className="prose prose-lg text-gray-700 leading-relaxed font-Figtree whitespace-pre-wrap break-words"
           dangerouslySetInnerHTML={{
             __html:
               expanded || !isLong
-                ? formattedText
+                ? text
                 : words.slice(0, 40).join(" ") + "...",
           }}
         />

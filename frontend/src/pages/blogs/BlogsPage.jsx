@@ -41,17 +41,21 @@ const BlogsPage = () => {
 
   return (
     <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
-      {/* ✅ Breadcrumb */} <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-light">
-        <nav aria-label="breadcrumb"> <ol className="breadcrumb m-0 p-0 flex gap-2 text-sm">
-          <li className="breadcrumb-item">
-            <a href="/" className="text-gray-500 hover:underline"> Home </a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="/blogs" className="text-gray-500 hover:underline"> Blogs
-            </a> </li> <li className="breadcrumb-item">
-            <a href="/blogs" className="!text-gray-700 hover:underline"> Author: Anil Kumar </a>
-          </li>
-        </ol>
+      {/* ✅ Breadcrumb */}
+      <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-light">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb m-0 p-0 flex gap-0 text-sm">
+            <li className="breadcrumb-item">
+              <a href="/" className="text-gray-500 hover:underline"> Home </a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/blogs" className="text-gray-500 hover:underline"> Blogs
+              </a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/blogs" className="!text-gray-700 hover:underline"> Author: Anil Kumar </a>
+            </li>
+          </ol>
         </nav>
       </div>
 
