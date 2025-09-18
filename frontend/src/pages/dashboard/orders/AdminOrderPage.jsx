@@ -7,6 +7,7 @@ const AdminOrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [trackingInputs, setTrackingInputs] = useState({});
+  const [totalSales, setTotalSales] = useState(0);
 
   const fetchOrders = async () => {
     try {
@@ -16,7 +17,6 @@ const AdminOrderPage = () => {
         },
       });
 
-      // Sort orders: put Delivered & Cancelled last
       const sortedOrders = res.data.sort((a, b) => {
         const statusPriority = (status) =>
           status === "Delivered" || status === "Cancelled" ? 1 : 0;
@@ -38,6 +38,16 @@ const AdminOrderPage = () => {
     }
   };
 
+useEffect(() => {
+  const total = orders.reduce((sum, order) => {
+    if (order.status !== "Cancelled") {
+      return sum + (order.totalPrice || 0);
+    }
+    return sum;
+  }, 0);
+  setTotalSales(total);
+}, [orders]);
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -58,13 +68,6 @@ const AdminOrderPage = () => {
     }
   };
 
-  const handleTrackingChange = (orderId, value) => {
-    setTrackingInputs((prev) => ({
-      ...prev,
-      [orderId]: value,
-    }));
-  };
-
   const handleStatusChange = async (orderId, value) => {
     try {
       await updateOrderField(orderId, { status: value });
@@ -74,9 +77,16 @@ const AdminOrderPage = () => {
         )
       );
       Swal.fire("Success", "Status updated", "success");
-    } catch {
+    } catch (error) {
+      console.error("Status update error:", error);
       Swal.fire("Error", "Failed to update status", "error");
     }
+  };
+  const handleTrackingChange = (orderId, value) => {
+    setTrackingInputs((prev) => ({
+      ...prev,
+      [orderId]: value,
+    }));
   };
 
   const handleUpdateAllTracking = async () => {
@@ -113,7 +123,6 @@ const AdminOrderPage = () => {
 
   return (
     <div className="p-4">
-      {/* Flex container for title and button */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h2 className="text-3xl font-bold">Order Management</h2>
         <button
@@ -124,7 +133,10 @@ const AdminOrderPage = () => {
         </button>
       </div>
 
-      {/* Responsive table wrapper */}
+      <div className="mb-4 font-semibold text-lg">
+        Total Sales: <span className="text-green-600">₹{totalSales.toFixed(2)}</span>
+      </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm sm:text-base">
           <thead className="bg-gray-100">

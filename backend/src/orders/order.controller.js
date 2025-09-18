@@ -1,4 +1,5 @@
 const Order = require("./order.model");
+const Book = require("../books/book.model");
 
 const createAOrder = async (req, res) => {
   try {
@@ -11,6 +12,10 @@ const createAOrder = async (req, res) => {
       products,
       totalPrice,
     } = req.body;
+
+    if (!products || !Array.isArray(products)) {
+      return res.status(400).json({ message: "Invalid products format." });
+    }
 
     const guestOrderCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
@@ -25,6 +30,18 @@ const createAOrder = async (req, res) => {
       guestOrderCode,
     });
 
+    for (const item of products) {
+      const book = await Book.findById(item.bookId);
+      if (book) {
+        if (book.stock < item.quantity) {
+          return res.status(400).json({ message: `Not enough stock for ${book.title}` });
+        }
+
+        book.stock -= item.quantity;
+        await book.save();
+      }
+    }
+
     const savedOrder = await newOrder.save();
 
     res.status(200).json({
@@ -37,7 +54,6 @@ const createAOrder = async (req, res) => {
   }
 };
 
-// ✅ Get orders by user email
 const getOrderByEmail = async (req, res) => {
   try {
     const { email } = req.params;
@@ -55,7 +71,6 @@ const getOrderByEmail = async (req, res) => {
   }
 };
 
-// ✅ Get all orders (Admin)
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -66,18 +81,40 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-// ✅ Update order by ID (Admin)
 const updateOrderById = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
+    const existingOrder = await Order.findById(id);
+
+    if (!existingOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const previousStatus = existingOrder.status;
+    const newStatus = updateData.status;
+
     const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
-    if (!updatedOrder) {
-      return res.status(404).json({ message: "Order not found" });
+    if (previousStatus !== "Delivered" && newStatus === "Delivered") {
+      for (const item of existingOrder.products) {
+        const book = await Book.findById(item.bookId);
+        if (book) {
+          book.sold = (book.sold || 0) + item.quantity;
+          await book.save();
+        }
+      }
+    } else if (previousStatus === "Delivered" && newStatus !== "Delivered") {
+      for (const item of existingOrder.products) {
+        const book = await Book.findById(item.bookId);
+        if (book) {
+          book.sold = Math.max(0, (book.sold || 0) - item.quantity);
+          await book.save();
+        }
+      }
     }
 
     res.status(200).json({

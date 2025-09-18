@@ -1,26 +1,5 @@
 const mongoose = require("mongoose");
 
-const reviewSchema = new mongoose.Schema({
-  user: {
-    type: String, // Replace with ObjectId if you have Users
-    required: true,
-  },
-  rating: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 5,
-  },
-  comment: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 const bookSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
@@ -38,8 +17,8 @@ const bookSchema = new mongoose.Schema(
     isbn: { type: String },
     publishingDate: { type: String },
     pages: { type: Number },
-    createdAt: { type: Date, default: Date.now },
-    reviews: [reviewSchema],
+    sold: { type: Number, default: 0 },
+    stock: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

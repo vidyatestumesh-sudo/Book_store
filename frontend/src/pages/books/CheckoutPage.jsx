@@ -7,7 +7,9 @@ import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
 
 const CheckoutPage = () => {
   const cartItems = useSelector(state => state.cart.cartItems);
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.newPrice, 0).toFixed(2);
+  const totalPrice = cartItems
+    .reduce((acc, item) => acc + item.newPrice * (item.quantity || 1), 0)
+    .toFixed(2);
 
   const {
     register,
@@ -33,14 +35,14 @@ const CheckoutPage = () => {
       },
       phone: data.phone,
       productIds: cartItems.map(item => item?._id),
-
-      // ✅ Include book titles and prices
       products: cartItems.map(item => ({
+        bookId: item._id,
         title: item.title,
         price: item.newPrice,
+        quantity: item.quantity || 1,
       })),
 
-      totalPrice: totalPrice,
+      totalPrice,
     };
 
     try {
@@ -59,7 +61,11 @@ const CheckoutPage = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-10 text-lg font-semibold">Loading....</div>;
+  if (isLoading) {
+    return (
+      <div className="text-center py-10 text-lg font-semibold">Loading....</div>
+    );
+  }
 
   return (
     <section className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-['Poppins']">
@@ -192,7 +198,7 @@ const CheckoutPage = () => {
             <button
               type="submit"
               disabled={!isChecked}
-              className={`bg-indigo-600 text-white font-bold py-2 px-6 rounded hover:bg-indigo-700 transition disabled:bg-gray-400`}
+              className="bg-indigo-600 text-white font-bold py-2 px-6 rounded hover:bg-indigo-700 transition disabled:bg-gray-400"
             >
               Place an Order
             </button>

@@ -25,6 +25,7 @@ import AddBlogs from "../pages/dashboard/manageblogs/AddBlogs";
 import BlogDetailPage from "../pages/blogs/BlogDetailPage";
 import AdminOrderPage from "../pages/dashboard/orders/AdminOrderPage";
 import BillingDownload from "../pages/dashboard/billing-download/BillingDownload";
+import InventoryPage from "../pages/dashboard/inventory/InventoryPage";
 
 const router = createBrowserRouter([
   {
@@ -143,7 +144,14 @@ const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
-
+      {
+        path: "inventory", 
+        element: (
+          <AdminRoute>
+            <InventoryPage />
+          </AdminRoute>
+        ),
+      },
     ]
   }
 ]);

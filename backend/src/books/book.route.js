@@ -1,15 +1,18 @@
-const express = require('express');
-const { postABook, getAllBooks, getSingleBook, UpdateBook, deleteABook, addReview } = require('./book.controller');
-const verifyAdminToken = require('../middleware/verifyAdminToken');
+const express = require("express");
 const router = express.Router();
 
-router.post("/create-book", verifyAdminToken, postABook);
-router.get("/", getAllBooks);
-router.get("/:id", getSingleBook);
-router.put("/edit/:id", verifyAdminToken, UpdateBook);
-router.delete("/:id", verifyAdminToken, deleteABook);
+const {
+  postABook,
+  getAllBooks,
+  getSingleBook,
+  updateBook,
+  deleteABook,
+} = require("./book.controller");
 
-// 🔹 Add Review route
-router.post("/:id/review", addReview);
+router.post("/", postABook);            
+router.get("/", getAllBooks);           
+router.get("/:id", getSingleBook);      
+router.put("/edit/:id", updateBook);    
+router.delete("/:id", deleteABook);     
 
 module.exports = router;
