@@ -44,7 +44,7 @@
 .footer-links {
   list-style: none;
   padding: 0;
-  margin: 0 0 35px 0;
+  margin: 0 0 20px 0;
 }
 
 .footer-links li {
@@ -178,7 +178,7 @@
 
 .popular-posts {
   display: flex;
-  gap: 10px;
+  gap: 30px;
   flex-wrap: wrap;
   margin-top: 10px;
 }
@@ -186,13 +186,16 @@
 .post {
   position: relative;
   flex: 1;
+  min-width: 24%;
+  max-width: 28%;
 }
 
 .post img {
-  width: 90%;
-  height: auto;
+  width: 100%;
+  height: 100px;
   border-radius: 6px;
   display: block;
+  object-fit: cover;
 }
 
 .post .overlay {
@@ -204,21 +207,22 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px 5px;
+  padding: 5px 5px;
   box-sizing: border-box;
   color: white;
 }
 
 .post .overlay p {
   margin: 0;
-  font-size: 17px;
+  font-size: 16px;
   padding: 2px 5px;
   border-radius: 4px;
   align-self: flex-start;
+  line-height: 1.2;
 }
 
 .post .overlay span {
-  font-size: 13px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
   align-self: flex-start;
@@ -252,20 +256,40 @@
   text-decoration: underline;
 }
 
+@media (max-width: 1440px) {
+  .post .overlay p {
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 1366px) {
   .post .overlay p {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 1200px) {
-  .post img {
-    width: 100%;
+  .featured-book p {
+    font-size: 16px;
   }
-  
+
+  .featured-book span {
+    font-size: 14px;
+  }
+
+  .popular-posts {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
   .post .overlay p {
     margin: 0;
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .post .overlay span {
+    font-size: 11px;
   }
 }
 
@@ -296,21 +320,26 @@
     font-size: 14px;
   }
 
+  .footer-posts {
+    text-align: center;
+  }
+
   .popular-posts {
     justify-content: center;
   }
 
   .post img {
     width: 90%;
+    height: 100px;
   }
 
   .post .overlay p {
     margin: 0;
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .post .overlay span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .footer-bottom {
@@ -325,9 +354,14 @@
 }
 
 @media (max-width: 767px) {
+  .post {
+    min-width: 28%;
+    max-width: 32%;
+  }
+
   .post .overlay p {
     margin: 0;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .post .overlay span {
@@ -425,7 +459,7 @@
   }
 
   .post img {
-    height: 100px;
+    height: 80px;
     width: 100%;
   }
 
@@ -435,14 +469,25 @@
 
   .post .overlay p {
     margin: 0;
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .post .overlay span {
-    font-size: 12px;
+    font-size: 9px;
   }
 
   .footer-bottom {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .post .overlay p {
+    margin: 0;
+    font-size: 10px;
+  }
+
+  .post .overlay span {
+    font-size: 8px;
   }
 }
