@@ -162,8 +162,8 @@ const BlogDetailPage = () => {
           {/* Sidebar - Featured Books (render only on xl+) */}
           {window.innerWidth >= 1280 && (
             <aside className="col-span-1">
-              <div className="bg-[#f3e7db] border-1 border-gray-500 rounded-[6px] p-4 h-[540px] flex flex-col">
-                <h3 className="text-[24px] sm:text-[28px] md:text-[30px] font-Figtree text-gray-900 font-[400] mb-4">
+              <div className="bg-[#f3e7db] border-1 border-gray-500 rounded-[6px] p-4 max-h-[700px] min-h-[540px] flex flex-col">
+                <h3 className="text-[20px] sm:text-[24px] md:text-[28px] font-Figtree font-medium text-gray-900 font-[400] mb-4">
                   Featured Books
                 </h3>
 
@@ -192,11 +192,11 @@ const BlogDetailPage = () => {
                       </Link>
 
                       {/* Price */}
-                      <div className="inline-flex justify-center items-center gap-3 w-full mb-2">
-                        <span className="text-gray-700 line-through text-base md:text-lg">
+                      <div className="inline-flex justify-center items-center gap-2 w-full mb-2">
+                        <span className="text-gray-700 line-through text-base md:text-sm">
                           ₹ {books[currentIndex]?.oldPrice}
                         </span>
-                        <span className="text-[#993333] text-lg md:text-xl">
+                        <span className="text-[#993333] text-lg md:text-lg">
                           ₹ {books[currentIndex]?.newPrice}
                         </span>
                         {books[currentIndex]?.oldPrice > books[currentIndex]?.newPrice && (
