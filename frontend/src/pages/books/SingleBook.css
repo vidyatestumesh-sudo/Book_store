@@ -66,7 +66,7 @@ p {
 
 /* Book Section */
 .book-section {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .book-image {
@@ -151,7 +151,6 @@ p {
   display: inline-block;
   text-align: left;
   font-size: 50px;
-
 }
 
 .book-details h2::after {
@@ -274,6 +273,11 @@ p {
   font-size: 18px;
 }
 
+.share a {
+  color: #212529;
+  text-decoration: none;
+}
+
 .share-icon {
   font-size: 18px !important;
   margin-right: 10px;
@@ -282,7 +286,7 @@ p {
 
 /* Recently Viewed */
 .recently-viewed {
-  margin: 80px 0px;
+  margin: 20px 0px 80px 0px;
   text-align: center;
   position: relative;
 }
@@ -360,6 +364,168 @@ p {
   font-size: 18px;
 }
 
+/* ------------------ Book Rating ------------------ */
+.book-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.book-rating .star {
+  font-size: 24px;
+  color: #ccc;
+}
+
+.book-rating .star.filled {
+  color: #f4b400;
+}
+
+.book-rating .star.half {
+  color: #f4b400;
+}
+
+.book-rating .star.empty {
+  color: #d9d9d9;
+}
+
+.book-rating .rating-text {
+  font-family: "Figtree-Light";
+  font-size: 18px;
+  color: #555;
+  margin-left: 5px;
+}
+
+/* ------------------ Reviews Section ------------------ */
+.review-section {
+  margin-top: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #ddd;
+}
+
+.review-section h3 {
+  font-family: "PlayfairDisplay-Regular";
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #333;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.review-section h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #99301f;
+}
+
+.rating-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.rating-input .star {
+  font-size: 28px;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.rating-input .star.selected {
+  color: #f4b400;
+}
+
+.review-section textarea {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 16px;
+  font-family: "Figtree-Light";
+  margin-bottom: 10px;
+  resize: vertical;
+}
+
+.review-section button {
+  padding: 8px 10px;
+
+  color: #fff;
+  background-color: #c86836;
+  border: none;
+  border-radius: 5px;
+  font-family: "Figtree-Regular";
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.review-section button:hover {
+  background-color: #99301f;
+}
+
+/* ------------------ Login Message ------------------ */
+.login-message a {
+  color: #c86836;
+  font-family: "Figtree-Regular";
+  text-decoration: none;
+}
+
+.login-message a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------ Individual Reviews ------------------ */
+.recent-reviews {
+  margin-top: 20px;
+}
+
+.recent-reviews h4 {
+  font-family: "Figtree-Regular";
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.review {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  background: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.review-rating {
+  margin-bottom: 8px;
+}
+
+.review-rating .star {
+  font-size: 22px;
+  color: #ccc;
+}
+
+.review-rating .star.filled {
+  color: #f4b400;
+}
+
+.review-comment {
+  font-family: "Figtree-Light";
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.review small {
+  font-family: "Figtree-Light";
+  color: #666;
+  font-size: 14px;
+}
+
 @media (max-width: 1200px) {
   .book-details h2 {
     font-size: 45px;
@@ -380,6 +546,10 @@ p {
 @media (max-width: 991px) {
   .breadcrumb {
     font-size: 14px;
+  }
+
+  .book-section {
+    margin-bottom: 10px;
   }
 
   .book-details {
@@ -428,12 +598,12 @@ p {
   }
 
   .recently-viewed {
-    margin: 40px 0px;
+    margin: 20px 0px 40px 0px;
   }
 
   .recently-viewed h3 {
     font-size: 28px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   .rv-card {
@@ -443,6 +613,30 @@ p {
   .rv-card img {
     width: 50%;
     margin: 20px auto !important;
+  }
+
+  .review-section {
+    padding: 10px 0px;
+  }
+
+  .review-section h3 {
+    font-size: 24px;
+  }
+
+  .review-section button {
+    font-size: 16px;
+  }
+
+  .recent-reviews h4 {
+    font-size: 20px;
+  }
+
+  .review {
+    margin-bottom: 15px;
+  }
+
+  .book-rating .rating-text {
+    font-size: 16px;
   }
 }
 
@@ -475,7 +669,7 @@ p {
   }
 
   .recently-viewed {
-    margin: 30px 0px;
+    margin: 10px 0px 30px 0px;
   }
 }
 
@@ -547,11 +741,41 @@ p {
 
   .recently-viewed h3 {
     padding: 0px;
+    font-size: 24px;
   }
 
   .recently-viewed h3::before,
   .recently-viewed h3::after {
     width: 90px;
+  }
+
+  .review-section h3 {
+    font-size: 20px;
+  }
+
+  .review {
+    margin-bottom: 10px;
+  }
+
+  .book-rating {
+    gap: 5px;
+    margin: 5px 0;
+  }
+
+  .book-rating .star {
+    font-size: 18px;
+  }
+
+  .book-rating .rating-text {
+    font-size: 14px;
+  }
+
+  .review-rating {
+    margin-bottom: 5px;
+  }
+
+  .review-rating .star {
+    font-size: 18px;
   }
 }
 
@@ -566,5 +790,9 @@ p {
 
   .delivery input {
     max-width: 180px;
+  }
+
+  .book-rating .rating-text {
+    font-size: 12px;
   }
 }
