@@ -5,20 +5,26 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
 import { getImgUrl } from "../../utils/getImgUrl";
-// import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
 
 const SingleBook = () => {
   const { id } = useParams();
-  const { data: book, isLoading, isError } = useFetchBookByIdQuery(id);
+  const { data: book, isLoading, isError, refetch } = useFetchBookByIdQuery(id);
   const dispatch = useDispatch();
-  // const { currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
   const [showMore, setShowMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
   const WORD_LIMIT = 100;
   const words = book?.description?.split(" ") || [];
@@ -50,6 +56,41 @@ const SingleBook = () => {
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
   };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    if (!rating || !comment) {
+      alert("Please provide both rating and comment.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/books/${id}/review`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: "Anonymous User",
+          rating,
+          comment,
+        }),
+      });
+
+      if (res.ok) {
+        setRating(0);
+        setComment("");
+        refetch();
+      } else {
+        console.error("Failed to submit review");
+      }
+    } catch (error) {
+      console.error("Error submitting review", error);
+    }
+  };
+
+  const avgRating =
+    book?.reviews?.length > 0
+      ? book.reviews.reduce((acc, r) => acc + r.rating, 0) / book.reviews.length
+      : 0;
 
   if (isLoading) return <div className="loading">Loading...</div>;
   if (isError || !book)
@@ -130,6 +171,24 @@ const SingleBook = () => {
         {/* Book Details */}
         <div className="col-lg-8 col-md-12 col-sm-12 col-12 book-details ">
           <h2>{book.title}</h2>
+
+          {/* ⭐ Average Rating Display */}
+          <div className="book-rating">
+            {Array.from({ length: 5 }, (_, i) => {
+              if (i < Math.floor(avgRating)) {
+                return <StarIcon key={i} className="star filled" />;
+              } else if (i < avgRating) {
+                return <StarHalfIcon key={i} className="star half" />;
+              } else {
+                return <StarBorderIcon key={i} className="star empty" />;
+              }
+            })}
+            <span className="rating-text">
+              ({avgRating.toFixed(1)} / 5 from {book?.reviews?.length || 0}{" "}
+              reviews)
+            </span>
+          </div>
+
           <div className="price">
             <span className="current-price">₹ {book.newPrice}</span>
             <span className="old-price">₹ {book.oldPrice}</span>
@@ -190,19 +249,69 @@ const SingleBook = () => {
             </div>
           </div>
 
-           {/* Delivery */}
-          {/* <div className="delivery">
-            <p>Delivery</p>
-            <input type="text" placeholder="Enter Delivery Pincode" />
-            <button className="check-btn">Check</button>
-          </div> */}
-
           {/* Share */}
           <div className="share">
             <a>
               <ShareOutlinedIcon className="share-icon" />
               Share
             </a>
+          </div>
+
+          {/* Review Section */}
+          <div className="review-section">
+            <h3>Leave a Review</h3>
+
+            {/* Show review form only if logged in */}
+            {currentUser ? (
+              <form onSubmit={handleReviewSubmit}>
+                <div className="rating-input">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span
+                      key={i}
+                      onClick={() => setRating(i + 1)}
+                      className={i < rating ? "star selected" : "star"}>
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Write your review..."></textarea>
+                <button type="submit">Submit Review</button>
+              </form>
+            ) : (
+              <p className="login-message">
+                Please <Link to="/login">login</Link> to leave a review.
+              </p>
+            )}
+
+            {/* Show Last 2 Reviews */}
+            <div className="recent-reviews">
+              <h4>Recent Reviews</h4>
+              {book?.reviews?.length > 0 ? (
+                [...book.reviews]
+                  .slice(-2) // last 2 reviews
+                  .reverse()
+                  .map((rev, idx) => (
+                    <div key={idx} className="review">
+                      <div className="review-rating">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <span
+                            key={i}
+                            className={i < rev.rating ? "star filled" : "star"}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      <p className="review-comment">{rev.comment}</p>
+                      <small>- {rev.user}</small>
+                    </div>
+                  ))
+              ) : (
+                <p>No reviews yet.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TwitterIcon from "@mui/icons-material/Twitter"; // X
+import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import "./Footer.css";
 
@@ -83,7 +83,7 @@ const Footer = () => {
           {/* Column 2 - Featured Books */}
           <div className="col-lg-3 col-md-6 col-sm-6 col-12 footer-section2">
             <h4 className="footer-heading">Featured Books</h4>
-            <div className="featured-book">
+              <div className="featured-book">
               <img src={book1} alt="The Attributes of A Virtuous Mindset" />
               <div>
                 <p>The Attributes of A Virtuous Mindset</p>
