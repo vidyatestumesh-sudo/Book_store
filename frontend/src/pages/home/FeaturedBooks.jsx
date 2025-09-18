@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
@@ -47,39 +46,41 @@ const FeaturedBooks = () => {
     }
   }, [books.length, itemsPerView, startIndex]);
 
-  // Scroll width of one book card (including padding/margin)
+  // Scroll width of one book card (exact width including gap)
   const getScrollAmount = () => {
     if (!scrollContainerRef.current) return 0;
     const container = scrollContainerRef.current;
-    const firstBook = container.querySelector("div > div > div");
+    const firstBook = container.querySelector("div > div");
     if (!firstBook) return 0;
-    return firstBook.offsetWidth + 16; // 16px = 8px padding left + 8px right (adjust if needed)
+    return firstBook.offsetWidth; // exact card width
   };
 
   const handleNext = () => {
     if (windowWidth > 1024) {
-      // Desktop: slide by changing startIndex
       if (startIndex + itemsPerView < books.length) {
         setStartIndex((prev) => Math.min(prev + 1, books.length - itemsPerView));
       }
     } else {
-      // Mobile: scroll container by one item
       if (scrollContainerRef.current) {
         const scrollAmount = getScrollAmount();
-        scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        scrollContainerRef.current.scrollBy({
+          left: scrollAmount,
+          behavior: "smooth",
+        });
       }
     }
   };
 
   const handlePrev = () => {
     if (windowWidth > 1024) {
-      // Desktop: slide by changing startIndex
       setStartIndex((prev) => Math.max(prev - 1, 0));
     } else {
-      // Mobile: scroll container by one item left
       if (scrollContainerRef.current) {
         const scrollAmount = getScrollAmount();
-        scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+        scrollContainerRef.current.scrollBy({
+          left: -scrollAmount,
+          behavior: "smooth",
+        });
       }
     }
   };
@@ -88,26 +89,25 @@ const FeaturedBooks = () => {
     <div className="max-w-8xl mx-auto py-2 text-center flex flex-col justify-center items-center px-4">
       {/* Title Section */}
       <div className="relative inline-block">
-        <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-7 mt-8">
+        <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-snug mb-7 mt-8">
           Featured Books
         </h1>
         <img
           src="/motif.webp"
           alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
+          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 mb-2"
         />
       </div>
 
       {/* Slider Container */}
       <div className="relative w-full flex items-center mt-8 flex overflow-x-auto scrollbar-hide">
-        
         {/* Left Arrow */}
         <button
           onClick={handlePrev}
-          disabled={windowWidth > 1024 ? startIndex === 0 : false} // disable on desktop if at start
-          className={`absolute left-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
-    -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] 2xl:translate-x-[-70%] ${windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""
-            }`}
+          disabled={windowWidth > 1024 ? startIndex === 0 : false}
+          className={`absolute left-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition 
+          -translate-y-1/2 translate-x-[-20%] sm:translate-x-[-40%] 2xl:translate-x-[-40%] 
+          ${windowWidth > 1024 && startIndex === 0 ? "opacity-30 cursor-not-allowed" : ""}`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
             touchAction: "manipulation",
@@ -119,9 +119,9 @@ const FeaturedBooks = () => {
             xmlns="http://www.w3.org/2000/svg"
             width={windowWidth > 1024 ? 80 : 40}
             height={windowWidth > 1024 ? 80 : 40}
-            viewBox="0 0 24 24"
+            viewBox="0 0 22 22"
             stroke="#999999"
-            strokeWidth="0.8" // thinner stroke
+            strokeWidth="0.8"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -134,10 +134,9 @@ const FeaturedBooks = () => {
         <div
           ref={scrollContainerRef}
           className={`w-full ${windowWidth > 1024 ? "overflow-hidden" : "overflow-x-auto scrollbar-hide"} px-0 sm:px-4`}
-          style={windowWidth <= 1024 ? { scrollPaddingLeft: "50px", scrollPaddingRight: "50px" } : {}}
         >
           <div
-            className={`flex ${windowWidth > 1024 ? "transition-transform duration-700 ease-in-out" : ""}`}
+            className={`flex ${windowWidth > 1024 ? "transition-transform duration-500 ease-in-out" : ""}`}
             style={{
               transform:
                 windowWidth > 1024 ? `translateX(-${(startIndex * 100) / itemsPerView}%)` : "none",
@@ -146,19 +145,20 @@ const FeaturedBooks = () => {
             {books.map((book, index) => (
               <div
                 key={index}
-                className={`px-2 flex-shrink-0 ${itemsPerView === 4
-                  ? "w-1/4"
-                  : itemsPerView === 3
+                className={`px-2 flex-shrink-0 ${
+                  itemsPerView === 4
+                    ? "w-1/4"
+                    : itemsPerView === 3
                     ? "w-1/3"
                     : itemsPerView === 2
-                      ? "w-1/2"
-                      : "w-full"
-                  }`}
+                    ? "w-1/2"
+                    : "w-full"
+                }`}
               >
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
                   <Link to={`/books/${book._id}`}>
-                    <div className="relative w-full aspect-[2/3] max-w-[290px] mx-auto overflow-hidden group">
+                    <div className="relative w-full aspect-[2/3] max-w-[290px] max-[425px]:max-w-[265px] mx-auto overflow-hidden group">
                       <img
                         src={getImgUrl(book?.coverImage)}
                         alt={book?.title}
@@ -168,10 +168,7 @@ const FeaturedBooks = () => {
                       {windowWidth > 1024 && (
                         <div
                           className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
-                          style={{
-                            backgroundColor: "rgba(0,0,0,0)",
-                            transition: "background-color 0.5s ease",
-                          }}
+                          style={{ backgroundColor: "rgba(0,0,0,0)" }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
                             e.currentTarget.firstChild.style.opacity = "1";
@@ -182,11 +179,8 @@ const FeaturedBooks = () => {
                           }}
                         >
                           <span
-                            className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer "
-                            style={{
-                              opacity: 0,
-                              transition: "opacity 0.5s ease",
-                            }}
+                            className="text-white text-lg font-semibold hover:text-[#cc6633] cursor-pointer"
+                            style={{ opacity: 0, transition: "opacity 0.5s ease" }}
                           >
                             VIEW BOOK
                           </span>
@@ -204,22 +198,19 @@ const FeaturedBooks = () => {
 
                   {/* Info Section */}
                   <div className="text-center mt-6 px-4">
-                    <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-3 font-figtree break-words">
+                    <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-3 break-words">
                       {book?.title}
                     </h3>
                     <div className="inline-flex justify-center items-center gap-3 w-full">
-                      <span className="text-gray-500 line-through text-base md:text-lg font-figtree font-lite">
+                      <span className="text-gray-500 line-through text-base md:text-lg">
                         ₹{book?.oldPrice}
                       </span>
-                      <span className="text-[#993333] font-lite text-lg md:text-xl font-figtree">
+                      <span className="text-[#993333] text-lg md:text-xl">
                         ₹{book?.newPrice}
                       </span>
                       {book?.oldPrice > book?.newPrice && (
-                        <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0 font-figtree font-lite">
-                          {Math.round(
-                            ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
-                          )}
-                          % off
+                        <span className="text-sm md:text-lg bg-[#993333] text-white px-2 py-0">
+                          {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
                         </span>
                       )}
                     </div>
@@ -233,16 +224,10 @@ const FeaturedBooks = () => {
         {/* Right Arrow */}
         <button
           onClick={handleNext}
-          disabled={
-            windowWidth > 1024
-              ? startIndex + itemsPerView >= books.length
-              : false
-          }
-          className={`absolute right-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition
-    -translate-y-1/2 translate-x-[20%] sm:translate-x-[40%] 2xl:translate-x-[70%] ${windowWidth > 1024 && startIndex + itemsPerView >= books.length
-              ? "opacity-30 cursor-not-allowed"
-              : ""
-            }`}
+          disabled={windowWidth > 1024 ? startIndex + itemsPerView >= books.length : false}
+          className={`absolute right-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition 
+          -translate-y-1/2 translate-x-[20%] sm:translate-x-[30%] 2xl:translate-x-[30%] 
+          ${windowWidth > 1024 && startIndex + itemsPerView >= books.length ? "opacity-30 cursor-not-allowed" : ""}`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
             touchAction: "manipulation",
@@ -254,9 +239,9 @@ const FeaturedBooks = () => {
             xmlns="http://www.w3.org/2000/svg"
             width={windowWidth > 1024 ? 80 : 40}
             height={windowWidth > 1024 ? 80 : 40}
-            viewBox="0 0 24 24"
+            viewBox="0 0 22 22"
             stroke="#999999"
-            strokeWidth="0.8" // thinner stroke
+            strokeWidth="0.8"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
