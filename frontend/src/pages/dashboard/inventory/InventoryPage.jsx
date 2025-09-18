@@ -20,7 +20,7 @@ const InventoryPage = () => {
 
       const initialStock = {};
       res.data.forEach((book) => {
-        initialStock[book._id] = book.stock || 0;
+        initialStock[book._id] = book.stock || 1;
       });
       setStockInputs(initialStock);
 
@@ -78,12 +78,12 @@ const InventoryPage = () => {
   // New function: Increase stock by a quantity programmatically
   const increaseStock = async (bookId, quantityToAdd) => {
     try {
-      if (typeof quantityToAdd !== "number" || quantityToAdd <= 0) {
+      if (typeof quantityToAdd !== "number" || quantityToAdd <= 1) {
         throw new Error("Quantity to add must be a positive number");
       }
 
       // Find current stock from local state if possible
-      const currentStock = books.find((b) => b._id === bookId)?.stock || 0;
+      const currentStock = books.find((b) => b._id === bookId)?.stock || 1;
       const updatedStock = currentStock + quantityToAdd;
 
       await axios.put(

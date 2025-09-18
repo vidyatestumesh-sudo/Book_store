@@ -1,18 +1,44 @@
 import { Link } from "react-router-dom";
+import { useFetchAllBooksQuery } from "../redux/features/books/booksApi";
+import { getImgUrl } from "../utils/getImgUrl";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import "./Footer.css";
+import { useEffect, useState } from "react";
 
-import book1 from "../assets/books/the-attributes-of-a-virtuous-mindset.webp";
-import book2 from "../assets/books/master-the-rules-of-manifestation.webp";
-import post1 from "../assets/books/footer-post1.webp";
-import post2 from "../assets/books/footer-post2.webp";
-import post3 from "../assets/books/footer-post3.webp";
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
 
 const Footer = () => {
+  // Books API
+  const { data: books = [] } = useFetchAllBooksQuery();
+  const recentBooks = [...books].slice(-2).reverse();
+
+  // Blogs State
+  const [blogs, setBlogs] = useState([]);
+
+  // Fetch Blogs
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
+        const data = await res.json();
+        const recent = data
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 3);
+        setBlogs(recent);
+      } catch (err) {
+        console.error("Failed to fetch blogs", err);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
   return (
     <footer className="footer">
       <div className="container">
@@ -83,27 +109,25 @@ const Footer = () => {
           {/* Column 2 - Featured Books */}
           <div className="col-lg-3 col-md-6 col-sm-6 col-12 footer-section2">
             <h4 className="footer-heading">Featured Books</h4>
-              <div className="featured-book">
-              <img src={book1} alt="The Attributes of A Virtuous Mindset" />
-              <div>
-                <p>The Attributes of A Virtuous Mindset</p>
-                <span>
-                  <span style={{ color: "#983120" }}>₹ </span>200
-                </span>
-              </div>
-            </div>
-            <div className="featured-book">
-              <img src={book2} alt="Master the Rules of Manifestation" />
-              <div>
-                <p>Master the Rules of Manifestation</p>
-                <span>
-                  <span style={{ color: "#983120" }}>₹ </span>300
-                </span>
-              </div>
-            </div>
+            {recentBooks.length > 0 ? (
+              recentBooks.map((book, index) => (
+                <div className="featured-book" key={index}>
+                  <img src={getImgUrl(book?.coverImage)} alt={book?.title} />
+                  <div>
+                    <p>{book?.title}</p>
+                    <span>
+                      <span style={{ color: "#983120" }}>₹ </span>
+                      {book?.newPrice}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No featured books available</p>
+            )}
           </div>
 
-          {/* Column 3 - Newsletter + Popular Posts */}
+          {/* Column 3 - Newsletter + Recent Blogs */}
           <div className="col-lg-6 col-md-12 col-sm-12 col-12 footer-section3">
             <div className="newsletter">
               <p>Subscribe to Newsletter</p>
@@ -115,29 +139,37 @@ const Footer = () => {
               </form>
             </div>
 
-            <h4 className="footer-heading footer-posts">Popular Posts</h4>
+            <h4 className="footer-heading footer-posts">Recent Blogs</h4>
             <div className="popular-posts">
-              <div className="post">
-                <img src={post1} alt="On Hiding Emptiness" />
-                <div className="overlay">
-                  <p>On Hiding Emptiness</p>
-                  <span>September 8, 2025</span>
-                </div>
-              </div>
-              <div className="post">
-                <img src={post2} alt="The Chains Within" />
-                <div className="overlay">
-                  <p>The Chains Within</p>
-                  <span>July 17, 2025</span>
-                </div>
-              </div>
-              <div className="post">
-                <img src={post3} alt="Nothing truly ends where it begins" />
-                <div className="overlay">
-                  <p>Nothing truly ends where it begins</p>
-                  <span>June 9, 2025</span>
-                </div>
-              </div>
+              {blogs.length > 0 ? (
+                blogs.map((blog, index) => (
+                  <div className="post" key={index}>
+                    <img
+                      src={
+                        blog.image?.startsWith("http")
+                          ? blog.image
+                          : `${BACKEND_BASE_URL}${blog.image}`
+                      }
+                      alt={blog.title}
+                    />
+                    <div className="overlay">
+                      <p>{blog.title}</p>
+                      <span>
+                        {new Date(blog.createdAt).toLocaleDateString(
+                          undefined,
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No recent blogs available</p>
+              )}
             </div>
           </div>
         </div>
