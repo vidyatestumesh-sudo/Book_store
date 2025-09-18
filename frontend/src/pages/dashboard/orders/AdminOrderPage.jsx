@@ -124,53 +124,91 @@ const AdminOrderPage = () => {
     }
   };
 
-  const generatePDF = (order) => {
-    const doc = new jsPDF();
+const generatePDF = (order) => {
+  const doc = new jsPDF();
 
-    doc.setFontSize(20);
-    doc.text("INVOICE", 105, 20, null, null, "center");
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("INVOICE", 105, 15, { align: "center" });
 
-    const startY = 30;
-    const lineHeight = 8;
-    doc.setFontSize(12);
-    doc.text(`Customer Name: ${order.name || "N/A"}`, 14, startY);
-    doc.text(`Phone: ${order.phone || "N/A"}`, 14, startY + lineHeight);
-    doc.text(`Order ID: ${order._id}`, 14, startY + lineHeight * 2);
-    doc.text(`Status: ${order.status}`, 14, startY + lineHeight * 3);
-    doc.text(`Tracking ID: ${order.trackingId || "N/A"}`, 14, startY + lineHeight * 4);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
 
-    const itemStartY = startY + lineHeight * 6;
-    const itemRows =
-      order.items?.map((item, index) => [
-        index + 1,
-        item.title || item.name || "Untitled",
-        item.quantity || 1,
-        `₹${item.price?.toFixed(2) || "0.00"}`,
-        `₹${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`,
-      ]) || [];
+  const {
+    name,
+    email,
+    phone,
+    _id,
+    address,
+    totalPrice,
+    products,
+  } = order;
 
-    autoTable(doc, {
-      head: [["#", "Book Title", "Qty", "Unit Price", "Subtotal"]],
-      body: itemRows,
-      startY: itemStartY,
-      styles: { fontSize: 11 },
-      headStyles: {
-        fillColor: [240, 240, 240],
-        textColor: 0,
-        halign: "center",
-      },
-    });
+  const fullAddress = [
+    address?.street,
+    address?.city,
+    address?.state,
+    address?.country,
+    address?.zipcode,
+  ]
+    .filter(Boolean)
+    .join(", ");
 
-    const finalY = doc.lastAutoTable?.finalY || itemStartY + 10;
-    doc.setFontSize(14);
-    doc.text(
-      `Total Amount: ₹${order.totalPrice?.toFixed(2) || "0.00"}`,
-      14,
-      finalY + 10
-    );
+  const details = [
+    `Customer Name: ${name || "N/A"}`,
+    `Phone: ${phone || "N/A"}`,
+    `Email: ${email || "N/A"}`,
+    `Order ID: ${_id}`,
+    `Address: ${fullAddress || "N/A"}`,
+  ];
 
-    doc.save(`Invoice-${order._id}.pdf`);
-  };
+  let y = 25;
+  details.forEach((line) => {
+    doc.text(line, 14, y);
+    y += 7;
+  });
+
+  const itemRows = (products || []).map((item, index) => [
+    index + 1,
+    item.title || "Untitled Book",
+    1,
+    `₹${(item.price || 0).toFixed(2)}`,
+    `₹${(item.price || 0).toFixed(2)}`,
+  ]);
+
+  autoTable(doc, {
+    head: [["#", "Book Title", "Qty", "Unit Price", "Subtotal"]],
+    body: itemRows,
+    startY: y + 5,
+    styles: { fontSize: 10 },
+    headStyles: {
+      fillColor: [230, 230, 230],
+      textColor: 20,
+      halign: "center",
+      fontStyle: "bold",
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 10 },
+      1: { halign: "left", cellWidth: 80 },
+      2: { halign: "left", cellWidth: 20 },
+      3: { halign: "left", cellWidth: 30 },
+      4: { halign: "left", cellWidth: 30 },
+    },
+  });
+
+  const finalY = doc.lastAutoTable.finalY || y + 30;
+
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text(`Total Amount: ₹${totalPrice?.toFixed(2) || "0.00"}`, 14, finalY + 10);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "italic");
+  doc.text("Thank you for shopping with us!", 105, finalY + 25, { align: "center" });
+
+  doc.save(`Invoice-${_id}.pdf`);
+};
+
 
   if (loading) return <div className="p-6">Loading orders...</div>;
 
@@ -185,11 +223,6 @@ const AdminOrderPage = () => {
           Update Tracking ID
         </button>
       </div>
-
-      {/* <div className="mb-4 font-semibold text-lg">
-        Total Sales:{" "}
-        <span className="text-green-600">₹{totalSales.toFixed(2)}</span>
-      </div> */}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm sm:text-base">

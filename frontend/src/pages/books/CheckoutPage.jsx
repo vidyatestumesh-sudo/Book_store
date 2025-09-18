@@ -31,7 +31,7 @@ const CheckoutPage = () => {
         country: data.country,
         state: data.state,
         zipcode: data.zipcode,
-        street: data.address,
+        street: data.street,
       },
       phone: data.phone,
       productIds: cartItems.map(item => item?._id),
@@ -119,9 +119,9 @@ const CheckoutPage = () => {
               </div>
 
               <div className="flex flex-col md:col-span-2">
-                <label htmlFor="address" className="mb-1 font-medium text-gray-600">Address / Street</label>
+                <label htmlFor="street" className="mb-1 font-medium text-gray-600">Address / Street</label>
                 <input
-                  {...register("address", { required: "Address is required" })}
+                  {...register("street", { required: "Street is required" })}
                   type="text"
                   id="address"
                   className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
