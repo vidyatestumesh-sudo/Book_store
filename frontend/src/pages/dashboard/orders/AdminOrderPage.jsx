@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable"; // updated import
+import autoTable from "jspdf-autotable";
 import getBaseUrl from "../../../utils/baseURL";
 
 const AdminOrderPage = () => {
@@ -127,11 +127,9 @@ const AdminOrderPage = () => {
   const generatePDF = (order) => {
     const doc = new jsPDF();
 
-    // Header
     doc.setFontSize(20);
     doc.text("INVOICE", 105, 20, null, null, "center");
 
-    // Customer Info
     const startY = 30;
     const lineHeight = 8;
     doc.setFontSize(12);
@@ -141,7 +139,6 @@ const AdminOrderPage = () => {
     doc.text(`Status: ${order.status}`, 14, startY + lineHeight * 3);
     doc.text(`Tracking ID: ${order.trackingId || "N/A"}`, 14, startY + lineHeight * 4);
 
-    // Items Table
     const itemStartY = startY + lineHeight * 6;
     const itemRows =
       order.items?.map((item, index) => [
@@ -164,7 +161,6 @@ const AdminOrderPage = () => {
       },
     });
 
-    // Total Price
     const finalY = doc.lastAutoTable?.finalY || itemStartY + 10;
     doc.setFontSize(14);
     doc.text(
@@ -190,10 +186,10 @@ const AdminOrderPage = () => {
         </button>
       </div>
 
-      <div className="mb-4 font-semibold text-lg">
+      {/* <div className="mb-4 font-semibold text-lg">
         Total Sales:{" "}
         <span className="text-green-600">₹{totalSales.toFixed(2)}</span>
-      </div>
+      </div> */}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border text-sm sm:text-base">
