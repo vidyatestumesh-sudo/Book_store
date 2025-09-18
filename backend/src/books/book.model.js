@@ -17,8 +17,8 @@ const bookSchema = new mongoose.Schema(
     isbn: { type: String },
     publishingDate: { type: String },
     pages: { type: Number },
-    sold: { type: Number, default: 0 },
-    stock: { type: Number, default: 0 },
+    sold: { type: Number, default: 1 },
+    stock: { type: Number, default: 1 },
   },
   { timestamps: true }
 );
