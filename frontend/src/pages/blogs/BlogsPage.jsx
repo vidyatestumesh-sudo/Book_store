@@ -40,7 +40,8 @@ const BlogsPage = () => {
   const totalPages = Math.ceil(blogs.length / blogsPerPage);
 
   return (
-    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
+    <div className="container">
+    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center">
       {/* ✅ Breadcrumb */}
       <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-light">
         <nav aria-label="breadcrumb">
@@ -186,6 +187,7 @@ const BlogsPage = () => {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 };

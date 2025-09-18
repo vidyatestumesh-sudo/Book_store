@@ -7,6 +7,7 @@ const Publications = () => {
     const { data: books = [] } = useFetchAllBooksQuery();
 
     return (
+        <div className="container">
         <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
             <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-lite">
                 <nav aria-label="breadcrumb">
@@ -87,19 +88,19 @@ const Publications = () => {
                         </Link>
 
                         {/* Info Section */}
-                        <div className="text-center mt-4 px-12">
-                            <h3 className="text-lg md:text-xl font-medium text-gray-700 mb-2 font-figtree break-words">
+                        <div className="text-center mt-4 px-6">
+                            <h3 className="text-lg md:text-lg font-medium text-gray-700 mb-2 font-figtree break-words">
                                 {book?.title}
                             </h3>
-                            <div className="inline-flex justify-center items-center gap-3 w-full">
-                                <span className="text-gray-500 line-through text-base md:text-lg font-figtree font-lite">
+                            <div className="inline-flex justify-center items-center gap-2 w-full">
+                                <span className="text-gray-500 line-through text-base md:text-md font-figtree font-lite">
                                     ₹{book?.oldPrice}
                                 </span>
-                                <span className="text-[#993333] font-lite text-lg md:text-xl font-figtree">
+                                <span className="text-[#993333] font-lite text-lg md:text-lg font-figtree">
                                     ₹{book?.newPrice}
                                 </span>
                                 {book?.oldPrice > book?.newPrice && (
-                                    <span className="text-sm md:text-lg bg-[#993333] text-white px-1 py-0 font-figtree font-lite">
+                                    <span className="text-sm md:text-md lg:text-lg bg-[#993333] text-white px-1 py-0 font-figtree font-lite">
                                         {Math.round(
                                             ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
                                         )}
@@ -111,6 +112,7 @@ const Publications = () => {
                     </div>
                 ))}
             </div>
+        </div>
         </div>
     );
 };

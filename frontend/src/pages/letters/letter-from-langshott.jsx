@@ -57,7 +57,8 @@ const LetterFromLangshott = () => {
   if (loading) return <p className="text-center py-4">Loading...</p>;
 
   return (
-    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
+    <div className="container">
+    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center">
       <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-lite">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb m-0 p-0">
@@ -142,6 +143,7 @@ const LetterFromLangshott = () => {
           })}
         </ul>
       )}
+    </div>
     </div>
   );
 };
