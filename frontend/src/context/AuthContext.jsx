@@ -1,20 +1,22 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase/firebase.config";
-import { 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  signOut, 
-  updateProfile 
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
 } from "firebase/auth";
 
-const AuthContext = createContext();
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
+const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 const googleProvider = new GoogleAuthProvider();
+const db = getFirestore();
 
 export const AuthProvide = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -26,21 +28,46 @@ export const AuthProvide = ({ children }) => {
     if (res.user) {
       await updateProfile(res.user, { displayName: username });
 
-      // Store phone in Firestore or backend (example Firestore)
-      // import { getFirestore, doc, setDoc } from "firebase/firestore";
-      // const db = getFirestore();
-      // await setDoc(doc(db, "users", res.user.uid), {
-      //   email, username, phone
-      // });
+      // Save extra data in Firestore
+      await setDoc(doc(db, "users", res.user.uid), {
+        email,
+        username,
+        phone,
+        createdAt: new Date().toISOString(),
+      });
     }
     return res;
   };
 
-  const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const loginUser = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
 
-  const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
+  const signInWithGoogle = async () => {
+    const res = await signInWithPopup(auth, googleProvider);
+    if (res.user) {
+      // check if user already exists in Firestore, else save
+      const docRef = doc(db, "users", res.user.uid);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        await setDoc(docRef, {
+          email: res.user.email,
+          username: res.user.displayName || "Google User",
+          phone: res.user.phoneNumber || "N/A",
+          createdAt: new Date().toISOString(),
+        });
+      }
+    }
+    return res;
+  };
 
   const logout = () => signOut(auth);
+
+  // Fetch user profile from Firestore
+  const getUserProfile = async (uid) => {
+    const docSnap = await getDoc(doc(db, "users", uid));
+    if (docSnap.exists()) return docSnap.data();
+    return null;
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -50,7 +77,15 @@ export const AuthProvide = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const value = { currentUser, loading, registerUser, loginUser, signInWithGoogle, logout };
+  const value = {
+    currentUser,
+    loading,
+    registerUser,
+    loginUser,
+    signInWithGoogle,
+    logout,
+    getUserProfile,
+  };
 
   return (
     <AuthContext.Provider value={value}>
