@@ -124,170 +124,212 @@ const AdminOrderPage = () => {
     }
   };
 
-const generatePDF = (order) => {
-  const doc = new jsPDF();
+  const generatePDF = (order) => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("INVOICE", 105, 15, { align: "center" });
 
-  doc.setFontSize(18);
-  doc.setFont("helvetica", "bold");
-  doc.text("INVOICE", 105, 15, { align: "center" });
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
 
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "normal");
+    const { name, email, phone, _id, address, totalPrice, products } = order;
+    const fullAddress = [
+      address?.street,
+      address?.city,
+      address?.state,
+      address?.country,
+      address?.zipcode,
+    ]
+      .filter(Boolean)
+      .join(", ");
 
-  const {
-    name,
-    email,
-    phone,
-    _id,
-    address,
-    totalPrice,
-    products,
-  } = order;
+    const details = [
+      `Customer Name: ${name || "N/A"}`,
+      `Phone: ${phone || "N/A"}`,
+      `Email: ${email || "N/A"}`,
+      `Order ID: ${_id}`,
+      `Address: ${fullAddress || "N/A"}`,
+    ];
 
-  const fullAddress = [
-    address?.street,
-    address?.city,
-    address?.state,
-    address?.country,
-    address?.zipcode,
-  ]
-    .filter(Boolean)
-    .join(", ");
+    let y = 25;
+    details.forEach((line) => {
+      doc.text(line, 14, y);
+      y += 7;
+    });
 
-  const details = [
-    `Customer Name: ${name || "N/A"}`,
-    `Phone: ${phone || "N/A"}`,
-    `Email: ${email || "N/A"}`,
-    `Order ID: ${_id}`,
-    `Address: ${fullAddress || "N/A"}`,
-  ];
+    const itemRows = (products || []).map((item, index) => [
+      index + 1,
+      item.title || "Untitled Book",
+      1,
+      `₹${(item.price || 0).toFixed(2)}`,
+      `₹${(item.price || 0).toFixed(2)}`,
+    ]);
 
-  let y = 25;
-  details.forEach((line) => {
-    doc.text(line, 14, y);
-    y += 7;
-  });
+    autoTable(doc, {
+      head: [["#", "Book Title", "Qty", "Unit Price", "Subtotal"]],
+      body: itemRows,
+      startY: y + 5,
+      styles: { fontSize: 10 },
+      headStyles: {
+        fillColor: [230, 230, 230],
+        textColor: 20,
+        halign: "center",
+        fontStyle: "bold",
+      },
+      columnStyles: {
+        0: { halign: "center", cellWidth: 10 },
+        1: { halign: "left", cellWidth: 80 },
+        2: { halign: "left", cellWidth: 20 },
+        3: { halign: "left", cellWidth: 30 },
+        4: { halign: "left", cellWidth: 30 },
+      },
+    });
 
-  const itemRows = (products || []).map((item, index) => [
-    index + 1,
-    item.title || "Untitled Book",
-    1,
-    `₹${(item.price || 0).toFixed(2)}`,
-    `₹${(item.price || 0).toFixed(2)}`,
-  ]);
+    const finalY = doc.lastAutoTable.finalY || y + 30;
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Total Amount: ₹${totalPrice?.toFixed(2) || "0.00"}`, 14, finalY + 10);
 
-  autoTable(doc, {
-    head: [["#", "Book Title", "Qty", "Unit Price", "Subtotal"]],
-    body: itemRows,
-    startY: y + 5,
-    styles: { fontSize: 10 },
-    headStyles: {
-      fillColor: [230, 230, 230],
-      textColor: 20,
-      halign: "center",
-      fontStyle: "bold",
-    },
-    columnStyles: {
-      0: { halign: "center", cellWidth: 10 },
-      1: { halign: "left", cellWidth: 80 },
-      2: { halign: "left", cellWidth: 20 },
-      3: { halign: "left", cellWidth: 30 },
-      4: { halign: "left", cellWidth: 30 },
-    },
-  });
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "italic");
+    doc.text("Thank you for shopping with us!", 105, finalY + 25, { align: "center" });
 
-  const finalY = doc.lastAutoTable.finalY || y + 30;
+    doc.save(`Invoice-${_id}.pdf`);
+  };
 
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.text(`Total Amount: ₹${totalPrice?.toFixed(2) || "0.00"}`, 14, finalY + 10);
-
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "italic");
-  doc.text("Thank you for shopping with us!", 105, finalY + 25, { align: "center" });
-
-  doc.save(`Invoice-${_id}.pdf`);
-};
-
-
-  if (loading) return <div className="p-6">Loading orders...</div>;
+  if (loading)
+    return <div className="p-6 text-center">Loading orders...</div>;
 
   return (
-    <div className="p-4">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-3xl font-bold">Order Management</h2>
-        <button
-          onClick={handleUpdateAllTracking}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded w-full sm:w-auto"
-        >
-          Update Tracking ID
-        </button>
-      </div>
+    <div className="container mt-[100px]">
+      <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <h2 className="text-3xl font-bold">Order Management</h2>
+          <button
+            onClick={handleUpdateAllTracking}
+            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded w-full sm:w-auto"
+          >
+            Update Tracking ID
+          </button>
+        </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border text-sm sm:text-base">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">Order ID</th>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Email</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Tracking ID</th>
-              <th className="border p-2">Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.length === 0 ? (
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="min-w-full border text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="6" className="text-center p-4">
-                  No orders found.
-                </td>
+                <th className="border p-2">Order ID</th>
+                <th className="border p-2">Name</th>
+                <th className="border p-2">Email</th>
+                <th className="border p-2">Status</th>
+                <th className="border p-2">Tracking ID</th>
+                <th className="border p-2">Download</th>
               </tr>
-            ) : (
-              orders.map((order) => (
-                <tr key={order._id} className="hover:bg-gray-50">
-                  <td className="border p-2 break-all">{order._id}</td>
-                  <td className="border p-2">{order.name}</td>
-                  <td className="border p-2">{order.email}</td>
-                  <td className="border p-2">
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        handleStatusChange(order._id, e.target.value)
-                      }
-                      className="border p-1 rounded w-full"
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="text"
-                      value={trackingInputs[order._id] || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(order._id, e.target.value)
-                      }
-                      className="border p-1 w-full rounded"
-                      placeholder="Enter Tracking ID"
-                    />
-                  </td>
-                  <td className="border p-2 text-center">
-                    <button
-                      onClick={() => generatePDF(order)}
-                      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
-                    >
-                      Download PDF
-                    </button>
+            </thead>
+            <tbody>
+              {orders.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center p-4 text-gray-500">
+                    No orders found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                orders.map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50">
+                    <td className="border p-2 break-all">{order._id}</td>
+                    <td className="border p-2">{order.name}</td>
+                    <td className="border p-2">{order.email}</td>
+                    <td className="border p-2">
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          handleStatusChange(order._id, e.target.value)
+                        }
+                        className="border p-1 rounded w-full"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        type="text"
+                        value={trackingInputs[order._id] || ""}
+                        onChange={(e) =>
+                          handleTrackingChange(order._id, e.target.value)
+                        }
+                        className="border p-1 w-full rounded"
+                        placeholder="Enter Tracking ID"
+                      />
+                    </td>
+                    <td className="border p-2 text-center">
+                      <button
+                        onClick={() => generatePDF(order)}
+                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
+                      >
+                        Download PDF
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-4">
+          {orders && orders.length > 0 ? (
+            orders.map((order) => (
+              <div
+                key={order._id}
+                className="bg-gray-50 p-4 rounded-lg shadow flex flex-col space-y-2"
+              >
+                <div className="text-sm font-semibold break-all">
+                  Order ID: {order._id}
+                </div>
+                <div className="text-sm">Name: {order.name}</div>
+                <div className="text-sm">Email: {order.email}</div>
+                <div className="flex flex-col space-y-2">
+                  <select
+                    value={order.status}
+                    onChange={(e) =>
+                      handleStatusChange(order._id, e.target.value)
+                    }
+                    className="border p-1 rounded w-full"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                  <input
+                    type="text"
+                    value={trackingInputs[order._id] || ""}
+                    onChange={(e) =>
+                      handleTrackingChange(order._id, e.target.value)
+                    }
+                    className="border p-1 w-full rounded"
+                    placeholder="Enter Tracking ID"
+                  />
+                </div>
+                <button
+                  onClick={() => generatePDF(order)}
+                  className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded w-full text-sm"
+                >
+                  Download PDF
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-6 text-gray-500">No orders available</div>
+          )}
+        </div>
       </div>
     </div>
   );

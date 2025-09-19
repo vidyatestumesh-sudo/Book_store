@@ -44,7 +44,6 @@ const InventoryPage = () => {
     }
   };
 
-  // Manual stock update (replace stock with input value)
   const updateStock = async (bookId) => {
     try {
       const newStock = parseInt(stockInputs[bookId], 10);
@@ -75,94 +74,102 @@ const InventoryPage = () => {
     }
   };
 
-  // New function: Increase stock by a quantity programmatically
-  const increaseStock = async (bookId, quantityToAdd) => {
-    try {
-      if (typeof quantityToAdd !== "number" || quantityToAdd <= 1) {
-        throw new Error("Quantity to add must be a positive number");
-      }
-
-      // Find current stock from local state if possible
-      const currentStock = books.find((b) => b._id === bookId)?.stock || 1;
-      const updatedStock = currentStock + quantityToAdd;
-
-      await axios.put(
-        `${getBaseUrl()}/api/books/edit/${bookId}`,
-        { stock: updatedStock },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      Swal.fire("Success", `Stock increased by ${quantityToAdd}`, "success");
-      fetchBooks();
-    } catch (error) {
-      console.error("Error increasing stock:", error);
-      Swal.fire("Error", "Failed to increase stock", "error");
-    }
-  };
-
-  if (loading) return <div className="p-6">Loading books...</div>;
+  if (loading) return <div className="p-6 text-center">Loading books...</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-3xl font-bold mb-6">Inventory Management</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border text-sm sm:text-base">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">Title</th>
-              <th className="border p-2">Author</th>
-              <th className="border p-2">Old Price</th>
-              <th className="border p-2">New Price</th>
-              <th className="border p-2">Stock</th>
-              <th className="border p-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.length === 0 ? (
+    <div className="container mt-[100px]">
+      <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+          Inventory Management
+        </h2>
+
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full table-auto border-collapse text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="7" className="text-center p-4">
-                  No books found.
-                </td>
+                <th className="border px-4 py-2 text-left">Title</th>
+                <th className="border px-4 py-2 text-left">Author</th>
+                <th className="border px-4 py-2 text-left">Old Price</th>
+                <th className="border px-4 py-2 text-left">New Price</th>
+                <th className="border px-4 py-2 text-left">Stock</th>
+                <th className="border px-4 py-2 text-left">Action</th>
               </tr>
-            ) : (
-              books.map((book) => (
-                <tr key={book._id} className="hover:bg-gray-50">
-                  <td className="border p-2">{book.title}</td>
-                  <td className="border p-2">{book.author}</td>
-                  <td className="border p-2">₹{book.oldPrice?.toFixed(2)}</td>
-                  <td className="border p-2">₹{book.newPrice?.toFixed(2)}</td>
-                  <td className="border p-2">
-                    <input
-                      type="text"
-                      value={stockInputs[book._id] || ""}
-                      onChange={(e) => handleStockChange(book._id, e.target.value)}
-                      className="border p-1 rounded w-20 text-center"
-                    />
-                  </td>
-                  <td className="border p-2 space-x-2">
-                    <button
-                      onClick={() => updateStock(book._id)}
-                      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded"
-                    >
-                      Update
-                    </button>
-                    {/* Example button to increase stock by 1 for testing */}
-                    {/* <button
-                      onClick={() => increaseStock(book._id, 1)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded"
-                    >
-                      +1 Stock
-                    </button> */}
+            </thead>
+            <tbody>
+              {books.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center p-4 text-gray-500">
+                    No books found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                books.map((book) => (
+                  <tr key={book._id} className="hover:bg-gray-50">
+                    <td className="border px-4 py-2">{book.title}</td>
+                    <td className="border px-4 py-2">{book.author}</td>
+                    <td className="border px-4 py-2">₹{book.oldPrice?.toFixed(2)}</td>
+                    <td className="border px-4 py-2">₹{book.newPrice?.toFixed(2)}</td>
+                    <td className="border px-4 py-2">
+                      <input
+                        type="text"
+                        value={stockInputs[book._id] || ""}
+                        onChange={(e) => handleStockChange(book._id, e.target.value)}
+                        className="border p-1 rounded w-20 text-center"
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <button
+                        onClick={() => updateStock(book._id)}
+                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded transition"
+                      >
+                        Update
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-4">
+          {books && books.length > 0 ? (
+            books.map((book, index) => (
+              <div key={book._id} className="bg-gray-50 p-4 rounded-lg shadow flex flex-col space-y-2">
+                <div className="font-semibold text-sm">{index + 1}. {book.title}</div>
+                <div className="text-sm text-gray-600">
+                  {book.oldPrice && book.discount > 0 ? (
+                    <>
+                      <span className="line-through text-gray-400 mr-1">₹{book.oldPrice}</span>
+                      <span className="text-green-600 font-semibold">₹{book.newPrice}</span>
+                      <span className="ml-1 text-red-500 font-semibold">({book.discount}% OFF)</span>
+                    </>
+                  ) : (
+                    <span className="text-green-600 font-semibold">₹{book.newPrice}</span>
+                  )}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={stockInputs[book._id] || ""}
+                    onChange={(e) => handleStockChange(book._id, e.target.value)}
+                    className="border p-1 rounded w-20 text-center"
+                  />
+                  <button
+                    onClick={() => updateStock(book._id)}
+                    className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded transition flex-1"
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-6 text-gray-500">No books available</div>
+          )}
+        </div>
       </div>
     </div>
   );

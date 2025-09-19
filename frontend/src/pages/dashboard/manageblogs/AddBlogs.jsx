@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
+// MUI icons
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -10,25 +17,18 @@ const BACKEND_BASE_URL =
     : "https://bookstore-backend-hshq.onrender.com";
 
 const AddBlogs = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     defaultValues: { title: "", description: "", image: null },
   });
 
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const [viewMode, setViewMode] = useState("list");
   const [description, setDescription] = useState("");
 
   const token = localStorage.getItem("adminToken");
 
-  // Fetch all blogs
   const fetchBlogs = async () => {
     try {
       const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
@@ -43,7 +43,6 @@ const AddBlogs = () => {
     fetchBlogs();
   }, []);
 
-  // Add or Edit blog
   const onSubmit = async (data) => {
     if (!description) {
       Swal.fire("Error", "Description is required", "error");
@@ -64,29 +63,26 @@ const AddBlogs = () => {
       const url = editingId
         ? `${BACKEND_BASE_URL}/api/blogs/edit/${editingId}`
         : `${BACKEND_BASE_URL}/api/blogs/create-blog`;
-
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       const result = await res.json();
 
       if (res.ok) {
-        Swal.fire({
-          title: editingId ? "Blog Updated" : "Blog Added",
-          text: editingId ? "Blog updated successfully!" : "Blog added successfully!",
-          icon: "success",
-        });
+        Swal.fire(
+          editingId ? "Blog Updated" : "Blog Added",
+          editingId ? "Blog updated successfully!" : "Blog added successfully!",
+          "success"
+        );
         reset();
         setDescription("");
         setEditingId(null);
-        setShowForm(false);
+        setViewMode("list");
         fetchBlogs();
       } else {
         Swal.fire("Error", result.message || "Something went wrong", "error");
@@ -99,23 +95,21 @@ const AddBlogs = () => {
     }
   };
 
-  // Edit handler
   const handleEdit = (blog) => {
     setEditingId(blog._id);
     setValue("title", blog.title);
     setDescription(blog.description);
-    setShowForm(true);
+    setViewMode("form");
   };
 
-  // Delete handler
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
       text: "This will permanently delete the blog!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: "#b91c1c",
+      cancelButtonColor: "#2563eb",
       confirmButtonText: "Yes, delete it!",
     });
 
@@ -126,7 +120,6 @@ const AddBlogs = () => {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-
       const result = await res.json();
 
       if (res.ok) {
@@ -141,190 +134,219 @@ const AddBlogs = () => {
     }
   };
 
-  // Blog Description component
-  const BlogDescription = ({ text }) => {
+  const BlogCard = ({ blog }) => {
     const [expanded, setExpanded] = useState(false);
+    const contentRef = useRef(null);
+    const [maxHeight, setMaxHeight] = useState(0);
 
-    const plainText = text.replace(/<[^>]+>/g, ""); // remove HTML tags for word count
+    const toggleExpand = () => setExpanded(!expanded);
+    // Helper: truncate HTML while keeping tags intact
+    const truncateHTML = (html, wordLimit = 40) => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      let wordCount = 0;
+
+      const traverse = (node) => {
+        if (wordCount >= wordLimit) {
+          node.remove();
+          return;
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {
+          const words = node.textContent.split(" ");
+          if (wordCount + words.length > wordLimit) {
+            node.textContent = words.slice(0, wordLimit - wordCount).join(" ") + "...";
+            wordCount = wordLimit;
+          } else {
+            wordCount += words.length;
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          Array.from(node.childNodes).forEach(traverse);
+        }
+      };
+
+      Array.from(div.childNodes).forEach(traverse);
+      return div.innerHTML;
+    };
+
+    useEffect(() => {
+      if (contentRef.current) {
+        setMaxHeight(expanded ? contentRef.current.scrollHeight : 0);
+      }
+    }, [expanded, blog.description]);
+
+    const plainText = blog.description.replace(/<[^>]+>/g, "");
     const words = plainText.split(" ");
     const isLong = words.length > 40;
 
     return (
-      <div>
+      <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 transition duration-500">
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:w-1/3 bg-gray-100 flex flex-col items-center p-4">
+            {blog.image && (
+              <div className="w-full h-48 lg:h-64 overflow-hidden rounded-lg">
+                <img
+                  src={blog.image.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
+                  alt={blog.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="lg:w-2/3 p-6 flex flex-col justify-between">
+            <h3 className="text-2xl font-semibold mb-2">{blog.title}</h3>
+            <p className="flex items-center gap-2 text-gray-500 text-sm mb-3">
+              <CalendarTodayIcon fontSize="small" />
+              {new Date(blog.createdAt).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+
+            {isLong ? (
+              <>
+                <div
+                  className="text-gray-700 text-sm leading-relaxed mb-2"
+                  dangerouslySetInnerHTML={{ __html: truncateHTML(blog.description, 40) }}
+                />
+                <button
+                  type="button"
+                  onClick={toggleExpand}
+                  className="text-blue-700 hover:text-blue-900 font-medium mt-2 flex items-center gap-1"
+                >
+                  {expanded ? "Hide Description" : "Read More"} {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </button>
+              </>
+            ) : (
+              <div
+                className="text-gray-700 text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: blog.description }}
+              />
+            )}
+            <div className="mt-4 flex gap-2 flex-wrap justify-center">
+              <button
+                onClick={() => handleEdit(blog)}
+                className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
+              >
+                <EditIcon fontSize="small" /> Edit
+              </button>
+              <button
+                onClick={() => handleDelete(blog._id)}
+                className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
+              >
+                <DeleteIcon fontSize="small" /> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div
-          className="prose prose-lg text-gray-700 leading-relaxed font-Figtree whitespace-pre-wrap break-words"
-          dangerouslySetInnerHTML={{
-            __html:
-              expanded || !isLong
-                ? text
-                : words.slice(0, 40).join(" ") + "...",
+          style={{
+            maxHeight: `${maxHeight}px`,
+            overflow: "hidden",
+            transition: "max-height 0.5s ease",
           }}
-        />
-        {isLong && (
-          <button
-            className="ml-2 inline-flex items-center gap-2 text-[#8c2f24] font-semibold group transition"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? "Read Less" : "Read More"}
-            <span className="inline-block transform transition-transform duration-300 group-hover:translate-x-2">
-              →
-            </span>
-          </button>
-        )}
+        >
+          <div
+            ref={contentRef}
+            className="p-6 bg-gray-50 border-t border-gray-200 text-gray-700 text-sm leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: blog.description }}
+          />
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-extrabold text-gray-800">📚 Blogs</h2>
-        <button
-          onClick={() => {
-            setShowForm(!showForm);
-            if (!showForm) reset();
-            setEditingId(null);
-            setDescription("");
-          }}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
-        >
-          {showForm ? "Close Form ✖️" : "➕ Add Blog"}
-        </button>
-      </div>
-
-      {/* Add/Edit Form */}
-      {showForm && (
-        <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 transition-all duration-500">
-          <h2 className="text-2xl font-extrabold mb-6 text-blue-800">
-            {editingId ? "✏️ Edit Blog" : "📝 Add New Blog"}
-          </h2>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            encType="multipart/form-data"
-            className="space-y-5"
-          >
-            {/* Title */}
-            <div>
-              <label className="block font-semibold mb-1 text-gray-800">
-                Title
-              </label>
-              <input
-                type="text"
-                placeholder="Enter blog title"
-                {...register("title", { required: "Title is required" })}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-              />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
-              )}
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block font-semibold mb-1 text-gray-800">
-                Description
-              </label>
-              <ReactQuill
-                theme="snow"
-                value={description}
-                onChange={setDescription}
-                placeholder="Write your blog content here..."
-                className="bg-white rounded"
-              />
-              {!description && (
-                <p className="text-red-500 text-sm mt-1">
-                  Description is required
-                </p>
-              )}
-            </div>
-
-            {/* Image Upload */}
-            <div>
-              <label className="block font-semibold mb-1 text-gray-800">
-                Image (optional)
-              </label>
-              <input
-                type="file"
-                {...register("image")}
-                className="w-full border rounded-lg px-4 py-2"
-              />
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
-            >
-              {isLoading
-                ? editingId
-                  ? "Updating..."
-                  : "Adding..."
-                : editingId
-                ? "Update Blog"
-                : "Add Blog"}
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Blog List */}
-      <div className="space-y-10">
-        {blogs.length ? (
-          blogs.map((blog, index) => (
+    <div className="container mt-[100px]">
+      <div className="container mt-20 mx-auto">
+        <div className="max-w-8xl mx-auto p-0 rounded-lg">
+          {/* Toggle Buttons */}
+          <div className="relative flex justify-center mb-8 bg-gray-200 rounded-full p-1 max-w-md mx-auto shadow-inner">
+            {/* Animated sliding background */}
             <div
-              key={blog._id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 overflow-hidden"
-            >
-              <div
-                className={`flex flex-col md:flex-row ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""
                 }`}
-              >
-                {/* Blog Image */}
-                {blog.image && (
-                  <div className="md:w-1/2">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-60 object-cover md:h-60 transition-transform duration-500 hover:scale-105"
-                    />
-                  </div>
-                )}
+            ></div>
 
-                {/* Blog Content */}
-                <div className="md:w-1/2 p-8 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      {blog.title}
-                    </h3>
-                    <BlogDescription text={blog.description} />
-                    <p className="text-gray-400 text-xs mt-3">
-                      Added: {new Date(blog.createdAt).toLocaleString()}
-                    </p>
-                  </div>
+            {/* Buttons */}
+            <button
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                }`}
+              onClick={() => setViewMode("list")}
+            >
+              <CalendarTodayIcon fontSize="medium" /> View Blogs
+            </button>
 
-                  <div className="mt-6 flex gap-3">
-                    <button
-                      onClick={() => handleEdit(blog)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg shadow-md transition"
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(blog._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg shadow-md transition"
-                    >
-                      🗑️ Delete
-                    </button>
-                  </div>
+            <button
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                }`}
+              onClick={() => {
+                setViewMode("form");
+                reset();
+                setEditingId(null);
+                setDescription("");
+              }}
+            >
+              <EditIcon fontSize="medium" /> Add Blog
+            </button>
+          </div>
+
+          {/* Add/Edit Form */}
+          {viewMode === "form" && (
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 transition-all duration-500">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+                {editingId ? "Edit Blog" : "Add New Blog"}
+              </h2>
+              <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="space-y-5">
+                <div>
+                  <label className="block font-semibold mb-1 text-gray-800">Title</label>
+                  <input
+                    type="text"
+                    placeholder="Enter blog title"
+                    {...register("title", { required: "Title is required" })}
+                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                  />
+                  {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                 </div>
-              </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-gray-800">Description</label>
+                  <ReactQuill
+                    theme="snow"
+                    value={description}
+                    onChange={setDescription}
+                    placeholder="Write your blog content here..."
+                    className="bg-white rounded"
+                  />
+                  {!description && <p className="text-red-500 text-sm mt-1">Description is required</p>}
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-gray-800">Image (optional)</label>
+                  <input type="file" {...register("image")} className="w-full border rounded-lg px-4 py-2" />
+                </div>
+
+                <button
+                  type="submit"
+                  className="bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+                >
+                  {isLoading ? (editingId ? "Updating..." : "Adding...") : editingId ? "Update Blog" : "Add Blog"}
+                </button>
+              </form>
             </div>
-          ))
-        ) : (
-          <p>No blogs found.</p>
-        )}
+          )}
+
+          {/* Blog List */}
+          {viewMode === "list" && (
+            <div className="flex flex-col gap-8">
+              {blogs.length > 0 ? blogs.map((blog) => <BlogCard key={blog._id} blog={blog} />)
+                : <p className="text-gray-500 text-center py-6">No blogs found.</p>}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

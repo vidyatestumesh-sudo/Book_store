@@ -1,165 +1,214 @@
-import React from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { HiViewGridAdd } from 'react-icons/hi';
-import { MdOutlineManageHistory } from 'react-icons/md';
-import { FaSignOutAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { HiViewGridAdd } from "react-icons/hi";
+import { MdOutlineManageHistory, MdDashboard } from "react-icons/md";
+import { FaSignOutAlt, FaBlog } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+import { FiChevronLeft, FiChevronRight, FiMenu } from "react-icons/fi";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isExpanded, setIsExpanded] = useState(true); // Desktop toggle
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [mobileSidebar, setMobileSidebar] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
-  // Helper function to determine active route
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-20 sm:w-60 bg-gray-800 text-white flex flex-col justify-between py-6 px-3 shadow-lg">
-        <div>
-          <Link className="flex items-center justify-center sm:justify-start space-x-2 px-3 mb-10">
-            <img src="/adminprofile.jpg" alt="Logo" className="w-10 h-10 rounded-full" />
-            <span className="hidden sm:inline text-xl font-bold">Admin</span>
-          </Link>
+    <div className="flex min-h-screen bg-gray-100 font-figtree font-normal leading-snug">
+      {/* Mobile overlay */}
+      {isMobile && mobileSidebar && (
+        <div
+          className="fixed inset-0 bg-black/40 z-30"
+          onClick={() => setMobileSidebar(false)}
+        ></div>
+      )}
 
-          <nav className="space-y-4">
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 h-screen bg-gray-800 text-white flex flex-col justify-between py-6 px-3 shadow-lg z-40 transition-all duration-300 ${
+          isMobile
+            ? mobileSidebar
+              ? "w-60 left-0"
+              : "w-0 -left-60"
+            : isExpanded
+            ? "w-60 left-0"
+            : "w-20 left-0"
+        } overflow-hidden`}
+      >
+        <div>
+          {/* Admin + Toggle */}
+          <div
+            className={`flex items-center mb-10 ${
+              isExpanded && !isMobile ? "justify-between px-2" : "flex-col space-y-3"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <img
+                src="/adminprofile.jpg"
+                alt="Logo"
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              {(isExpanded && !isMobile) || mobileSidebar ? (
+                <span className="text-lg font-playfair font-light text-white leading-tight">
+                  Admin
+                </span>
+              ) : null}
+            </div>
+
+            {/* Desktop toggle */}
+            {!isMobile && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-gray-300 hover:text-white"
+              >
+                {isExpanded ? <FiChevronLeft size={22} /> : <FiChevronRight size={22} />}
+              </button>
+            )}
+          </div>
+
+          {/* Nav Links */}
+          <nav className="space-y-3">
             <Link
               to="/dashboard"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard')
-                ? 'bg-purple-600 text-white'
-                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-                }`}
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"
-                />
-              </svg>
-              <span className="hidden sm:inline">Dashboard</span>
+              <MdDashboard className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base font-figtree leading-snug">Dashboard</span>
+              )}
             </Link>
 
             <Link
               to="/dashboard/add-new-book"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/add-new-book')
-                ? 'bg-purple-600 text-white'
-                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-                }`}
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard/add-new-book")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
             >
-              <HiViewGridAdd className="w-6 h-6" />
-              <span className="hidden sm:inline">Add Book</span>
+              <HiViewGridAdd className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base font-figtree leading-snug">Add Book</span>
+              )}
             </Link>
 
             <Link
               to="/dashboard/manage-books"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/manage-books')
-                ? 'bg-purple-600 text-white'
-                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-                }`}
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard/manage-books")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
             >
-              <MdOutlineManageHistory className="w-6 h-6" />
-              <span className="hidden sm:inline">Manage Books</span>
+              <MdOutlineManageHistory className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base font-figtree leading-snug">Manage Books</span>
+              )}
             </Link>
 
-            {/* Blogs */}
             <Link
               to="/dashboard/add-blogs"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/blogs')
-                  ? 'bg-purple-600 text-white'
-                  : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-                }`}
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard/add-blogs")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h9l7 7v9a2 2 0 01-2 2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-8H7v8" />
-              </svg>
-              <span className="hidden sm:inline">Add/manage Blogs</span>
+              <FaBlog className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base font-figtree leading-snug">Manage Blogs</span>
+              )}
             </Link>
 
-            {/* Letter from Langshott */}
             <Link
               to="/dashboard/manage-letters"
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 group ${isActive('/dashboard/manage-letters')
-                ? 'bg-purple-600 text-white'
-                : 'hover:bg-purple-600 text-gray-300 hover:text-white'
-                }`}
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard/manage-letters")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="hidden sm:inline">Manage Langshott Letters</span>
+              <HiOutlineMail className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base font-figtree leading-snug">Manage Letters</span>
+              )}
             </Link>
           </nav>
-
         </div>
 
         {/* Logout */}
-        <div className="px-4">
+        <div className={`${isExpanded ? "px-4" : "flex justify-center"} transition-all duration-300`}>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-white hover:bg-red-600 rounded-lg w-full transition-all duration-300"
+            className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-white hover:bg-red-600 rounded-lg w-full transition-all duration-300 justify-center"
           >
-            <FaSignOutAlt className="w-5 h-5" />
-            <span className="hidden sm:inline">Logout</span>
+            <FaSignOutAlt className="w-5 h-5 flex-shrink-0" />
+            {(isExpanded || mobileSidebar) && (
+              <span className="text-base font-figtree leading-snug">Logout</span>
+            )}
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isExpanded && !isMobile ? "ml-60" : !isMobile ? "ml-20" : "ml-0"
+        }`}
+      >
         {/* Header */}
-        <header className="flex flex-col items-center justify-center px-6 py-6 bg-white shadow-sm text-center">
-          <h1 className="text-3xl font-semibold text-gray-800">Dashboard</h1>
-          <p className="text-sm text-gray-500">Welcome to the Book Store Admin Panel</p>
+        <header
+          className={`fixed top-0 z-20 flex flex-col items-center justify-center px-6 py-4 bg-white shadow-sm transition-all duration-300 ${
+            isExpanded && !isMobile ? "left-60" : !isMobile ? "left-20" : "left-0"
+          } right-0`}
+        >
+          <h1 className="text-2xl md:text-3xl font-playfair font-light text-black leading-tight text-center">
+            Dashboard
+          </h1>
+          <p className="text-sm md:text-base font-figtree text-gray-500 leading-snug text-center">
+            Welcome to the Book Store Admin Panel
+          </p>
+
+          {/* Hamburger only on mobile */}
+          {isMobile && (
+            <button
+              onClick={() => setMobileSidebar(true)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 hover:text-black"
+            >
+              <FiMenu size={26} />
+            </button>
+          )}
         </header>
 
-        {/* Action Buttons */}
-        <div className="flex justify-end gap-4 px-6 py-4">
-          <Link
-            to="/dashboard/manage-books"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 border border-purple-600 rounded hover:bg-purple-100 transition-all duration-300"
-          >
-            <MdOutlineManageHistory className="mr-2" />
-            Manage Books
-          </Link>
-          <Link
-            to="/dashboard/add-new-book"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded transition-all duration-300"
-          >
-            <HiViewGridAdd className="mr-2" />
-            Add Book
-          </Link>
-        </div>
-
         {/* Page Content */}
-        <main className="flex-1 px-6 pb-10">
+        <main className="flex-1 px-4 sm:px-6 md:px-8 pb-10 pt-[100px]">
           <Outlet />
         </main>
       </div>
