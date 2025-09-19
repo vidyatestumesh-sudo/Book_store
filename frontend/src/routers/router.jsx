@@ -13,8 +13,6 @@ import AdminLogin from "../components/AdminLogin";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import ManageBooks from "../pages/dashboard/manageBooks/ManageBooks";
-import AddBook from "../pages/dashboard/addBook/AddBook";
-import UpdateBook from "../pages/dashboard/EditBook/UpdateBook";
 import UserDashboard from "../pages/dashboard/users/UserDashboard";
 import AboutAuthorPage from "../pages/AboutAuthorPage/AboutAuthorPage";
 import Publications from "../pages/publications/Publications";
@@ -27,131 +25,47 @@ import AdminOrderPage from "../pages/dashboard/orders/AdminOrderPage";
 import BillingDownload from "../pages/dashboard/billing-download/BillingDownload";
 import InventoryPage from "../pages/dashboard/inventory/InventoryPage";
 
+// Optional: create this later
+// import NotFoundPage from "../pages/NotFoundPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/orders",
-        element: <PrivateRoute><OrderPage /></PrivateRoute>
-      },
-      {
-        path: "/aboutauthorpage",
-        element: <AboutAuthorPage />,
-      },
-      {
-        path: "/login",
-        element: <Login />
-      },
-      {
-        path: "/register",
-        element: <Register />
-      },
-      {
-        path: "/cart",
-        element: <CartPage />
-      },
-      {
-        path: "/checkout",
-        element: <CheckoutPage />
-      },
-      {
-        path: "/books/:id",
-        element: <SingleBook />
-      },
-      {
-        path: "/user-dashboard",
-        element: <PrivateRoute><UserDashboard /></PrivateRoute>
-      },
-      {
-        path: "/blogs",
-        element: <BlogsPage />,
-      },
-      {
-        path: "/publications",
-        element: <Publications />,
-      },
-      {
-        path: "/letters",
-        element: <LetterFromLangshott />
-      },
-      {
-         path: "/blogs/:id",
-         element: <BlogDetailPage />
-      }  
+      { path: "/", element: <Home /> },
+      { path: "/orders", element: <PrivateRoute><OrderPage /></PrivateRoute> },
+      { path: "/aboutauthorpage", element: <AboutAuthorPage /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+      { path: "/cart", element: <CartPage /> },
+      { path: "/checkout", element: <CheckoutPage /> },
+      { path: "/books/:id", element: <SingleBook /> },
+      { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
+      { path: "/blogs", element: <BlogsPage /> },
+      { path: "/blogs/:id", element: <BlogDetailPage /> },
+      { path: "/publications", element: <Publications /> },
+      { path: "/letters", element: <LetterFromLangshott /> },
+      // { path: "*", element: <NotFoundPage /> }
     ]
   },
-  {
-    path: "/admin",
-    element: <AdminLogin />
-  },
+  { path: "/admin", element: <AdminLogin /> },
   {
     path: "/dashboard",
-    element: <AdminRoute>
-      <DashboardLayout />
-    </AdminRoute>,
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
     children: [
-      {
-        path: "",
-        element: <AdminRoute><Dashboard /></AdminRoute>
-      },
-      {
-        path: "add-new-book",
-        element: <AdminRoute>
-          <AddBook />
-        </AdminRoute>
-      },
-      {
-        path: "edit-book/:id",
-        element: <AdminRoute>
-          <UpdateBook />
-        </AdminRoute>
-      },
-      {
-        path: "manage-books",
-        element: <AdminRoute>
-          <ManageBooks />
-        </AdminRoute>
-      },
-      {
-        path: "manage-letters",
-        element: <AdminRoute><ManageLetters /></AdminRoute>
-      },
-      {
-        path: "add-blogs",
-        element: <AdminRoute>
-          <AddBlogs />
-        </AdminRoute>
-      },
-      {
-        path: "orders",
-        element: (
-          <AdminRoute>
-            <AdminOrderPage />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "billing-download", 
-        element: (
-          <AdminRoute>
-            <BillingDownload />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "inventory", 
-        element: (
-          <AdminRoute>
-            <InventoryPage />
-          </AdminRoute>
-        ),
-      },
+      { path: "", element: <AdminRoute><Dashboard /></AdminRoute> },
+      { path: "manage-books", element: <AdminRoute><ManageBooks /></AdminRoute> },
+      { path: "manage-letters", element: <AdminRoute><ManageLetters /></AdminRoute> },
+      { path: "add-blogs", element: <AdminRoute><AddBlogs /></AdminRoute> },
+      { path: "orders", element: <AdminRoute><AdminOrderPage /></AdminRoute> },
+      { path: "billing-download", element: <AdminRoute><BillingDownload /></AdminRoute> },
+      { path: "inventory", element: <AdminRoute><InventoryPage /></AdminRoute> },
+      // { path: "*", element: <NotFoundPage /> }
     ]
   }
 ]);

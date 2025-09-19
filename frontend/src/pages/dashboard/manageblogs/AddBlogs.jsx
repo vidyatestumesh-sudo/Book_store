@@ -296,54 +296,58 @@ const AddBlogs = () => {
 
           {/* Add/Edit Form */}
           {viewMode === "form" && (
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 transition-all duration-500">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
-                {editingId ? "Edit Blog" : "Add New Blog"}
-              </h2>
-              <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="space-y-5">
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-800">Title</label>
-                  <input
-                    type="text"
-                    placeholder="Enter blog title"
-                    {...register("title", { required: "Title is required" })}
-                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                  />
-                  {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
-                </div>
+            <div className="mt-[50px]">
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 shadow-xl rounded-2xl p-8 mb-10 border border-gray-500 transition-all duration-500">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+                  {editingId ? "Edit Blog" : "Add New Blog"}
+                </h2>
+                <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="space-y-5">
+                  <div>
+                    <label className="block font-semibold mb-1 text-gray-800">Title</label>
+                    <input
+                      type="text"
+                      placeholder="Enter blog title"
+                      {...register("title", { required: "Title is required" })}
+                      className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                    />
+                    {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+                  </div>
 
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-800">Description</label>
-                  <ReactQuill
-                    theme="snow"
-                    value={description}
-                    onChange={setDescription}
-                    placeholder="Write your blog content here..."
-                    className="bg-white rounded"
-                  />
-                  {!description && <p className="text-red-500 text-sm mt-1">Description is required</p>}
-                </div>
+                  <div>
+                    <label className="block font-semibold mb-1 text-gray-800">Description</label>
+                    <ReactQuill
+                      theme="snow"
+                      value={description}
+                      onChange={setDescription}
+                      placeholder="Write your blog content here..."
+                      className="bg-white rounded"
+                    />
+                    {!description && <p className="text-red-500 text-sm mt-1">Description is required</p>}
+                  </div>
 
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-800">Image (optional)</label>
-                  <input type="file" {...register("image")} className="w-full border rounded-lg px-4 py-2" />
-                </div>
+                  <div>
+                    <label className="block font-semibold mb-1 text-gray-800">Image (optional)</label>
+                    <input type="file" {...register("image")} className="w-full border rounded-lg px-4 py-2" />
+                  </div>
 
-                <button
-                  type="submit"
-                  className="bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
-                >
-                  {isLoading ? (editingId ? "Updating..." : "Adding...") : editingId ? "Update Blog" : "Add Blog"}
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    className="bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+                  >
+                    {isLoading ? (editingId ? "Updating..." : "Adding...") : editingId ? "Update Blog" : "Add Blog"}
+                  </button>
+                </form>
+              </div>
             </div>
           )}
 
           {/* Blog List */}
           {viewMode === "list" && (
-            <div className="flex flex-col gap-8">
-              {blogs.length > 0 ? blogs.map((blog) => <BlogCard key={blog._id} blog={blog} />)
-                : <p className="text-gray-500 text-center py-6">No blogs found.</p>}
+            <div className="mt-[50px]">
+              <div className="flex flex-col gap-8">
+                {blogs.length > 0 ? blogs.map((blog) => <BlogCard key={blog._id} blog={blog} />)
+                  : <p className="text-gray-500 text-center py-6">No blogs found.</p>}
+              </div>
             </div>
           )}
         </div>
