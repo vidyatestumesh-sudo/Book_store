@@ -8,7 +8,7 @@ const AboutAuthorPage = () => {
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center gap-10 bg-gradient-to-r from-purple-100 via-pink-100 to-yellow-100 rounded-3xl shadow-xl p-12 hover:shadow-2xl transition-all duration-700">
         <img
-          src="/author_logo.png"
+          src="/author_logo.webp"
           alt="Author"
           className="w-64 h-64 rounded-full border-4 border-pink-500 shadow-lg object-cover transform hover:scale-105 hover:rotate-3 transition-all duration-500"
         />
