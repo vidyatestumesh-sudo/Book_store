@@ -7,7 +7,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ArticleIcon from "@mui/icons-material/Article";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -276,7 +276,7 @@ const AddBlogs = () => {
                 }`}
               onClick={() => setViewMode("list")}
             >
-              <ArticleIcon fontSize="medium" /> View Blogs
+              <LibraryBooksIcon fontSize="medium" /> View Blogs
             </button>
 
             <button

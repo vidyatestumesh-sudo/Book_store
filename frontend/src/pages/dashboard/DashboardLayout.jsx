@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { HiViewGridAdd } from "react-icons/hi";
-import { MdOutlineManageHistory, MdDashboard } from "react-icons/md";
-import { FaSignOutAlt, FaBlog } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
-import { FiChevronLeft, FiChevronRight, FiMenu } from "react-icons/fi";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(true); // Desktop toggle
+
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [mobileSidebar, setMobileSidebar] = useState(false);
 
@@ -74,7 +78,11 @@ const DashboardLayout = () => {
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="text-gray-300 hover:text-white"
               >
-                {isExpanded ? <FiChevronLeft size={22} /> : <FiChevronRight size={22} />}
+                {isExpanded ? (
+                  <ChevronLeftIcon fontSize="small" />
+                ) : (
+                  <ChevronRightIcon fontSize="small" />
+                )}
               </button>
             )}
           </div>
@@ -91,10 +99,8 @@ const DashboardLayout = () => {
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
               }`}
             >
-              <MdDashboard className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && (
-                <span className="text-base font-figtree leading-snug">Dashboard</span>
-              )}
+              <DashboardIcon className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && <span className="text-base">Dashboard</span>}
             </Link>
 
             <Link
@@ -107,10 +113,8 @@ const DashboardLayout = () => {
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
               }`}
             >
-              <MdOutlineManageHistory className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && (
-                <span className="text-base font-figtree leading-snug">Manage Books</span>
-              )}
+              <MenuBookIcon className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Books</span>}
             </Link>
 
             <Link
@@ -123,10 +127,8 @@ const DashboardLayout = () => {
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
               }`}
             >
-              <FaBlog className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && (
-                <span className="text-base font-figtree leading-snug">Manage Blogs</span>
-              )}
+              <LibraryBooksIcon className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Blogs</span>}
             </Link>
 
             <Link
@@ -139,10 +141,8 @@ const DashboardLayout = () => {
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
               }`}
             >
-              <HiOutlineMail className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && (
-                <span className="text-base font-figtree leading-snug">Manage Letters</span>
-              )}
+              <MailOutlineIcon className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Letters</span>}
             </Link>
           </nav>
         </div>
@@ -153,10 +153,8 @@ const DashboardLayout = () => {
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-white hover:bg-red-600 rounded-lg w-full transition-all duration-300 justify-center"
           >
-            <FaSignOutAlt className="w-5 h-5 flex-shrink-0" />
-            {(isExpanded || mobileSidebar) && (
-              <span className="text-base font-figtree leading-snug">Logout</span>
-            )}
+            <LogoutIcon className="w-5 h-5 flex-shrink-0" />
+            {(isExpanded || mobileSidebar) && <span className="text-base">Logout</span>}
           </button>
         </div>
       </aside>
@@ -173,11 +171,11 @@ const DashboardLayout = () => {
             isExpanded && !isMobile ? "left-60" : !isMobile ? "left-20" : "left-0"
           } right-0`}
         >
-          <h1 className="text-2xl md:text-3xl font-playfair font-light text-black leading-tight text-center">
+          <h1 className="text-2xl md:text-4xl font-playfair font-light text-black leading-tight text-center">
             Dashboard
           </h1>
           <p className="text-sm md:text-base font-figtree text-gray-500 leading-snug text-center">
-            Welcome to the Book Store Admin Panel
+            Welcome to Langshott Leadership Foundation Admin Panel
           </p>
 
           {/* Hamburger only on mobile */}
@@ -186,7 +184,7 @@ const DashboardLayout = () => {
               onClick={() => setMobileSidebar(true)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 hover:text-black"
             >
-              <FiMenu size={26} />
+              <MenuIcon fontSize="medium" />
             </button>
           )}
         </header>
