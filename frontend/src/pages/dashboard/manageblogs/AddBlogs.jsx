@@ -3,13 +3,11 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
-// MUI icons
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -230,13 +228,13 @@ const AddBlogs = () => {
                 onClick={() => handleEdit(blog)}
                 className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
               >
-                <EditIcon fontSize="small" /> Edit
+                <FiEdit fontSize="small" /> Edit
               </button>
               <button
                 onClick={() => handleDelete(blog._id)}
                 className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
               >
-                <DeleteIcon fontSize="small" /> Delete
+                <FiTrash2 fontSize="small" /> Delete
               </button>
             </div>
           </div>
@@ -271,13 +269,14 @@ const AddBlogs = () => {
                 }`}
             ></div>
 
-            {/* Buttons */}
             <button
-              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
+                  ? "text-white"
+                  : "text-gray-700 hover:text-gray-900 hover:scale-105"
                 }`}
               onClick={() => setViewMode("list")}
             >
-              <CalendarTodayIcon fontSize="medium" /> View Blogs
+              <LibraryBooksIcon fontSize="medium" /> View Blogs
             </button>
 
             <button
@@ -290,7 +289,7 @@ const AddBlogs = () => {
                 setDescription("");
               }}
             >
-              <EditIcon fontSize="medium" /> Add Blog
+              <FiEdit fontSize="medium" /> Add Blog
             </button>
           </div>
 
