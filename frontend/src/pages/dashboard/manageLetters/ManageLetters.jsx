@@ -14,12 +14,12 @@ const BACKEND_BASE_URL =
 const ManageLetters = () => {
   const [letters, setLetters] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false); // ⬅️ Uploading state
   const [viewMode, setViewMode] = useState("list"); // list | form
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
   const [editingTitleId, setEditingTitleId] = useState(null);
   const [newTitle, setNewTitle] = useState("");
-  const [uploading, setUploading] = useState(false); // <-- added uploading state
 
   useEffect(() => {
     fetchLetters();
@@ -45,11 +45,11 @@ const ManageLetters = () => {
       return;
     }
 
-    setUploading(true); // <-- start uploading
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("pdf", file);
+
+    setUploading(true); // ⬅️ Start uploading
 
     try {
       await axios.post(`${BACKEND_BASE_URL}/api/letters/upload`, formData, {
@@ -64,7 +64,7 @@ const ManageLetters = () => {
       console.error("Upload failed", err);
       Swal.fire("Error", "Upload failed.", "error");
     } finally {
-      setUploading(false); // <-- done uploading
+      setUploading(false); // ⬅️ End uploading
     }
   };
 
@@ -92,13 +92,10 @@ const ManageLetters = () => {
   };
 
   const handleRename = async (id) => {
-    if (!newTitle.trim())
-      return Swal.fire("Error", "New title cannot be empty.", "error");
+    if (!newTitle.trim()) return Swal.fire("Error", "New title cannot be empty.", "error");
 
     try {
-      await axios.put(`${BACKEND_BASE_URL}/api/letters/${id}`, {
-        title: newTitle.trim(),
-      });
+      await axios.put(`${BACKEND_BASE_URL}/api/letters/${id}`, { title: newTitle.trim() });
       Swal.fire("Updated!", "Title updated.", "success");
       setEditingTitleId(null);
       setNewTitle("");
@@ -115,28 +112,25 @@ const ManageLetters = () => {
         {/* Toggle Buttons */}
         <div className="relative flex justify-center mb-8 bg-gray-200 rounded-full p-1 max-w-md mx-auto shadow-inner">
           <div
-            className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${
-              viewMode === "form" ? "translate-x-full" : ""
-            }`}
+            className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""
+              }`}
           ></div>
 
           <button
-            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
-              viewMode === "list"
-                ? "text-white"
-                : "text-gray-700 hover:text-gray-900 hover:scale-105"
-            }`}
+            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
+              ? "text-white"
+              : "text-gray-700 hover:text-gray-900 hover:scale-105"
+              }`}
             onClick={() => setViewMode("list")}
           >
             <MailOutlineIcon fontSize="medium" /> View Letters
           </button>
 
           <button
-            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
-              viewMode === "form"
-                ? "text-white"
-                : "text-gray-700 hover:text-gray-900 hover:scale-105"
-            }`}
+            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form"
+              ? "text-white"
+              : "text-gray-700 hover:text-gray-900 hover:scale-105"
+              }`}
             onClick={() => setViewMode("form")}
           >
             <FiUpload /> Upload Letter
@@ -163,6 +157,7 @@ const ManageLetters = () => {
                     className="w-full border rounded-md px-3 py-2"
                     placeholder="Enter letter title"
                     required
+                    disabled={uploading} // ⬅️ Disable input while uploading
                   />
                 </div>
 
@@ -176,15 +171,42 @@ const ManageLetters = () => {
                     onChange={(e) => setFile(e.target.files[0])}
                     className="w-full border rounded-md px-3 py-2"
                     required
+                    disabled={uploading} // ⬅️ Disable input while uploading
                   />
                 </div>
 
                 <button
                   type="submit"
-                  disabled={uploading}
-                  className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={uploading} // ⬅️ Disable button while uploading
+                  className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {uploading ? "Uploading..." : "Upload"}
+                  {uploading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Uploading...
+                    </>
+                  ) : (
+                    "Upload"
+                  )}
                 </button>
               </form>
             </div>
@@ -205,7 +227,7 @@ const ManageLetters = () => {
                 <p className="text-center py-6 text-gray-500">No letters found</p>
               ) : (
                 <>
-                  {/* ✅ Desktop Table */}
+                  {/* Desktop Table */}
                   <div className="hidden md:block overflow-x-auto">
                     <table className="w-full table-auto border-collapse">
                       <thead>
@@ -218,10 +240,7 @@ const ManageLetters = () => {
                       </thead>
                       <tbody>
                         {letters.map((letter, index) => (
-                          <tr
-                            key={letter._id}
-                            className="border-b hover:bg-gray-50"
-                          >
+                          <tr key={letter._id} className="border-b hover:bg-gray-50">
                             <td className="px-6 py-4 text-sm">{index + 1}</td>
                             <td className="px-6 py-4 text-sm">
                               {editingTitleId === letter._id ? (
@@ -253,9 +272,7 @@ const ManageLetters = () => {
                             <td className="px-6 py-4 text-sm">
                               {new Date(letter.uploadedAt).toLocaleDateString()}
                             </td>
-
                             <td className="px-6 py-4 text-sm space-x-2 flex items-center">
-                              {/* View */}
                               <a
                                 href={letter.fileUrl}
                                 target="_blank"
@@ -265,7 +282,6 @@ const ManageLetters = () => {
                                 <VisibilityIcon fontSize="small" />
                               </a>
 
-                              {/* Download */}
                               <a
                                 href={letter.downloadUrl}
                                 download={letter.fileName || "letter.pdf"}
@@ -274,7 +290,6 @@ const ManageLetters = () => {
                                 <DownloadIcon fontSize="small" /> Download
                               </a>
 
-                              {/* Rename */}
                               <button
                                 onClick={() => {
                                   setEditingTitleId(letter._id);
@@ -285,7 +300,6 @@ const ManageLetters = () => {
                                 <FiEdit fontSize="small" /> Rename
                               </button>
 
-                              {/* Delete */}
                               <button
                                 onClick={() => handleDelete(letter._id)}
                                 className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md transition"
@@ -299,7 +313,7 @@ const ManageLetters = () => {
                     </table>
                   </div>
 
-                  {/* ✅ Mobile Cards */}
+                  {/* Mobile Cards */}
                   <div className="md:hidden space-y-4">
                     {letters.map((letter, index) => (
                       <div
