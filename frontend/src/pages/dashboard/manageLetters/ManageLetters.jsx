@@ -19,6 +19,7 @@ const ManageLetters = () => {
   const [file, setFile] = useState(null);
   const [editingTitleId, setEditingTitleId] = useState(null);
   const [newTitle, setNewTitle] = useState("");
+  const [uploading, setUploading] = useState(false); // <-- added uploading state
 
   useEffect(() => {
     fetchLetters();
@@ -44,6 +45,8 @@ const ManageLetters = () => {
       return;
     }
 
+    setUploading(true); // <-- start uploading
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("pdf", file);
@@ -60,6 +63,8 @@ const ManageLetters = () => {
     } catch (err) {
       console.error("Upload failed", err);
       Swal.fire("Error", "Upload failed.", "error");
+    } finally {
+      setUploading(false); // <-- done uploading
     }
   };
 
@@ -87,10 +92,13 @@ const ManageLetters = () => {
   };
 
   const handleRename = async (id) => {
-    if (!newTitle.trim()) return Swal.fire("Error", "New title cannot be empty.", "error");
+    if (!newTitle.trim())
+      return Swal.fire("Error", "New title cannot be empty.", "error");
 
     try {
-      await axios.put(`${BACKEND_BASE_URL}/api/letters/${id}`, { title: newTitle.trim() });
+      await axios.put(`${BACKEND_BASE_URL}/api/letters/${id}`, {
+        title: newTitle.trim(),
+      });
       Swal.fire("Updated!", "Title updated.", "success");
       setEditingTitleId(null);
       setNewTitle("");
@@ -107,25 +115,28 @@ const ManageLetters = () => {
         {/* Toggle Buttons */}
         <div className="relative flex justify-center mb-8 bg-gray-200 rounded-full p-1 max-w-md mx-auto shadow-inner">
           <div
-            className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""
-              }`}
+            className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${
+              viewMode === "form" ? "translate-x-full" : ""
+            }`}
           ></div>
 
           <button
-            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
-              ? "text-white"
-              : "text-gray-700 hover:text-gray-900 hover:scale-105"
-              }`}
+            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
+              viewMode === "list"
+                ? "text-white"
+                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+            }`}
             onClick={() => setViewMode("list")}
           >
             <MailOutlineIcon fontSize="medium" /> View Letters
           </button>
 
           <button
-            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form"
-              ? "text-white"
-              : "text-gray-700 hover:text-gray-900 hover:scale-105"
-              }`}
+            className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
+              viewMode === "form"
+                ? "text-white"
+                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+            }`}
             onClick={() => setViewMode("form")}
           >
             <FiUpload /> Upload Letter
@@ -170,9 +181,10 @@ const ManageLetters = () => {
 
                 <button
                   type="submit"
-                  className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+                  disabled={uploading}
+                  className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Upload
+                  {uploading ? "Uploading..." : "Upload"}
                 </button>
               </form>
             </div>
@@ -206,7 +218,10 @@ const ManageLetters = () => {
                       </thead>
                       <tbody>
                         {letters.map((letter, index) => (
-                          <tr key={letter._id} className="border-b hover:bg-gray-50">
+                          <tr
+                            key={letter._id}
+                            className="border-b hover:bg-gray-50"
+                          >
                             <td className="px-6 py-4 text-sm">{index + 1}</td>
                             <td className="px-6 py-4 text-sm">
                               {editingTitleId === letter._id ? (
@@ -238,7 +253,6 @@ const ManageLetters = () => {
                             <td className="px-6 py-4 text-sm">
                               {new Date(letter.uploadedAt).toLocaleDateString()}
                             </td>
-
 
                             <td className="px-6 py-4 text-sm space-x-2 flex items-center">
                               {/* View */}
@@ -279,7 +293,6 @@ const ManageLetters = () => {
                                 <FiTrash2 fontSize="small" /> Delete
                               </button>
                             </td>
-
                           </tr>
                         ))}
                       </tbody>
