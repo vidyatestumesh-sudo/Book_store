@@ -2,15 +2,18 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const verifyAdminToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
+  const authHeader = req.headers['authorization'];
 
-  if (!token) {
-    return res.status(401).json({ message: 'Access Denied. No token provided' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Access Denied. No token provided or malformed header' });
   }
+
+  const token = authHeader.split(' ')[1];
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid credentials' });
+      const msg = err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid credentials';
+      return res.status(403).json({ message: msg });
     }
 
     if (!user.isAdmin) {
@@ -21,5 +24,4 @@ const verifyAdminToken = (req, res, next) => {
     next();
   });
 };
-
 module.exports = verifyAdminToken;

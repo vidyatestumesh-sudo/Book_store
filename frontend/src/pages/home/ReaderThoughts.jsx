@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const thoughts = [
+const data = {
+  image: "/1-my-mind.webp",
+  title: "What’s On My Mind?",
+ thoughts: [
   {
     id: 1,
     title: "The Silent Chant",
@@ -77,18 +80,21 @@ const thoughts = [
     title: "The Power of Belief",
     text: `Belief is a language of creation that we are gifted with.\n– Anil Kumar`,
   },
-];
+],
+};
 
 const ReaderThoughts = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
 
-  // Handle responsive layout based on screen size
+  const { image, title, thoughts } = data;
+
+  // Responsive handling
   useEffect(() => {
     const handleResize = () => {
       setItemsPerPage(window.innerWidth >= 1450 ? 2 : 1);
     };
-    handleResize(); // Initial check
+    handleResize(); // Initial
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -118,16 +124,18 @@ const ReaderThoughts = () => {
   };
 
   return (
-   <div className="h-full overflow-hidden pt-10 pb-14 md:pb-20 px-4">
+    <div className="h-full overflow-hidden pt-10 pb-14 md:pb-20 px-4">
       <div className="max-w-9xl mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 items-stretch shadow-md rounded-xl overflow-hidden custom-layout bg-[#e6e8da]">
 
         {/* Left Image */}
         <div className="relative w-full">
           <img
-            src="/1-my-mind.webp"
+            src={image}
             alt="mind"
-            className="w-full h-[250px] sm:h-[350px] md:h-[450px]  lg:h-[600px]  xl:h-[720px]  2xl:h-[700px]  object-cover"/>
+            className="w-full h-[250px] sm:h-[350px] md:h-[450px]  lg:h-[600px]  xl:h-[720px]  2xl:h-[700px]  object-cover"
+          />
         </div>
+
         {/* Right Content */}
         <div className="relative bg-[#e6e8da] p-4 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
           {/* Gradient overlay */}
@@ -135,7 +143,7 @@ const ReaderThoughts = () => {
           <div className="relative inline-block">
             <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-6 sm:mb-8 mt-4 sm:mt-8 text-left">
               <span className="relative inline-block">
-                What’s On My Mind?
+                {title}
                 <img
                   src="/motif.webp"
                   alt="feather"
@@ -143,7 +151,6 @@ const ReaderThoughts = () => {
                 />
               </span>
             </h1>
-
           </div>
 
           {/* Thoughts Grid */}

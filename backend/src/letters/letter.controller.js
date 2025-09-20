@@ -15,15 +15,16 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_OAUTH_REDIRECT_URI
 );
 
-// Set the access and refresh tokens
 oauth2Client.setCredentials({
-  access_token: process.env.GOOGLE_OAUTH_ACCESS_TOKEN,
   refresh_token: process.env.GOOGLE_OAUTH_REFRESH_TOKEN,
 });
 
+
 // Upload to Google Drive
 async function uploadFileToDrive(filePath, fileName) {
+  await oauth2Client.getAccessToken();
   const driveService = google.drive({ version: 'v3', auth: oauth2Client });
+
 
   const fileMetadata = {
     name: fileName,
