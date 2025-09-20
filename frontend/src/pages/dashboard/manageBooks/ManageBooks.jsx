@@ -12,6 +12,7 @@ import axios from "axios";
 import InputField from "../manageBooks/InputField";
 import getBaseUrl from "../../../utils/baseURL";
 import Loading from "../../../components/Loading";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 const toNum = (v) => {
     const n = parseFloat(v);
@@ -195,7 +196,9 @@ const ManageBooks = () => {
                     ></div>
 
                     <button
-                        className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                        className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
+                                ? "text-white"
+                                : "text-gray-700 hover:text-gray-900 hover:scale-105"
                             }`}
                         onClick={() => {
                             setViewMode("list");
@@ -203,9 +206,8 @@ const ManageBooks = () => {
                             reset();
                         }}
                     >
-                        <FiEdit /> View Books
+                        <MenuBookIcon /> View Books
                     </button>
-
                     <button
                         className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
                             }`}
@@ -306,7 +308,7 @@ const ManageBooks = () => {
 
                                     <button
                                         type="submit"
-                                        className="w-full py-2 mt-4 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition"
+                                        className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
                                     >
                                         {editingBookId ? "Update Book" : adding ? "Adding..." : "Add Book"}
                                     </button>

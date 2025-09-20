@@ -145,15 +145,14 @@ const FeaturedBooks = () => {
             {books.map((book, index) => (
               <div
                 key={index}
-                className={`px-2 flex-shrink-0 ${
-                  itemsPerView === 4
+                className={`px-2 flex-shrink-0 ${itemsPerView === 4
                     ? "w-1/4"
                     : itemsPerView === 3
-                    ? "w-1/3"
-                    : itemsPerView === 2
-                    ? "w-1/2"
-                    : "w-full"
-                }`}
+                      ? "w-1/3"
+                      : itemsPerView === 2
+                        ? "w-1/2"
+                        : "w-full"
+                  }`}
               >
                 <div className="group relative bg-white overflow-hidden transition-all duration-500">
                   {/* Book Cover */}
@@ -179,8 +178,11 @@ const FeaturedBooks = () => {
                           }}
                         >
                           <span
-                            className="text-white text-lg font-semibold hover:text-[#cc6633] cursor-pointer"
-                            style={{ opacity: 0, transition: "opacity 0.5s ease" }}
+                            className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer "
+                            style={{
+                              opacity: 0,
+                              transition: "opacity 0.5s ease",
+                            }}
                           >
                             VIEW BOOK
                           </span>

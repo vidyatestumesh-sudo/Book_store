@@ -3,7 +3,8 @@ import axios from "axios";
 import { FiEdit, FiTrash2, FiUpload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from "@mui/icons-material/Download";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -112,18 +113,18 @@ const ManageLetters = () => {
 
           <button
             className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
-                ? "text-white"
-                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+              ? "text-white"
+              : "text-gray-700 hover:text-gray-900 hover:scale-105"
               }`}
             onClick={() => setViewMode("list")}
           >
-            <FiEdit /> View Letters
+            <MailOutlineIcon fontSize="medium" /> View Letters
           </button>
 
           <button
             className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form"
-                ? "text-white"
-                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+              ? "text-white"
+              : "text-gray-700 hover:text-gray-900 hover:scale-105"
               }`}
             onClick={() => setViewMode("form")}
           >
@@ -169,7 +170,7 @@ const ManageLetters = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-2 mt-4 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition"
+                  className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
                 >
                   Upload
                 </button>
@@ -237,7 +238,10 @@ const ManageLetters = () => {
                             <td className="px-6 py-4 text-sm">
                               {new Date(letter.uploadedAt).toLocaleDateString()}
                             </td>
+
+
                             <td className="px-6 py-4 text-sm space-x-2 flex items-center">
+                              {/* View */}
                               <a
                                 href={letter.fileUrl}
                                 target="_blank"
@@ -247,30 +251,35 @@ const ManageLetters = () => {
                                 <VisibilityIcon fontSize="small" />
                               </a>
 
+                              {/* Download */}
                               <a
                                 href={letter.downloadUrl}
                                 download={letter.fileName || "letter.pdf"}
-                                className="flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md transition"
+                                className="flex items-center gap-1 bg-indigo-500 no-underline hover:bg-indigo-600 text-white px-2 py-1 rounded-md transition"
                               >
-                                Download
+                                <DownloadIcon fontSize="small" /> Download
                               </a>
+
+                              {/* Rename */}
                               <button
                                 onClick={() => {
                                   setEditingTitleId(letter._id);
                                   setNewTitle(letter.title);
                                 }}
-                                className="flex items-center gap-1 bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-md transition"
+                                className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
                               >
-                                <EditIcon fontSize="small" /> Rename
+                                <FiEdit fontSize="small" /> Rename
                               </button>
 
+                              {/* Delete */}
                               <button
                                 onClick={() => handleDelete(letter._id)}
-                                className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition"
+                                className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md transition"
                               >
-                                <FiTrash2 /> Delete
+                                <FiTrash2 fontSize="small" /> Delete
                               </button>
                             </td>
+
                           </tr>
                         ))}
                       </tbody>
