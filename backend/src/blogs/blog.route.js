@@ -9,6 +9,7 @@ const {
   getSingleBlog,
   updateBlog,
   deleteBlog,
+  suspendBlog,
 } = require('./blog.controller');
 
 // Use memory storage for Cloudinary upload
@@ -21,5 +22,6 @@ router.get("/", getAllBlogs);
 router.get("/:id", getSingleBlog);
 router.put("/edit/:id", upload.single("image"), updateBlog);
 router.delete("/:id", deleteBlog);
+router.put("/suspend/:id", suspendBlog); // new route
 
 module.exports = router;

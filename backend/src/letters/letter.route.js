@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { uploadLetter, getAllLetters } = require('./letter.controller');
+const { uploadLetter, getAllLetters, toggleSuspendLetter } = require('./letter.controller');
 const Letter = require('./letter.model');
 
 const router = express.Router();
@@ -70,5 +70,8 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Delete failed' });
   }
 });
+
+// ⬅️ Suspend/Unsuspend route
+router.patch('/:id/suspend', toggleSuspendLetter);
 
 module.exports = router;

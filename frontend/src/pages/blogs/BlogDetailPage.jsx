@@ -24,11 +24,11 @@ const BlogDetailPage = () => {
   const [fade, setFade] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const blogsPerPage = 3; // Adjust as needed
-  const totalPages = Math.ceil(latestBlogs.length / blogsPerPage);
+  const blogsPerPage = 3; // Blogs per page in Latest Blogs
+
+  // Only active books
   const activeBooks = books.filter((book) => !book.suspended);
 
-  // 🔹 Auto-slide for Featured Books
   useEffect(() => {
     if (books.length === 0) return;
     const interval = setInterval(() => handleNext(), 4000);
@@ -51,14 +51,17 @@ const BlogDetailPage = () => {
     }, 300);
   };
 
-
-  // 🔹 Fetch blog details + latest blogs
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`);
         const data = await res.json();
-        setBlog(data);
+
+        if (data.suspended) {
+          setBlog(null); // Block suspended blog
+        } else {
+          setBlog(data);
+        }
       } catch (err) {
         console.error("Failed to fetch blog", err);
       }
@@ -69,7 +72,7 @@ const BlogDetailPage = () => {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
         const data = await res.json();
         const sorted = data
-          .filter((b) => b._id !== id)
+          .filter((b) => b._id !== id && !b.suspended) // Only active blogs
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setLatestBlogs(sorted);
       } catch (err) {
@@ -81,9 +84,10 @@ const BlogDetailPage = () => {
     fetchLatestBlogs();
   }, [id]);
 
-  if (!blog) return <p className="text-center mt-10">Loading blog...</p>;
+  if (!blog) return <p className="text-center mt-10">Blog not found.</p>;
 
-  // Calculate blogs for current page
+  // Pagination for Latest Blogs
+  const totalPages = Math.ceil(latestBlogs.length / blogsPerPage);
   const indexOfLast = currentPage * blogsPerPage;
   const indexOfFirst = indexOfLast - blogsPerPage;
   const currentBlogs = latestBlogs.slice(indexOfFirst, indexOfLast);
@@ -91,77 +95,53 @@ const BlogDetailPage = () => {
   return (
     <div className="container">
       <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
-        {/* Banner Section */}
+
+        {/* Banner */}
         <div className="relative w-full h-[350px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-[10px] z-0">
           <img
-            src={
-              blog.image?.startsWith("http")
-                ? blog.image
-                : `${BACKEND_BASE_URL}${blog.image}`
-            }
+            src={blog.image?.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
             alt={blog.title}
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
           <div className="absolute inset-0 bg-black/40 z-0" />
 
-          {/* Overlay Content */}
           <div className="relative z-10 flex flex-col justify-center items-center text-center text-white h-full px-2">
-            {/* 🔹 Breadcrumb (TOP LEFT) */}
+            {/* Breadcrumb */}
             <div className="absolute top-4 left-4 z-20">
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb m-0 p-0 flex gap-0 text-[14px]">
-                  <li className="breadcrumb-item">
-                    <a href="/" className="text-gray-300 hover:underline">Home</a>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <a href="/blogs" className="text-gray-300 hover:underline">Blogs</a>
-                  </li>
-                  <li
-                    className="breadcrumb-item text-gray-200 truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"
-                    title={blog.title}
-                  >
-                    {blog.title}
-                  </li>
+                  <li className="breadcrumb-item"><a href="/" className="text-gray-300 hover:underline">Home</a></li>
+                  <li className="breadcrumb-item"><a href="/blogs" className="text-gray-300 hover:underline">Blogs</a></li>
+                  <li className="breadcrumb-item text-gray-200 truncate max-w-[120px]" title={blog.title}>{blog.title}</li>
                 </ol>
               </nav>
             </div>
 
-            {/* Title */}
             <div className="relative w-full max-w-[900px] mx-auto text-center px-3 sm:px-6 md:px-8 lg:px-0">
               <h1 className="relative text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-snug">
                 {blog.title}
-                <img
-                  src="/motif.webp"
-                  alt="feather"
-                  className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 filter brightness-0 invert pointer-events-none"
-                />
               </h1>
             </div>
           </div>
         </div>
 
-        {/* Blog Content + Sidebar */}
+        {/* Blog Content */}
         <div className="max-w-8xl mx-auto px-0 py-8 grid gap-10 lg:grid-cols-1 xl:grid-cols-4">
-          {/* Blog Content */}
           <div className="col-span-1 xl:col-span-3">
-            {/* Blog Date */}
             <p className="flex items-center gap-2 text-gray-400 text-md font-regular mt-0 mb-2">
               <CalendarDays className="w-5 h-5" />
               {new Date(blog.createdAt).toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
+                year: "numeric", month: "long", day: "numeric",
               })}
             </p>
 
-            {/* Blog Content */}
             <div
               className="text-left max-w-none text-gray-800 text-[15px] sm:text-[17px] md:text-[17px] lg:text-[18px] xl:text-[18px] font-Figtree leading-snug whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: sanitizeDescription(blog.description) }}
             />
           </div>
 
-          {/* Sidebar - Featured Books (render only on xl+) */}
+          {/* Sidebar - Featured Books */}
           {window.innerWidth >= 1280 && (
             <aside className="col-span-1">
               <div className="bg-[#f3e7db] border-1 border-gray-500 rounded-[6px] p-4 max-h-[700px] min-h-[540px] flex flex-col">
@@ -171,13 +151,7 @@ const BlogDetailPage = () => {
 
                 {activeBooks.length > 0 && (
                   <div className="flex flex-col items-center text-center rounded-lg overflow-hidden relative flex-grow">
-                    {/* Book Slide */}
-                    <div
-                      key={activeBooks[currentIndex]?._id}
-                      className={`flex flex-col items-center absolute transition-all duration-700 ease-in-out transform will-change-transform ${fade ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-                        }`}
-                    >
-                      {/* Book Image */}
+                    <div key={activeBooks[currentIndex]?._id} className={`flex flex-col items-center absolute transition-all duration-700 ease-in-out transform will-change-transform ${fade ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}>
                       <Link to={`/books/${activeBooks[currentIndex]?._id}`} className="no-underline">
                         <img
                           src={getImgUrl(activeBooks[currentIndex]?.coverImage)}
@@ -185,56 +159,19 @@ const BlogDetailPage = () => {
                           className="w-40 h-58 object-cover mb-4 cursor-pointer hover:scale-105 transition-transform duration-500"
                         />
                       </Link>
-
-                      {/* Book Title */}
                       <Link to={`/books/${activeBooks[currentIndex]?._id}`} className="no-underline">
                         <h4 className="text-[16px] sm:text-[18px] md:text-[20px] text-black font-Figtree mb-3 hover:text-[#993333] transition-colors duration-300 cursor-pointer">
                           {activeBooks[currentIndex]?.title}
                         </h4>
                       </Link>
-
-                      {/* Price */}
-                      <div className="inline-flex justify-center items-center gap-2 w-full mb-2">
-                        <span className="text-gray-700 line-through text-base md:text-sm">
-                          ₹ {activeBooks[currentIndex]?.oldPrice}
-                        </span>
-                        <span className="text-[#993333] text-lg md:text-lg">
-                          ₹ {activeBooks[currentIndex]?.newPrice}
-                        </span>
-                        {activeBooks[currentIndex]?.oldPrice > activeBooks[currentIndex]?.newPrice && (
-                          <span className="text-sm md:text-lg bg-[#993333] text-white px-1 py-0">
-                            {Math.round(
-                              ((activeBooks[currentIndex].oldPrice - activeBooks[currentIndex].newPrice) /
-                                activeBooks[currentIndex].oldPrice) *
-                              100
-                            )}
-                            % off
-                          </span>
-                        )}
-                      </div>
                     </div>
 
-                    {/* Navigation */}
                     <div className="flex items-center justify-center gap-6 mt-auto relative z-10">
-                      <button
-                        onClick={handlePrev}
-                        className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100"
-                      >
-                        <ArrowLeft
-                          size={20}
-                          strokeWidth={2}
-                          className="text-black transition-colors duration-300 group-hover:text-red-500"
-                        />
+                      <button onClick={handlePrev} className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100">
+                        <ArrowLeft size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500"/>
                       </button>
-                      <button
-                        onClick={handleNext}
-                        className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100"
-                      >
-                        <ArrowRight
-                          size={20}
-                          strokeWidth={2}
-                          className="text-black transition-colors duration-300 group-hover:text-red-500"
-                        />
+                      <button onClick={handleNext} className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100">
+                        <ArrowRight size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500"/>
                       </button>
                     </div>
                   </div>
@@ -242,10 +179,9 @@ const BlogDetailPage = () => {
               </div>
             </aside>
           )}
-
         </div>
 
-        {/* Latest Blogs Section */}
+        {/* Latest Blogs */}
         <div className="max-w-8xl mx-auto py-0">
           <h2 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-snug mb-4 mt-2">
             Latest Blogs
@@ -259,11 +195,7 @@ const BlogDetailPage = () => {
                 {blog.image && (
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={
-                        blog.image.startsWith("http")
-                          ? blog.image
-                          : `${BACKEND_BASE_URL}${blog.image}`
-                      }
+                      src={blog.image.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
                       alt={blog.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
                     />
@@ -321,10 +253,21 @@ const BlogDetailPage = () => {
               <ArrowLeft size={20} strokeWidth={2} />
             </button>
 
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+              <button
+                key={num}
+                onClick={() => setCurrentPage(num)}
+                className={`w-8 h-8 flex items-center justify-center rounded-full ${currentPage === num
+                    ? "bg-[#993333] text-white"
+                    : "border-transparent text-black hover:border-black"
+                  }`}
+              >
+                {num}
+              </button>
+            ))}
+
             <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="w-8 h-8 flex items-center justify-center border border-black rounded-full disabled:opacity-30"
             >
