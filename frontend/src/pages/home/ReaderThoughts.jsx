@@ -85,7 +85,7 @@ const ReaderThoughts = () => {
         </div>
 
         {/* Right Content */}
-        <div className="relative bg-[#e6e8da] p-4 me-5 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
+        <div className="relative bg-[#e6e8da] p-4 me-3 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
           {/* Gradient overlay */}
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
           <div className="relative inline-block">
@@ -108,7 +108,7 @@ const ReaderThoughts = () => {
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
-                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
+                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
                   <span className="block font-bold mb-2">{thought.title}</span>
                   {thought.text}
                 </p>
