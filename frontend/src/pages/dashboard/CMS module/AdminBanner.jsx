@@ -210,20 +210,22 @@ const AdminBanner = () => {
             />
           </div>
 
-          {/* Stars Count, Logo, Author Image - Responsive Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Stars Count */}
-            <div>
+            <div className="w-full sm:w-3/4 md:w-1/2">
               <label className="block mb-1 font-medium">Stars Count</label>
               <input
                 type="number"
                 name="starsCount"
                 value={form.starsCount}
                 onChange={handleChange}
-                className="w-1/2 border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded"
                 min={1}
-                max={50}
+                max={15}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended: <span className="font-semibold">14 for all screens</span>
+              </p>
             </div>
 
             {/* Logo */}
