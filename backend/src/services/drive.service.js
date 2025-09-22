@@ -1,5 +1,8 @@
+// uploadFileToDrive.js
+
 const fs = require('fs');
 const { google } = require('googleapis');
+const mime = require('mime');
 require('dotenv').config();
 
 const oauth2Client = new google.auth.OAuth2(
@@ -8,28 +11,25 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-// Set the credentials using the refresh token
 oauth2Client.setCredentials({
   refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
 });
 
-const drive = google.drive({
-  version: 'v3',
-  auth: oauth2Client,
-});
+const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
 const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
-// Upload a file to Google Drive
 async function uploadFileToDrive(filePath, fileName) {
   try {
+    const mimeType = mime.getType(filePath); // Auto-detect type from path
+
     const fileMetadata = {
       name: fileName,
       parents: [FOLDER_ID],
     };
 
     const media = {
-      mimeType: 'application/pdf', // adjust if you're uploading different types
+      mimeType,
       body: fs.createReadStream(filePath),
     };
 
@@ -39,22 +39,31 @@ async function uploadFileToDrive(filePath, fileName) {
       fields: 'id',
     });
 
-    // Make it public
-    await drive.permissions.create({
-      fileId: file.data.id,
-      requestBody: {
-        role: 'reader',
-        type: 'anyone',
-      },
-    });
+    const fileId = file.data.id;
 
-    return `https://drive.google.com/uc?id=${file.data.id}&export=download`;
+await driveService.permissions.create({
+  fileId,
+  requestBody: {
+    role: "reader",
+    type: "anyone",
+  },
+}, (err, res) => {
+  if (err) {
+    console.error('Permission creation error:', err);
+  } else {
+    console.log('Permission created:', res.data);
+  }
+});
+
+
+    return {
+      url: `https://drive.google.com/uc?id=${fileId}`, // or use fileId directly
+      mimeType,
+    };
   } catch (error) {
     console.error('Upload to Google Drive failed:', error);
     throw error;
   }
 }
 
-module.exports = {
-  uploadFileToDrive,
-};
+module.exports = { uploadFileToDrive };

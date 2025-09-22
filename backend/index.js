@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const path = require("path");
-const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
@@ -16,21 +14,10 @@ app.use(
       "http://localhost:5173",
       "https://book-app-frontend-tau.vercel.app",
       "https://bookstore-frontend-9tii.onrender.com",
-      "*", // Allow all origins, consider removing "*" for production
     ],
     credentials: true,
   })
 );
-
-// Ensure uploads folder exists
-const uploadsDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-  console.log("Uploads folder created ✅");
-}
-
-// Serve uploaded files statically
-app.use("/uploads", express.static(uploadsDir));
 
 // Route imports
 const bookRoutes = require("./src/books/book.route");
@@ -38,7 +25,7 @@ const orderRoutes = require("./src/orders/order.route");
 const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
-const letterRoutes = require("./src/letters/letter.route"); // check filename consistency here
+const letterRoutes = require("./src/letters/letter.route");
 const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");

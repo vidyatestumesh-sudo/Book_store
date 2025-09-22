@@ -6,7 +6,7 @@ const AdminReaderThoughts = () => {
 
   const [title, setTitle] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");  // existing or new preview
+  const [imagePreview, setImagePreview] = useState(null);  // now object or null
   const [uploading, setUploading] = useState(false);
 
   const [thoughts, setThoughts] = useState([{ title: "", text: "", _id: null }]);
@@ -20,8 +20,9 @@ const AdminReaderThoughts = () => {
         const data = res.data;
         if (data) {
           setTitle(data.title || "");
-          if (data.image) {
-            setImagePreview(data.image);  // use existing image URL
+          if (data.image?.url) {
+            // Set as object with url and mimeType
+            setImagePreview({ url: data.image.url, mimeType: data.image.mimeType });
           }
           if (Array.isArray(data.thoughts) && data.thoughts.length > 0) {
             setThoughts(
@@ -44,13 +45,23 @@ const AdminReaderThoughts = () => {
     fetchData();
   }, []);
 
+  // Cleanup blob URLs when component unmounts or imagePreview changes
+  React.useEffect(() => {
+    return () => {
+      if (imagePreview?.url?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview.url);
+      }
+    };
+  }, [imagePreview]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setImageFile(file);
-    // Create preview from the selected file
+
+    // Create preview from the selected file (as object)
     const localPreviewUrl = URL.createObjectURL(file);
-    setImagePreview(localPreviewUrl);
+    setImagePreview({ url: localPreviewUrl, mimeType: file.type });
   };
 
   const handleThoughtChange = (index, field, value) => {
@@ -66,6 +77,32 @@ const AdminReaderThoughts = () => {
   const removeThought = (index) => {
     const updated = thoughts.filter((_, i) => i !== index);
     setThoughts(updated);
+  };
+
+  // Extract Google Drive file ID from a URL
+  const extractGoogleDriveFileId = (url) => {
+    if (!url) return null;
+    const regex = /(?:\/d\/|id=)([a-zA-Z0-9_-]+)/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
+
+  // Get image src, proxying Google Drive URLs through backend
+  const getImageSrc = (url) => {
+    if (!url) return "";
+    if (url.startsWith("blob:")) {
+      // Local preview blob URL
+      return url;
+    }
+    // If Google Drive URL, proxy through backend
+    if (url.includes("drive.google.com")) {
+      const fileId = extractGoogleDriveFileId(url);
+      if (fileId) {
+        return `/image/${fileId}`;
+      }
+    }
+    // Otherwise return the original URL
+    return url;
   };
 
   const handleSubmit = async (e) => {
@@ -103,8 +140,10 @@ const AdminReaderThoughts = () => {
       const data = res.data;
       // After successful save, reset states from the response
       setTitle(data.title);
-      if (data.image) {
-        setImagePreview(data.image);
+      if (data.image?.url) {
+        setImagePreview({ url: data.image.url, mimeType: data.image.mimeType });
+      } else {
+        setImagePreview(null);
       }
       if (Array.isArray(data.thoughts)) {
         setThoughts(
@@ -151,17 +190,30 @@ const AdminReaderThoughts = () => {
           <input
             type="file"
             onChange={handleImageChange}
-            accept="image/*"
+            accept="image/*,application/pdf"
             className="block mb-2"
             disabled={uploading}
           />
           {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-          {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="mt-2 h-64 w-full object-cover rounded-md border border-gray-300"
-            />
+          {imagePreview?.url && (
+            <>
+              {imagePreview.mimeType.startsWith("image/") ? (
+                <img
+                  src={getImageSrc(imagePreview.url)}
+                  alt="Preview"
+                  onError={(e) => { e.target.src = ""; }}
+                  className="mt-2 h-64 w-full object-cover rounded-md border border-gray-300"
+                />
+              ) : imagePreview.mimeType === "application/pdf" ? (
+                <iframe
+                  src={getImageSrc(imagePreview.url)}
+                  title="PDF Preview"
+                  className="mt-2 w-full h-64 border border-gray-300 rounded-md"
+                />
+              ) : (
+                <p className="text-sm text-gray-500 mt-2">Unsupported preview format</p>
+              )}
+            </>
           )}
         </div>
 
