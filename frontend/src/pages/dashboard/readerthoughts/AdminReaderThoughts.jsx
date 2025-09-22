@@ -2,27 +2,42 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const AdminReaderThoughts = () => {
+  const [loading, setLoading] = useState(true);
+
   const [title, setTitle] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");  // existing or new preview
   const [uploading, setUploading] = useState(false);
-  const [thoughts, setThoughts] = useState([]);
+
+  const [thoughts, setThoughts] = useState([{ title: "", text: "", _id: null }]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch existing ReaderThoughts on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get("/api/reader-thoughts");
+        const res = await axios.get("/api/reader-thoughts");
+        const data = res.data;
         if (data) {
           setTitle(data.title || "");
-          setImagePreview(data.image || null);
-          setThoughts(data.thoughts || []);
+          if (data.image) {
+            setImagePreview(data.image);  // use existing image URL
+          }
+          if (Array.isArray(data.thoughts) && data.thoughts.length > 0) {
+            setThoughts(
+              data.thoughts.map((t) => ({
+                title: t.title,
+                text: t.text,
+                _id: t._id,
+              }))
+            );
+          }
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load data.");
+        console.error("Failed to fetch reader thoughts:", err);
+        setError("Failed to load existing data");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,27 +46,26 @@ const AdminReaderThoughts = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     setImageFile(file);
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
+    // Create preview from the selected file
+    const localPreviewUrl = URL.createObjectURL(file);
+    setImagePreview(localPreviewUrl);
   };
 
   const handleThoughtChange = (index, field, value) => {
-    const updatedThoughts = [...thoughts];
-    updatedThoughts[index][field] = value;
-    setThoughts(updatedThoughts);
+    const updated = [...thoughts];
+    updated[index][field] = value;
+    setThoughts(updated);
   };
 
   const addThought = () => {
-    setThoughts([...thoughts, { _id: `new-${Date.now()}`, title: "", text: "" }]);
+    setThoughts([...thoughts, { title: "", text: "", _id: null }]);
   };
 
   const removeThought = (index) => {
-    if (thoughts.length === 1) return;
-    const updatedThoughts = [...thoughts];
-    updatedThoughts.splice(index, 1);
-    setThoughts(updatedThoughts);
+    const updated = thoughts.filter((_, i) => i !== index);
+    setThoughts(updated);
   };
 
   const handleSubmit = async (e) => {
@@ -60,10 +74,9 @@ const AdminReaderThoughts = () => {
     setSuccess(false);
 
     if (!title.trim()) {
-      setError("Title is required.");
+      setError("Please enter a title.");
       return;
     }
-
     for (const t of thoughts) {
       if (!t.title.trim() || !t.text.trim()) {
         setError("Please fill all thought titles and texts.");
@@ -73,18 +86,37 @@ const AdminReaderThoughts = () => {
 
     try {
       setUploading(true);
-
       const formData = new FormData();
       formData.append("title", title);
-      if (imageFile) formData.append("image", imageFile);
 
-      // Only send new thoughts (without _id)
-      const newThoughts = thoughts.filter((t) => !t._id || t._id.toString().startsWith("new-"));
-      formData.append("thoughts", JSON.stringify(newThoughts));
+      if (imageFile) {
+        formData.append("file", imageFile);
+      }
 
-      await axios.post("/api/reader-thoughts", formData, {
+      // Send thoughts array (stringified)
+      formData.append("thoughts", JSON.stringify(thoughts));
+
+      const res = await axios.post("/api/reader-thoughts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      const data = res.data;
+      // After successful save, reset states from the response
+      setTitle(data.title);
+      if (data.image) {
+        setImagePreview(data.image);
+      }
+      if (Array.isArray(data.thoughts)) {
+        setThoughts(
+          data.thoughts.map((t) => ({
+            title: t.title,
+            text: t.text,
+            _id: t._id,
+          }))
+        );
+      } else {
+        setThoughts([{ title: "", text: "", _id: null }]);
+      }
 
       setSuccess(true);
     } catch (err) {
@@ -95,17 +127,25 @@ const AdminReaderThoughts = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="text-center mt-10">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-md shadow-md mt-10">
-      <h1 className="text-2xl font-semibold mb-6">Add Reader Thoughts</h1>
+      <h1 className="text-2xl font-semibold mb-6">Edit Reader Thoughts</h1>
 
       {success && (
-        <p className="text-green-600 mb-4">Reader Thoughts saved successfully!</p>
+        <p className="text-green-600 mb-4">Changes saved successfully!</p>
       )}
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-10">
-        {/* Left: Image */}
+        {/* Left Side: Image */}
         <div className="md:w-1/3">
           <label className="block mb-1 font-medium">Image</label>
           <input
@@ -115,9 +155,7 @@ const AdminReaderThoughts = () => {
             className="block mb-2"
             disabled={uploading}
           />
-
           {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-
           {imagePreview && (
             <img
               src={imagePreview}
@@ -127,7 +165,7 @@ const AdminReaderThoughts = () => {
           )}
         </div>
 
-        {/* Right: Title and Thoughts */}
+        {/* Right Side: Title and Thoughts */}
         <div className="md:w-2/3 flex flex-col gap-6">
           {/* Title */}
           <div>
@@ -137,7 +175,6 @@ const AdminReaderThoughts = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full border border-gray-300 px-3 py-2 rounded-md"
-              required
               disabled={uploading}
             />
           </div>
@@ -147,7 +184,7 @@ const AdminReaderThoughts = () => {
             <label className="block mb-2 font-medium">Thoughts</label>
             {thoughts.map((thought, index) => (
               <div
-                key={thought._id || `new-${index}`}
+                key={thought._id || index}
                 className="mb-4 p-4 border border-gray-300 rounded-md space-y-3 relative"
               >
                 {thoughts.length > 1 && (
@@ -155,7 +192,6 @@ const AdminReaderThoughts = () => {
                     type="button"
                     onClick={() => removeThought(index)}
                     className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm"
-                    aria-label={`Remove thought ${index + 1}`}
                     disabled={uploading}
                   >
                     Remove
@@ -169,7 +205,6 @@ const AdminReaderThoughts = () => {
                     handleThoughtChange(index, "title", e.target.value)
                   }
                   className="w-full border border-gray-300 px-3 py-2 rounded-md"
-                  required
                   disabled={uploading}
                 />
                 <textarea
@@ -180,7 +215,6 @@ const AdminReaderThoughts = () => {
                   }
                   className="w-full border border-gray-300 px-3 py-2 rounded-md"
                   rows={4}
-                  required
                   disabled={uploading}
                 />
               </div>
@@ -188,7 +222,7 @@ const AdminReaderThoughts = () => {
             <button
               type="button"
               onClick={addThought}
-              className="text-blue-600 font-medium hover:underline mt-2"
+              className="text-blue-600 font-medium hover:underline"
               disabled={uploading}
             >
               + Add Another Thought
@@ -201,7 +235,7 @@ const AdminReaderThoughts = () => {
             className="self-start bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
             disabled={uploading}
           >
-            {uploading ? "Submitting..." : "Submit"}
+            {uploading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </form>
