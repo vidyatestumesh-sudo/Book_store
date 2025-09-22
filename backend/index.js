@@ -40,10 +40,9 @@ const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
 const letterRoutes = require("./src/letters/letter.route"); // Note: letter.routes.js file
 const authRoutes = require('./auth.routes'); // path to above file
+const bannerRoutes = require("./src/home/banner/banner.routes");
+app.use("/api/home/banner", bannerRoutes);
 app.use('/', authRoutes);
-
-
-// Route registrations
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", userRoutes);

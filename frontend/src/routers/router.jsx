@@ -24,6 +24,7 @@ import BlogDetailPage from "../pages/blogs/BlogDetailPage";
 import AdminOrderPage from "../pages/dashboard/orders/AdminOrderPage";
 import BillingDownload from "../pages/dashboard/billing-download/BillingDownload";
 import InventoryPage from "../pages/dashboard/inventory/InventoryPage";
+import AdminBanner from "../pages/dashboard/home-banner/AdminBanner";
 
 // Optional: create this later
 // import NotFoundPage from "../pages/NotFoundPage";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
       { path: "orders", element: <AdminRoute><AdminOrderPage /></AdminRoute> },
       { path: "billing-download", element: <AdminRoute><BillingDownload /></AdminRoute> },
       { path: "inventory", element: <AdminRoute><InventoryPage /></AdminRoute> },
+      { path: "admin-Banner", element: <AdminRoute><AdminBanner /></AdminRoute> },
       // { path: "*", element: <NotFoundPage /> }
     ]
   }

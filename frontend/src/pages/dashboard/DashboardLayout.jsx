@@ -8,6 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ImageIcon from "@mui/icons-material/Image";  // <-- Added for Admin Banner
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -56,7 +57,9 @@ const DashboardLayout = () => {
           {/* Admin + Toggle */}
           <div
             className={`flex items-center mb-10 ${
-              isExpanded && !isMobile ? "justify-between px-2" : "flex-col space-y-3"
+              isExpanded && !isMobile
+                ? "justify-between px-2"
+                : "flex-col space-y-3"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -100,7 +103,9 @@ const DashboardLayout = () => {
               }`}
             >
               <DashboardIcon className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && <span className="text-base">Dashboard</span>}
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base">Dashboard</span>
+              )}
             </Link>
 
             <Link
@@ -114,7 +119,9 @@ const DashboardLayout = () => {
               }`}
             >
               <MenuBookIcon className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Books</span>}
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base">Manage Books</span>
+              )}
             </Link>
 
             <Link
@@ -128,7 +135,9 @@ const DashboardLayout = () => {
               }`}
             >
               <LibraryBooksIcon className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Blogs</span>}
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base">Manage Blogs</span>
+              )}
             </Link>
 
             <Link
@@ -142,13 +151,36 @@ const DashboardLayout = () => {
               }`}
             >
               <MailOutlineIcon className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && <span className="text-base">Manage Letters</span>}
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base">Manage Letters</span>
+              )}
+            </Link>
+
+            {/* Admin Banner Link Added */}
+            <Link
+              to="/dashboard/admin-banner"
+              className={`no-underline flex items-center ${
+                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+              } py-3 rounded-lg transition-all duration-300 ${
+                isActive("/dashboard/admin-banner")
+                  ? "bg-purple-600 text-white"
+                  : "hover:bg-purple-600 text-gray-300 hover:text-white"
+              }`}
+            >
+              <ImageIcon className="w-6 h-6 flex-shrink-0" />
+              {(isExpanded || mobileSidebar) && (
+                <span className="text-base">Admin Banner</span>
+              )}
             </Link>
           </nav>
         </div>
 
         {/* Logout */}
-        <div className={`${isExpanded ? "px-4" : "flex justify-center"} transition-all duration-300`}>
+        <div
+          className={`${
+            isExpanded ? "px-4" : "flex justify-center"
+          } transition-all duration-300`}
+        >
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-white hover:bg-red-600 rounded-lg w-full transition-all duration-300 justify-center"

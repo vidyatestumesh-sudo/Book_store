@@ -1,22 +1,4 @@
-// BannerWithMockData.jsx
 import React, { useEffect, useState } from "react";
-
-const fetchBannerData = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        title: "Langshott Leadership Foundation",
-        logoUrl: "/langshott-foundation-logo.webp",
-        imageUrl: "anil-kumar.webp",
-        description:
-          "Welcome to Langshott Leadership Foundation, a charitable organisation and provider of mentorship and guidance in personal leadership through seminars, workshops, talks, books, inspirational collections, blogs, and uplifting wisdom in the form of quotations. See this site as your home for inspiration and enlightenment.",
-        quote:
-          "The solutions you’re searching for are within you; we can only help you to get there.",
-        starsCount: 15,
-      });
-    }, 10); 
-  });
-};
 
 const Banner = () => {
   const [data, setData] = useState(null);
@@ -24,18 +6,25 @@ const Banner = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchBannerData()
-      .then((res) => {
-        setData(res);
+    const fetchBannerData = async () => {
+      try {
+        const response = await fetch("/api/home/banner"); // adjust if using proxy or full domain
+        if (!response.ok) throw new Error("Failed to fetch banner data");
+
+        const bannerData = await response.json();
+        setData(bannerData);
         setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to load content");
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load banner content");
         setLoading(false);
-      });
+      }
+    };
+
+    fetchBannerData();
   }, []);
 
-  if (loading) return <div className="text-center py-10"></div>;
+  if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
