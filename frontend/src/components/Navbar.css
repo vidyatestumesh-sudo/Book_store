@@ -1,22 +1,25 @@
 @font-face {
+  font-family: "Figtree-Regular";
+  src: url("../assets/fonts/Figtree-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
   font-family: "Figtree-Light";
   src: url("../assets/fonts/Figtree-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 
-@font-face {
-  font-family: "Figtree-Regular";
-  src: url("../assets/fonts/Figtree-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
+ul {
+  padding: 0 !important;
 }
 
-/* -------------------------------Navbar Container--------------------------*/
+/* ---------------- Navbar ---------------- */
 .navbar-header {
   background: white;
   border-bottom: 1px solid #c86836;
-  padding: 30px 0px;
+  padding: 30px 0;
   font-family: "Figtree-Regular";
   position: relative;
   z-index: 10;
@@ -24,7 +27,7 @@
 
 .navbar-container {
   width: 90% !important;
-  padding: 0px 20px !important;
+  padding: 0 20px !important;
 }
 
 .navbar-header .row {
@@ -32,13 +35,13 @@
   align-items: center;
 }
 
-/* -------------------------------Logo--------------------------------*/
+/* Logo */
 .navbar-logo img {
   width: auto;
   height: auto;
 }
 
-/*------------------------------Icons container----------------------------- */
+/* ---------------- Icons ---------------- */
 .navbar-icons {
   display: flex;
   justify-content: flex-end;
@@ -47,12 +50,8 @@
   position: relative;
 }
 
-/* Avatar button */
 .user-avatar {
   padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
 }
 
 .navbar-avatar {
@@ -94,14 +93,8 @@
   color: #8c6239;
 }
 
-/* Contact-Link */
-.contact-mobile {
-  display: none;
-}
-
+/* Contact link */
 .contact-link {
-  font-family: "Figtree-Regular";
-  display: inline-block;
   font-size: 18px;
   color: #898989;
   transition: color 0.3s;
@@ -113,13 +106,13 @@
   color: #8c6239;
 }
 
-/* Navbar Dropdown (MUI Menu) */
+/* ---------------- Navbar Menu ---------------- */
 .navbar-menu-dropdown {
   border-radius: 8px !important;
   border: 1px solid #ccc !important;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15) !important;
   min-width: 180px !important;
-  padding: 4px 0 !important;
+  padding: 0 !important;
 }
 
 .navbar-menu-item {
@@ -134,27 +127,7 @@
   color: #8c6239 !important;
 }
 
-/*-----------------------------Menu-----------------------------*/
-.navbar-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.navbar-menu li a {
-  text-decoration: none;
-  font-size: 16px;
-  color: #333;
-  transition: color 0.3s ease;
-}
-
-.navbar-menu li a:hover {
-  color: #c86836;
-}
-
+/* ---------------- Desktop Menu ---------------- */
 .navbar-desktop-menu {
   display: flex;
   justify-content: flex-end;
@@ -166,7 +139,6 @@
   list-style: none;
   display: flex;
   gap: 20px;
-  padding: 0;
   margin: 0;
 }
 
@@ -200,7 +172,7 @@
   transform: translateX(-50%) scaleX(1);
 }
 
-/*-----------------------------Hamburger------------------------*/
+/* ---------------- Hamburger ---------------- */
 .hamburger-wrapper {
   display: none;
 }
@@ -208,7 +180,6 @@
 .hamburger-btn {
   background: none;
   border: none;
-  cursor: pointer;
 }
 
 .hamburger-icon {
@@ -216,52 +187,31 @@
   color: #973021;
 }
 
-/*----------------------Mobile Menu---------------------------*/
-.navbar-mobile-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #fdfdfd;
-  border-top: 1px solid #c86836;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  display: none;
-  flex-direction: column;
-  z-index: 1000;
+.navbar-submenu-item {
+  padding-left: 30px !important;
+  font-size: 14px;
+  background-color: #fff;
+  font-family: "Figtree-Regular" !important;
+  font-size: 14px !important;
+  color: #333 !important;
 }
 
-.menu-open.navbar-mobile-menu {
-  display: flex;
-}
-
-.navbar-mobile-menu li {
-  text-align: center;
-  padding: 10px 0;
-}
-
-/*----------------------Responsive---------------------------*/
-@media (max-width: 1366px) {
-  .navbar-menu-desktop li a {
-    font-size: 14px;
-    padding: 2px 5px;
-  }
-}
-
+/* ---------------- Responsive ---------------- */
 @media (max-width: 1200px) {
+  .navbar-menu-desktop {
+    gap: 10px;
+  }
+
   .navbar-menu-desktop li a {
     font-size: 12px;
   }
 
-  .navbar-menu-desktop {
-    gap: 10px;
+  .navbar-desktop-menu {
+    margin-top: 15px;
   }
 }
 
 @media (min-width: 992px) {
-  .contact-mobile {
-    display: none;
-  }
-
   .hamburger-wrapper {
     display: none;
   }
@@ -269,63 +219,45 @@
 
 @media (max-width: 991px) {
   .navbar-header {
-    padding: 20px 0px;
-  }
-
-  .navbar-right-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 15px;
-    flex-wrap: nowrap;
-  }
-
-  .navbar-icons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .contact-link {
-    display: none;
-  }
-
-  .navbar-menu {
-    gap: 0px;
+    padding: 20px 0;
   }
 
   .navbar-desktop-menu {
     display: none;
   }
 
-  .navbar-menu li.contact-mobile {
-    display: block;
+  .navbar-menu-item {
+    font-size: 15px !important;
+    padding: 5px 20px !important;
+  }
+
+  .hamburger-wrapper Menu {
+    padding: 5px 10px;
   }
 
   .hamburger-wrapper {
     display: flex;
-    margin: 0;
+  }
+
+  .contact-link {
+    display: none;
+  }
+
+  .navbar-right-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+
+  .navbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
 }
 
 @media (max-width: 575px) {
-  .navbar-header {
-    padding: 20px 0px;
-  }
-
-  .navbar-container {
-    width: 100% !important;
-    padding: 0px 20px !important;
-  }
-
-  .navbar-right-wrapper {
-    margin-top: 20px;
-  }
-
-  .navbar-icons {
-    gap: 10px;
-  }
-
   .icon {
     font-size: 18px;
   }
@@ -335,21 +267,5 @@
     min-width: 16px;
     top: -5px;
     right: -8px;
-  }
-
-  .navbar-mobile-menu li {
-    padding: 5px 0px;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar-right-wrapper {
-    margin-top: 10px;
-  }
-}
-
-@media (max-width: 360px) {
-  .navbar-right-wrapper {
-    margin-top: 5px;
   }
 }

@@ -15,9 +15,19 @@ const BACKEND_BASE_URL =
     : "https://bookstore-backend-hshq.onrender.com";
 
 const Footer = () => {
-  // Books API
+  // Fetch all books
   const { data: books = [] } = useFetchAllBooksQuery();
-  const recentBooks = [...books].slice(-2).reverse();
+
+  // Filter only active (not suspended) books
+  const activeBooks = books.filter((book) => !book.suspended);
+
+  // Sort by creation date descending (most recent first)
+  const sortedBooks = activeBooks.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  // Take top 2 most recent active books
+  const recentBooks = sortedBooks.slice(0, 2);
 
   // Blogs State
   const [blogs, setBlogs] = useState([]);
@@ -28,14 +38,24 @@ const Footer = () => {
       try {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
         const data = await res.json();
-        const recent = data
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 3);
+
+        // Filter only active blogs
+        const activeBlogs = data.filter((blog) => !blog.suspended);
+
+        // Sort by creation date descending (most recent first)
+        const sortedBlogs = activeBlogs.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        // Take the last 3 most recent active blogs
+        const recent = sortedBlogs.slice(0, 3);
+
         setBlogs(recent);
       } catch (err) {
         console.error("Failed to fetch blogs", err);
       }
     };
+
     fetchBlogs();
   }, []);
 
