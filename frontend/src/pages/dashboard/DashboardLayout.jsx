@@ -172,6 +172,21 @@ const DashboardLayout = () => {
                 <span className="text-base">Admin Banner</span>
               )}
             </Link>
+
+            <Link
+  to="/dashboard/reader-thoughts"
+  className={`no-underline flex items-center ${
+    isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+  } py-3 rounded-lg transition-all duration-300 ${
+    isActive("/dashboard/reader-thoughts")
+      ? "bg-purple-600 text-white"
+      : "hover:bg-purple-600 text-gray-300 hover:text-white"
+  }`}
+>
+  <ImageIcon className="w-6 h-6 flex-shrink-0" />
+  {(isExpanded || mobileSidebar) && <span className="text-base">Reader Thoughts</span>}
+</Link>
+
           </nav>
         </div>
 
