@@ -16,7 +16,7 @@ app.use(
       "http://localhost:5173",
       "https://book-app-frontend-tau.vercel.app",
       "https://bookstore-frontend-9tii.onrender.com",
-      "*",
+      "*", // Allow all origins, consider removing "*" for production
     ],
     credentials: true,
   })
@@ -38,11 +38,15 @@ const orderRoutes = require("./src/orders/order.route");
 const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
-const letterRoutes = require("./src/letters/letter.route"); // Note: letter.routes.js file
-const authRoutes = require('./auth.routes'); // path to above file
+const letterRoutes = require("./src/letters/letter.route"); // check filename consistency here
+const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
+const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
+
+// Use routes
+app.use("/api/reader-thoughts", readerThoughtRoutes);
 app.use("/api/home/banner", bannerRoutes);
-app.use('/', authRoutes);
+app.use("/", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", userRoutes);

@@ -86,6 +86,8 @@ const data = {
 const ReaderThoughts = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [fade, setFade] = useState("fade-in");
+  const animationDuration = 300; // milliseconds
 
   const { image, title, thoughts } = data;
 
@@ -104,23 +106,25 @@ const ReaderThoughts = () => {
     currentIndex + itemsPerPage
   );
 
+  const animateTransition = (nextIndex) => {
+    setFade("fade-out");
+    setTimeout(() => {
+      setCurrentIndex(nextIndex);
+      setFade("fade-in");
+    }, animationDuration);
+  };
+
   const handlePrev = () => {
-    if (currentIndex === 0) {
-      const lastIndex =
-        thoughts.length - (thoughts.length % itemsPerPage || itemsPerPage);
-      setCurrentIndex(lastIndex);
-    } else {
-      setCurrentIndex(currentIndex - itemsPerPage);
-    }
+    const lastIndex =
+      thoughts.length - (thoughts.length % itemsPerPage || itemsPerPage);
+    const nextIndex = currentIndex === 0 ? lastIndex : currentIndex - itemsPerPage;
+    animateTransition(nextIndex);
   };
 
   const handleNext = () => {
-    const nextIndex = currentIndex + itemsPerPage;
-    if (nextIndex >= thoughts.length) {
-      setCurrentIndex(0);
-    } else {
-      setCurrentIndex(nextIndex);
-    }
+    const nextIndex =
+      currentIndex + itemsPerPage >= thoughts.length ? 0 : currentIndex + itemsPerPage;
+    animateTransition(nextIndex);
   };
 
   return (
@@ -153,14 +157,14 @@ const ReaderThoughts = () => {
             </h1>
           </div>
 
-          {/* Thoughts Grid */}
+          {/* Thoughts Grid with Fade */}
           <div
             className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-              } gap-8 z-10 flex-grow overflow-y-auto`}
+              } gap-8 z-10 flex-grow overflow-y-auto ${fade}`}
           >
             {visibleThoughts.map((thought) => (
               <div key={thought.id} className="space-y-4">
-                <h3 className="text-[50px] font-light text-[#993333]  font-figtree">
+                <h3 className="text-[50px] font-light text-[#993333] font-figtree">
                   {String(thought.id).padStart(2, "0")}
                 </h3>
                 <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
@@ -187,12 +191,9 @@ const ReaderThoughts = () => {
               <FiChevronRight size={20} />
             </button>
 
-            <span className="text-gray-700 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[22px] font-Figtree font-regular leading-snug leading-tigh font-figtree">
-              {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(
-                2,
-                "0"
-              )}{" "}
-              / {String(Math.ceil(thoughts.length / itemsPerPage)).padStart(2, "0")}
+            <span className="text-gray-700 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[22px] font-Figtree font-regular leading-snug font-figtree">
+              {String(Math.ceil((currentIndex + 1) / itemsPerPage)).padStart(2, "0")} /{" "}
+              {String(Math.ceil(thoughts.length / itemsPerPage)).padStart(2, "0")}
             </span>
           </div>
         </div>

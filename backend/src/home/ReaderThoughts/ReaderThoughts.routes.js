@@ -2,23 +2,19 @@ const express = require("express");
 const router = express.Router();
 const controller = require("./ReaderThoughts.controller");
 const multer = require("multer");
-const path = require("path");
 
-// Multer config for file upload to temp folder
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // ensure this folder exists
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  },
-});
+const upload = multer({ dest: "uploads/" });
 
-const upload = multer({ storage: storage });
+// GET the singleton ReaderThoughts document
+router.get("/", controller.getReaderThoughts);
 
-// Routes
-router.get("/", controller.getAllReaderThoughts);
-router.post("/", upload.single("image"), controller.createReaderThoughts);
+// POST to create or update (image + thoughts)
+router.post("/", upload.single("file"), controller.createOrUpdateReaderThoughts);
+
+// DELETE a specific thought
+router.delete("/thought/:thoughtId", controller.deleteThoughtById);
+
+// PATCH to edit a specific thought
+router.patch("/thought/:thoughtId", controller.updateThoughtById);
 
 module.exports = router;
