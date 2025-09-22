@@ -106,8 +106,23 @@ const getAllLetters = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch letters' });
   }
 };
+const toggleSuspendLetter = async (req, res) => {
+  try {
+    const letter = await Letter.findById(req.params.id);
+    if (!letter) return res.status(404).json({ message: 'Letter not found' });
+
+    letter.suspended = !letter.suspended;
+    await letter.save();
+
+    res.status(200).json({ message: `Letter ${letter.suspended ? 'suspended' : 'unsuspended'}`, letter });
+  } catch (error) {
+    console.error('Toggle suspend failed:', error);
+    res.status(500).json({ message: 'Toggle suspend failed' });
+  }
+};
 
 module.exports = {
   uploadLetter,
   getAllLetters,
+  toggleSuspendLetter,
 };

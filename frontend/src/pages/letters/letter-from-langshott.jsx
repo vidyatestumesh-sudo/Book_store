@@ -26,7 +26,6 @@ const viewIcon = (
   </svg>
 );
 
-// Define backend base URL based on environment
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
@@ -42,7 +41,9 @@ const LetterFromLangshott = () => {
         const response = await fetch(`${BACKEND_BASE_URL}/api/letters`);
         const data = await response.json();
         const lettersData = Array.isArray(data) ? data : [];
-        setLetters(lettersData);
+        // Filter only active letters
+        const activeLetters = lettersData.filter(letter => !letter.suspended);
+        setLetters(activeLetters);
       } catch (error) {
         console.error("Failed to fetch letters:", error);
         setLetters([]);
@@ -58,92 +59,86 @@ const LetterFromLangshott = () => {
 
   return (
     <div className="container">
-    <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center">
-      <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-lite">
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb m-0 p-0">
-            <li className="breadcrumb-item">
-              <a href="/" className="text-gray">
-                Home
-              </a>
-            </li>
-            <li className="breadcrumb-item">
-              <a href="/publications" className="!text-gray-600">
-                Letters from Langshott
-              </a>
-            </li>
-          </ol>
-        </nav>
-      </div>
-
-      {/* Title Section */}
-      <div className="relative inline-block mb-8 pt-[50px]">
-        <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug">
-          Letters from Langshott
-        </h1>
-        <img
-          src="/motif.webp"
-          alt="feather"
-          className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
-          style={{ opacity: 0.15 }}
-        />
-      </div>
-
-      {/* Letters List */}
-      {letters.length === 0 ? (
-        <p className="italic text-gray-500">No letters uploaded yet.</p>
-      ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-[1200px]">
-          {letters.map(({ _id, title, uploadedAt, fileUrl, downloadUrl, fileName }) => {
-            const downloadFileName = fileName?.toLowerCase().endsWith(".pdf")
-              ? fileName
-              : `${fileName || "download"}.pdf`;
-
-            return (
-              <li
-                key={_id}
-                className="group bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold font-figtree text-gray-800 mb-2 break-words">
-                    {title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Published: {new Date(uploadedAt).toLocaleDateString()}
-                  </p>
-                </div>
-
-                <div className="flex justify-center gap-4 mt-auto">
-                  {/* View PDF - direct Google Drive viewUrl */}
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 text-[#3366cc] font-semibold hover:underline"
-                    title="View PDF"
-                  >
-                    {viewIcon}
-                    <span>View PDF</span>
-                  </a>
-
-                  {/* Download PDF - uses downloadUrl */}
-                  <a
-                    href={downloadUrl}
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 text-[#cc6633] font-semibold hover:underline"
-                    title="Download PDF"
-                    download={downloadFileName}
-                  >
-                    {pdfIcon}
-                    <span>Download PDF</span>
-                  </a>
-                </div>
+      <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center">
+        <div className="breadcrumb-container w-full text-left mb-0 ml-10 font-figtree font-lite">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb m-0 p-0">
+              <li className="breadcrumb-item">
+                <a href="/" className="text-gray">Home</a>
               </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
+              <li className="breadcrumb-item">
+                <a href="/publications" className="!text-gray-600">
+                  Letters from Langshott
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        <div className="relative inline-block mb-8 pt-[50px]">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair text-black font-display leading-snug">
+            Letters from Langshott
+          </h1>
+          <img
+            src="/motif.webp"
+            alt="feather"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-14 sm:w-16 md:w-20 lg:w-24 h-auto opacity-15"
+            style={{ opacity: 0.15 }}
+          />
+        </div>
+
+        {letters.length === 0 ? (
+          <p className="italic text-gray-500">No active letters available.</p>
+        ) : (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-[1200px]">
+            {letters.map(({ _id, title, uploadedAt, fileUrl, downloadUrl, fileName }) => {
+              const downloadFileName = fileName?.toLowerCase().endsWith(".pdf")
+                ? fileName
+                : `${fileName || "download"}.pdf`;
+
+              return (
+                <li
+                  key={_id}
+                  className="group bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    <h3 className="text-lg md:text-xl font-semibold font-figtree text-gray-800 mb-2 break-words">
+                      {title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-4">
+                      Published: {new Date(uploadedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <div className="flex justify-center gap-4 mt-auto">
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 text-[#3366cc] font-semibold hover:underline"
+                      title="View PDF"
+                    >
+                      {viewIcon}
+                      <span>View PDF</span>
+                    </a>
+
+                    <a
+                      href={downloadUrl}
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 text-[#cc6633] font-semibold hover:underline"
+                      title="Download PDF"
+                      download={downloadFileName}
+                    >
+                      {pdfIcon}
+                      <span>Download PDF</span>
+                    </a>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

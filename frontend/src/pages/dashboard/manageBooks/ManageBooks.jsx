@@ -331,10 +331,38 @@ const ManageBooks = () => {
 
                                     <button
                                         type="submit"
-                                        className="py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+                                        disabled={adding} // disable while adding/updating
+                                        className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${adding ? "opacity-50 cursor-not-allowed" : ""}`}
                                     >
-                                        {editingBookId ? "Update Book" : adding ? "Adding..." : "Add Book"}
+                                        {adding ? (
+                                            <>
+                                                <svg
+                                                    className="animate-spin h-5 w-5 text-white"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <circle
+                                                        className="opacity-25"
+                                                        cx="12"
+                                                        cy="12"
+                                                        r="10"
+                                                        stroke="currentColor"
+                                                        strokeWidth="4"
+                                                    ></circle>
+                                                    <path
+                                                        className="opacity-75"
+                                                        fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v8H4z"
+                                                    ></path>
+                                                </svg>
+                                                {editingBookId ? "Updating..." : "Adding..."}
+                                            </>
+                                        ) : (
+                                            editingBookId ? "Update Book" : "Add Book"
+                                        )}
                                     </button>
+
                                 </form>
                             </div>
                         </div>
@@ -380,13 +408,13 @@ const ManageBooks = () => {
                                                     <td className="px-6 py-4 text-sm space-x-2 flex items-center">
                                                         <button
                                                             onClick={() => handleEditBook(book._id)}
-                                                            className="flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md transition"
+                                                            className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md transition"
                                                         >
                                                             <FiEdit /> Edit
                                                         </button>
                                                         <button
                                                             onClick={() => handleSuspendBook(book)}
-                                                            className={`flex items-center gap-1 ${book.suspended ? "bg-green-500 hover:bg-green-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white px-3 py-1 rounded-md transition`}
+                                                            className={`flex items-center gap-1 ${book.suspended ? "bg-indigo-500 hover:bg-indigo-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white px-3 py-1 rounded-md transition`}
                                                         >
                                                             {book.suspended ? "Unsuspend" : "Suspend"}
                                                         </button>

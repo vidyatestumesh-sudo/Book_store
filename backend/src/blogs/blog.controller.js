@@ -101,10 +101,28 @@ const deleteBlog = async (req, res) => {
   }
 };
 
+// Suspend / Unsuspend blog
+const suspendBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blog = await Blog.findById(id);
+    if (!blog) return res.status(404).send({ message: "Blog not found" });
+
+    blog.suspended = !blog.suspended; // toggle
+    await blog.save();
+
+    res.status(200).send({ message: `Blog ${blog.suspended ? "suspended" : "active"}`, blog });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to update blog suspension" });
+  }
+};
+
 module.exports = {
   postABlog,
   getAllBlogs,
   getSingleBlog,
   updateBlog,
   deleteBlog,
+  suspendBlog, // <- export it
 };

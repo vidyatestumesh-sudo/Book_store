@@ -132,6 +132,39 @@ const AddBlogs = () => {
     }
   };
 
+  const handleSuspend = async (blog) => {
+    const action = blog.suspended ? "unsuspend" : "suspend";
+
+    const result = await Swal.fire({
+      title: `Are you sure you want to ${action} this blog?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: action === "suspend" ? "Yes, suspend!" : "Yes, unsuspend!",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      // Use same endpoint, backend should toggle based on current status
+      const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/suspend/${blog._id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire("Success", `Blog ${action}ed successfully`, "success");
+        fetchBlogs(); // refresh the blog list
+      } else {
+        Swal.fire("Error", data.message || `Failed to ${action} blog`, "error");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", `Failed to ${action} blog`, "error");
+    }
+  };
+
   const BlogCard = ({ blog }) => {
     const [expanded, setExpanded] = useState(false);
     const contentRef = useRef(null);
@@ -231,6 +264,12 @@ const AddBlogs = () => {
                 <FiEdit fontSize="small" /> Edit
               </button>
               <button
+                onClick={() => handleSuspend(blog)}
+                className={`flex items-center gap-1 ${blog.suspended ? "bg-indigo-500 hover:bg-indigo-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white px-3 py-1 rounded-md transition`}
+              >
+                {blog.suspended ? "Unsuspend" : "Suspend"}
+              </button>
+              <button
                 onClick={() => handleDelete(blog._id)}
                 className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-md shadow-md transition flex items-center gap-1"
               >
@@ -271,8 +310,8 @@ const AddBlogs = () => {
 
             <button
               className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
-                  ? "text-white"
-                  : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                ? "text-white"
+                : "text-gray-700 hover:text-gray-900 hover:scale-105"
                 }`}
               onClick={() => setViewMode("list")}
             >
@@ -331,10 +370,38 @@ const AddBlogs = () => {
 
                   <button
                     type="submit"
-                    className="bg-blue-700 hover:bg-blue-800 transition text-white font-bold py-2 px-6 rounded-lg shadow-lg"
+                    disabled={isLoading} // disables while adding/updating
+                    className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
-                    {isLoading ? (editingId ? "Updating..." : "Adding...") : editingId ? "Update Blog" : "Add Blog"}
+                    {isLoading ? (
+                      <>
+                        <svg
+                          className="animate-spin h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          ></path>
+                        </svg>
+                        {editingId ? "Updating..." : "Adding..."}
+                      </>
+                    ) : (
+                      editingId ? "Update Blog" : "Add Blog"
+                    )}
                   </button>
+
                 </form>
               </div>
             </div>

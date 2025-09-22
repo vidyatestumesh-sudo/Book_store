@@ -106,6 +106,29 @@ const ManageLetters = () => {
     }
   };
 
+  const handleSuspend = async (id, suspended) => {
+    // Determine action based on current status
+    const action = suspended ? "unsuspend" : "suspend";
+
+    const result = await Swal.fire({
+      title: `Are you sure you want to ${action} this letter?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: action === "suspend" ? "Yes, suspend!" : "Yes, unsuspend!",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await axios.patch(`${BACKEND_BASE_URL}/api/letters/${id}/suspend`);
+      Swal.fire("Success", res.data.message || `Letter ${action}ed successfully`, "success");
+      fetchLetters();
+    } catch (err) {
+      console.error("Suspend failed", err);
+      Swal.fire("Error", `Failed to ${action} letter`, "error");
+    }
+  };
+
   return (
     <div className="container mt-[100px]">
       <div className="max-w-8xl mx-auto rounded-lg">
@@ -157,7 +180,7 @@ const ManageLetters = () => {
                     className="w-full border rounded-md px-3 py-2"
                     placeholder="Enter letter title"
                     required
-                    disabled={uploading} // ⬅️ Disable input while uploading
+                    disabled={uploading}
                   />
                 </div>
 
@@ -171,13 +194,13 @@ const ManageLetters = () => {
                     onChange={(e) => setFile(e.target.files[0])}
                     className="w-full border rounded-md px-3 py-2"
                     required
-                    disabled={uploading} // ⬅️ Disable input while uploading
+                    disabled={uploading}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  disabled={uploading} // ⬅️ Disable button while uploading
+                  disabled={uploading}
                   className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {uploading ? (
@@ -287,8 +310,17 @@ const ManageLetters = () => {
                                 download={letter.fileName || "letter.pdf"}
                                 className="flex items-center gap-1 bg-indigo-500 no-underline hover:bg-indigo-600 text-white px-2 py-1 rounded-md transition"
                               >
-                                <DownloadIcon fontSize="small" /> Download
+                                <DownloadIcon fontSize="small" />
                               </a>
+
+                              {/* Suspend/Unsuspend Button */}
+                              <button
+                                onClick={() => handleSuspend(letter._id, letter.suspended)}
+                                className={`px-2 py-1 rounded-md ${letter.suspended ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-yellow-500 hover:bg-yellow-600'
+                                  } text-white transition`}
+                              >
+                                {letter.suspended ? 'Unsuspend' : 'Suspend'}
+                              </button>
 
                               <button
                                 onClick={() => {

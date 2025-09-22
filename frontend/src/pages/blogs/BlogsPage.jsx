@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CalendarDays } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, CalendarDays, ArrowRight } from "lucide-react";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -18,7 +17,7 @@ const BlogsPage = () => {
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const blogsPerPage = 6;
- 
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -27,7 +26,11 @@ const BlogsPage = () => {
     try {
       const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
       const data = await res.json();
-      setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      setBlogs(
+        data
+          .filter((blog) => !blog.suspended) // <-- Only active blogs
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      );
     } catch (err) {
       console.error("Failed to fetch blogs", err);
     }
@@ -39,13 +42,13 @@ const BlogsPage = () => {
 
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+
   const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
   const totalPages = Math.ceil(blogs.length / blogsPerPage);
 
   return (
     <div className="container">
       <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4">
-
         {/* Breadcrumb */}
         <div className="breadcrumb-container w-full text-left mb-0 font-figtree font-light">
           <nav aria-label="breadcrumb">
@@ -54,8 +57,7 @@ const BlogsPage = () => {
                 <a href="/" className="text-gray-500 hover:underline"> Home </a>
               </li>
               <li className="breadcrumb-item">
-                <a href="/blogs" className="text-gray-500 hover:underline"> Blogs
-                </a>
+                <a href="/blogs" className="text-gray-500 hover:underline"> Blogs </a>
               </li>
               <li className="breadcrumb-item">
                 <a href="/blogs" className="!text-gray-700 hover:underline breadcrumb-item truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"> Author: Anil Kumar </a>
@@ -88,12 +90,11 @@ const BlogsPage = () => {
                     key={blog._id}
                     className="group bg-white rounded-[10px] border-[2px] hover:shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
                   >
-                    {/* Blog Image */}
                     {blog.image && (
                       <div className="relative h-64 overflow-hidden">
                         <img
                           src={
-                            blog.image?.startsWith("http")
+                            blog.image.startsWith("http")
                               ? blog.image
                               : `${BACKEND_BASE_URL}${blog.image}`
                           }
@@ -104,8 +105,7 @@ const BlogsPage = () => {
                       </div>
                     )}
 
-                    {/* Blog Content */}
-                    <div className="p-2 text-left flex flex-col px-3 flex-grow">
+                    <div className="p-4 text-left flex flex-col flex-grow">
                       <p className="text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-Figtree font-medium leading-snug">
                         {blog.title}
                       </p>
@@ -150,7 +150,6 @@ const BlogsPage = () => {
 
               {/* Pagination */}
               <div className="flex justify-center items-center space-x-3 mt-10 mb-20">
-                {/* Prev Button */}
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
@@ -159,7 +158,6 @@ const BlogsPage = () => {
                   <ArrowLeft size={20} strokeWidth={2} />
                 </button>
 
-                {/* Page Numbers */}
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
                   <button
                     key={num}
@@ -173,7 +171,6 @@ const BlogsPage = () => {
                   </button>
                 ))}
 
-                {/* Next Button */}
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
@@ -181,7 +178,6 @@ const BlogsPage = () => {
                 >
                   <ArrowRight size={20} strokeWidth={2} />
                 </button>
-
               </div>
             </>
           )}
