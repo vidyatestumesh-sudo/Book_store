@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 const AdminBanner = () => {
   const [bannerData, setBannerData] = useState(null);
@@ -12,6 +14,8 @@ const AdminBanner = () => {
   const [logoFile, setLogoFile] = useState(null);
   const [authorImageFile, setAuthorImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // For back navigation
 
   // Fetch current banner data
   useEffect(() => {
@@ -34,11 +38,8 @@ const AdminBanner = () => {
     fetchBanner();
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Handle file change with dimension check
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -47,73 +48,36 @@ const AdminBanner = () => {
     img.src = URL.createObjectURL(file);
 
     img.onload = () => {
-      let requiredWidth, requiredHeight;
-
-      if (type === "logo") {
-        requiredWidth = 210;
-        requiredHeight = 130;
-      } else if (type === "authorImage") {
-        requiredWidth = 740;
-        requiredHeight = 710;
-      }
+      let requiredWidth = type === "logo" ? 210 : 740;
+      let requiredHeight = type === "logo" ? 130 : 710;
 
       const withinRange =
         Math.abs(img.width - requiredWidth) <= 25 &&
         Math.abs(img.height - requiredHeight) <= 25;
 
-      // Case 1: Exact (within ±25px) → auto accept
       if (withinRange) {
         saveFile(file, type);
         return;
       }
 
-      // Case 2: Too small → ask admin
-      if (img.width < requiredWidth || img.height < requiredHeight) {
-        Swal.fire({
-          icon: "warning",
-          title: `${type === "logo" ? "Logo" : "Author Image"} Larger Than Recommended`,
-          html: `
+      Swal.fire({
+        icon: "warning",
+        title: `${type === "logo" ? "Logo" : "Author Image"} Size Warning`,
+        html: `
           <p>Recommended: <b>${requiredWidth} × ${requiredHeight}px</b></p>
           <p>You uploaded: <b>${img.width} × ${img.height}px</b></p>
           <p>Do you want to use this image anyway?</p>
         `,
-          showCancelButton: true,
-          confirmButtonText: "Yes, use it",
-          cancelButtonText: "No, re-upload",
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-        }).then((result) => {
-          if (result.isConfirmed) saveFile(file, type);
-          else e.target.value = "";
-        });
-        return;
-      }
-
-      // Case 3: Larger → ask admin
-      if (img.width > requiredWidth || img.height > requiredHeight) {
-        Swal.fire({
-          icon: "warning",
-          title: `${type === "logo" ? "Logo" : "Author Image"} Larger Than Recommended`,
-          html: `
-          <p>Recommended: <b>${requiredWidth} × ${requiredHeight}px</b></p>
-          <p>You uploaded: <b>${img.width} × ${img.height}px</b></p>
-          <p>Do you want to use this image anyway?</p>
-        `,
-          showCancelButton: true,
-          confirmButtonText: "Yes, use it",
-          cancelButtonText: "No, re-upload",
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-        }).then((result) => {
-          if (result.isConfirmed) saveFile(file, type);
-          else e.target.value = "";
-        });
-        return;
-      }
+        showCancelButton: true,
+        confirmButtonText: "Yes, use it",
+        cancelButtonText: "No, re-upload",
+      }).then((result) => {
+        if (result.isConfirmed) saveFile(file, type);
+        else e.target.value = "";
+      });
     };
   };
 
-  // Helper: Save file + preview
   const saveFile = (file, type) => {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -127,8 +91,6 @@ const AdminBanner = () => {
     if (type === "logo") setLogoFile(file);
     if (type === "authorImage") setAuthorImageFile(file);
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,8 +115,6 @@ const AdminBanner = () => {
       if (!res.ok) throw new Error(result.message || "Update failed");
 
       setBannerData(result.banner);
-
-      // Success popup
       Swal.fire("Banner Updated", "Banner updated successfully!", "success");
     } catch (err) {
       console.error(err);
@@ -169,9 +129,19 @@ const AdminBanner = () => {
   return (
     <div className="container mt-[100px]">
       <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
-          Edit Banner Content
-        </h2>
+        <div className="mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105"
+          >
+            <ArrowBackIcon className="w-3 h-3" />
+            Back
+          </button>
+
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+            Edit Banner Content
+          </h2>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title */}
@@ -275,7 +245,7 @@ const AdminBanner = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
           >
             {loading ? (

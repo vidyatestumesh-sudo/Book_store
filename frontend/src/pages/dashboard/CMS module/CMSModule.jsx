@@ -23,7 +23,7 @@ const CMSModule = () => {
 
   return (
     <div className="container mt-[100px]">
-      <div className="max-w-8xl mx-auto p-6 md:p-8">
+      <div className="max-w-8xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
           CMS Module
         </h2>
