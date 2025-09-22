@@ -43,24 +43,22 @@ const DashboardLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 h-screen bg-gray-800 text-white flex flex-col justify-between py-6 px-3 shadow-lg z-40 transition-all duration-300 ${
-          isMobile
-            ? mobileSidebar
-              ? "w-60 left-0"
-              : "w-0 -left-60"
-            : isExpanded
+        className={`fixed top-0 h-screen bg-gray-800 text-white flex flex-col justify-between py-6 px-3 shadow-lg z-40 transition-all duration-300 ${isMobile
+          ? mobileSidebar
+            ? "w-60 left-0"
+            : "w-0 -left-60"
+          : isExpanded
             ? "w-60 left-0"
             : "w-20 left-0"
-        } overflow-hidden`}
+          } overflow-hidden`}
       >
         <div>
           {/* Admin + Toggle */}
           <div
-            className={`flex items-center mb-10 ${
-              isExpanded && !isMobile
-                ? "justify-between px-2"
-                : "flex-col space-y-3"
-            }`}
+            className={`flex items-center mb-10 ${isExpanded && !isMobile
+              ? "justify-between px-2"
+              : "flex-col space-y-3"
+              }`}
           >
             <div className="flex items-center gap-3">
               <img
@@ -94,13 +92,11 @@ const DashboardLayout = () => {
           <nav className="space-y-3">
             <Link
               to="/dashboard"
-              className={`no-underline flex items-center ${
-                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-              } py-3 rounded-lg transition-all duration-300 ${
-                isActive("/dashboard")
+              className={`no-underline flex items-center ${isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+                } py-3 rounded-lg transition-all duration-300 ${isActive("/dashboard")
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
-              }`}
+                }`}
             >
               <DashboardIcon className="w-6 h-6 flex-shrink-0" />
               {(isExpanded || mobileSidebar) && (
@@ -110,13 +106,11 @@ const DashboardLayout = () => {
 
             <Link
               to="/dashboard/manage-books"
-              className={`no-underline flex items-center ${
-                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-              } py-3 rounded-lg transition-all duration-300 ${
-                isActive("/dashboard/manage-books")
+              className={`no-underline flex items-center ${isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+                } py-3 rounded-lg transition-all duration-300 ${isActive("/dashboard/manage-books")
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
-              }`}
+                }`}
             >
               <MenuBookIcon className="w-6 h-6 flex-shrink-0" />
               {(isExpanded || mobileSidebar) && (
@@ -126,13 +120,11 @@ const DashboardLayout = () => {
 
             <Link
               to="/dashboard/add-blogs"
-              className={`no-underline flex items-center ${
-                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-              } py-3 rounded-lg transition-all duration-300 ${
-                isActive("/dashboard/add-blogs")
+              className={`no-underline flex items-center ${isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+                } py-3 rounded-lg transition-all duration-300 ${isActive("/dashboard/add-blogs")
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
-              }`}
+                }`}
             >
               <LibraryBooksIcon className="w-6 h-6 flex-shrink-0" />
               {(isExpanded || mobileSidebar) && (
@@ -142,13 +134,11 @@ const DashboardLayout = () => {
 
             <Link
               to="/dashboard/manage-letters"
-              className={`no-underline flex items-center ${
-                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-              } py-3 rounded-lg transition-all duration-300 ${
-                isActive("/dashboard/manage-letters")
+              className={`no-underline flex items-center ${isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+                } py-3 rounded-lg transition-all duration-300 ${isActive("/dashboard/manage-letters")
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
-              }`}
+                }`}
             >
               <MailOutlineIcon className="w-6 h-6 flex-shrink-0" />
               {(isExpanded || mobileSidebar) && (
@@ -156,45 +146,25 @@ const DashboardLayout = () => {
               )}
             </Link>
 
-            {/* Admin Banner Link Added */}
             <Link
-              to="/dashboard/admin-banner"
-              className={`no-underline flex items-center ${
-                isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-              } py-3 rounded-lg transition-all duration-300 ${
-                isActive("/dashboard/admin-banner")
+              to="/dashboard/cms"
+              className={`no-underline flex items-center ${isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
+                } py-3 rounded-lg transition-all duration-300 ${isActive("/dashboard/cms")
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-600 text-gray-300 hover:text-white"
-              }`}
+                }`}
             >
               <ImageIcon className="w-6 h-6 flex-shrink-0" />
-              {(isExpanded || mobileSidebar) && (
-                <span className="text-base">Admin Banner</span>
-              )}
+              {(isExpanded || mobileSidebar) && <span className="text-base">CMS Module</span>}
             </Link>
-
-            <Link
-  to="/dashboard/reader-thoughts"
-  className={`no-underline flex items-center ${
-    isExpanded || mobileSidebar ? "gap-4 px-4" : "justify-center px-2"
-  } py-3 rounded-lg transition-all duration-300 ${
-    isActive("/dashboard/reader-thoughts")
-      ? "bg-purple-600 text-white"
-      : "hover:bg-purple-600 text-gray-300 hover:text-white"
-  }`}
->
-  <ImageIcon className="w-6 h-6 flex-shrink-0" />
-  {(isExpanded || mobileSidebar) && <span className="text-base">Reader Thoughts</span>}
-</Link>
 
           </nav>
         </div>
 
         {/* Logout */}
         <div
-          className={`${
-            isExpanded ? "px-4" : "flex justify-center"
-          } transition-all duration-300`}
+          className={`${isExpanded ? "px-4" : "flex justify-center"
+            } transition-all duration-300`}
         >
           <button
             onClick={handleLogout}
@@ -208,15 +178,13 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${
-          isExpanded && !isMobile ? "ml-60" : !isMobile ? "ml-20" : "ml-0"
-        }`}
+        className={`flex-1 flex flex-col transition-all duration-300 ${isExpanded && !isMobile ? "ml-60" : !isMobile ? "ml-20" : "ml-0"
+          }`}
       >
         {/* Header */}
         <header
-          className={`fixed top-0 z-20 flex flex-col items-center justify-center px-6 py-4 bg-white shadow-sm transition-all duration-300 ${
-            isExpanded && !isMobile ? "left-60" : !isMobile ? "left-20" : "left-0"
-          } right-0`}
+          className={`fixed top-0 z-20 flex flex-col items-center justify-center px-6 py-4 bg-white shadow-sm transition-all duration-300 ${isExpanded && !isMobile ? "left-60" : !isMobile ? "left-20" : "left-0"
+            } right-0`}
         >
           <h1 className="text-2xl md:text-4xl font-playfair font-light text-black leading-tight text-center">
             Dashboard

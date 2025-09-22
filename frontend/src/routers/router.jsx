@@ -24,9 +24,10 @@ import BlogDetailPage from "../pages/blogs/BlogDetailPage";
 import AdminOrderPage from "../pages/dashboard/orders/AdminOrderPage";
 import BillingDownload from "../pages/dashboard/billing-download/BillingDownload";
 import InventoryPage from "../pages/dashboard/inventory/InventoryPage";
-import AdminBanner from "../pages/dashboard/home-banner/AdminBanner";
-import AdminReaderThoughts from "../pages/dashboard/readerthoughts/AdminReaderThoughts";
 import Contact from "../pages/contact/contact";
+import AdminBanner from "../pages/dashboard/CMS module/AdminBanner";
+import CMSModule from "../pages/dashboard/CMS module/CMSModule";
+import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThoughts";
 
 // Optional: create this later
 // import NotFoundPage from "../pages/NotFoundPage";
@@ -129,6 +130,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <InventoryPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "cms",
+        element: (
+          <AdminRoute>
+            <CMSModule />
           </AdminRoute>
         ),
       },

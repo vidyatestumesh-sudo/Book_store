@@ -8,7 +8,7 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_OAUTH_REDIRECT_URI
 );
 
-const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 // Redirect user to Google's OAuth consent screen
 router.get('/auth', (req, res) => {

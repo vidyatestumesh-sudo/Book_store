@@ -38,10 +38,97 @@ const AdminBanner = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Handle file change with dimension check
   const handleFileChange = (e, type) => {
-    if (type === "logo") setLogoFile(e.target.files[0]);
-    if (type === "authorImage") setAuthorImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = () => {
+      let requiredWidth, requiredHeight;
+
+      if (type === "logo") {
+        requiredWidth = 210;
+        requiredHeight = 130;
+      } else if (type === "authorImage") {
+        requiredWidth = 740;
+        requiredHeight = 710;
+      }
+
+      const withinRange =
+        Math.abs(img.width - requiredWidth) <= 25 &&
+        Math.abs(img.height - requiredHeight) <= 25;
+
+      // Case 1: Exact (within ±25px) → auto accept
+      if (withinRange) {
+        saveFile(file, type);
+        return;
+      }
+
+      // Case 2: Too small → ask admin
+      if (img.width < requiredWidth || img.height < requiredHeight) {
+        Swal.fire({
+          icon: "warning",
+          title: `${type === "logo" ? "Logo" : "Author Image"} Larger Than Recommended`,
+          html: `
+          <p>Recommended: <b>${requiredWidth} × ${requiredHeight}px</b></p>
+          <p>You uploaded: <b>${img.width} × ${img.height}px</b></p>
+          <p>Do you want to use this image anyway?</p>
+        `,
+          showCancelButton: true,
+          confirmButtonText: "Yes, use it",
+          cancelButtonText: "No, re-upload",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+        }).then((result) => {
+          if (result.isConfirmed) saveFile(file, type);
+          else e.target.value = "";
+        });
+        return;
+      }
+
+      // Case 3: Larger → ask admin
+      if (img.width > requiredWidth || img.height > requiredHeight) {
+        Swal.fire({
+          icon: "warning",
+          title: `${type === "logo" ? "Logo" : "Author Image"} Larger Than Recommended`,
+          html: `
+          <p>Recommended: <b>${requiredWidth} × ${requiredHeight}px</b></p>
+          <p>You uploaded: <b>${img.width} × ${img.height}px</b></p>
+          <p>Do you want to use this image anyway?</p>
+        `,
+          showCancelButton: true,
+          confirmButtonText: "Yes, use it",
+          cancelButtonText: "No, re-upload",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+        }).then((result) => {
+          if (result.isConfirmed) saveFile(file, type);
+          else e.target.value = "";
+        });
+        return;
+      }
+    };
   };
+
+  // Helper: Save file + preview
+  const saveFile = (file, type) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setBannerData((prev) => ({
+        ...prev,
+        [type === "logo" ? "logoUrl" : "imageUrl"]: reader.result,
+      }));
+    };
+    reader.readAsDataURL(file);
+
+    if (type === "logo") setLogoFile(file);
+    if (type === "authorImage") setAuthorImageFile(file);
+  };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,20 +210,22 @@ const AdminBanner = () => {
             />
           </div>
 
-          {/* Stars Count, Logo, Author Image - Side by Side */}
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Stars Count */}
-            <div className="flex-1">
+            <div className="w-full sm:w-3/4 md:w-1/2">
               <label className="block mb-1 font-medium">Stars Count</label>
               <input
                 type="number"
                 name="starsCount"
                 value={form.starsCount}
                 onChange={handleChange}
-                className="w-1/2 border px-3 py-2 rounded"
+                className="w-full border px-3 py-2 rounded"
                 min={1}
-                max={50}
+                max={15}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended: <span className="font-semibold">14 for all screens</span>
+              </p>
             </div>
 
             {/* Logo */}
@@ -148,11 +237,14 @@ const AdminBanner = () => {
                 onChange={(e) => handleFileChange(e, "logo")}
                 className="block"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended size: <span className="font-semibold">210 × 130 px</span>
+              </p>
               {bannerData.logoUrl && (
                 <img
                   src={bannerData.logoUrl}
                   alt="Current Logo"
-                  className="h-20 mt-2 object-contain"
+                  className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px] mt-2 object-contain border rounded"
                 />
               )}
             </div>
@@ -166,23 +258,25 @@ const AdminBanner = () => {
                 onChange={(e) => handleFileChange(e, "authorImage")}
                 className="block"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended size: <span className="font-semibold">740 × 710 px</span>
+              </p>
               {bannerData.imageUrl && (
                 <img
                   src={bannerData.imageUrl}
                   alt="Current Author"
-                  className="h-20 mt-2 object-contain"
+                  className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px] mt-2 object-contain border rounded"
                 />
               )}
             </div>
           </div>
 
-          {/* Submit Button with Spinner */}
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             {loading ? (
               <>
@@ -213,6 +307,7 @@ const AdminBanner = () => {
             )}
           </button>
         </form>
+
       </div>
     </div>
   );
