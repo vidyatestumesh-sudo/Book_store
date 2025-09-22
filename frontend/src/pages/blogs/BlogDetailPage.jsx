@@ -26,6 +26,7 @@ const BlogDetailPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const blogsPerPage = 3; // Adjust as needed
   const totalPages = Math.ceil(latestBlogs.length / blogsPerPage);
+  const activeBooks = books.filter((book) => !book.suspended);
 
   // 🔹 Auto-slide for Featured Books
   useEffect(() => {
@@ -37,7 +38,7 @@ const BlogDetailPage = () => {
   const handlePrev = () => {
     setFade(false);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev === 0 ? books.length - 1 : prev - 1));
+      setCurrentIndex((prev) => (prev === 0 ? activeBooks.length - 1 : prev - 1));
       setFade(true);
     }, 300);
   };
@@ -45,10 +46,11 @@ const BlogDetailPage = () => {
   const handleNext = () => {
     setFade(false);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % books.length);
+      setCurrentIndex((prev) => (prev + 1) % activeBooks.length);
       setFade(true);
     }, 300);
   };
+
 
   // 🔹 Fetch blog details + latest blogs
   useEffect(() => {
@@ -167,43 +169,43 @@ const BlogDetailPage = () => {
                   Featured Books
                 </h3>
 
-                {books.length > 0 && (
+                {activeBooks.length > 0 && (
                   <div className="flex flex-col items-center text-center rounded-lg overflow-hidden relative flex-grow">
                     {/* Book Slide */}
                     <div
-                      key={books[currentIndex]?._id}
+                      key={activeBooks[currentIndex]?._id}
                       className={`flex flex-col items-center absolute transition-all duration-700 ease-in-out transform will-change-transform ${fade ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
                         }`}
                     >
                       {/* Book Image */}
-                      <Link to={`/books/${books[currentIndex]?._id}`} className="no-underline">
+                      <Link to={`/books/${activeBooks[currentIndex]?._id}`} className="no-underline">
                         <img
-                          src={getImgUrl(books[currentIndex]?.coverImage)}
-                          alt={books[currentIndex]?.title}
+                          src={getImgUrl(activeBooks[currentIndex]?.coverImage)}
+                          alt={activeBooks[currentIndex]?.title}
                           className="w-40 h-58 object-cover mb-4 cursor-pointer hover:scale-105 transition-transform duration-500"
                         />
                       </Link>
 
                       {/* Book Title */}
-                      <Link to={`/books/${books[currentIndex]?._id}`} className="no-underline">
+                      <Link to={`/books/${activeBooks[currentIndex]?._id}`} className="no-underline">
                         <h4 className="text-[16px] sm:text-[18px] md:text-[20px] text-black font-Figtree mb-3 hover:text-[#993333] transition-colors duration-300 cursor-pointer">
-                          {books[currentIndex]?.title}
+                          {activeBooks[currentIndex]?.title}
                         </h4>
                       </Link>
 
                       {/* Price */}
                       <div className="inline-flex justify-center items-center gap-2 w-full mb-2">
                         <span className="text-gray-700 line-through text-base md:text-sm">
-                          ₹ {books[currentIndex]?.oldPrice}
+                          ₹ {activeBooks[currentIndex]?.oldPrice}
                         </span>
                         <span className="text-[#993333] text-lg md:text-lg">
-                          ₹ {books[currentIndex]?.newPrice}
+                          ₹ {activeBooks[currentIndex]?.newPrice}
                         </span>
-                        {books[currentIndex]?.oldPrice > books[currentIndex]?.newPrice && (
+                        {activeBooks[currentIndex]?.oldPrice > activeBooks[currentIndex]?.newPrice && (
                           <span className="text-sm md:text-lg bg-[#993333] text-white px-1 py-0">
                             {Math.round(
-                              ((books[currentIndex].oldPrice - books[currentIndex].newPrice) /
-                                books[currentIndex].oldPrice) *
+                              ((activeBooks[currentIndex].oldPrice - activeBooks[currentIndex].newPrice) /
+                                activeBooks[currentIndex].oldPrice) *
                               100
                             )}
                             % off
@@ -240,6 +242,7 @@ const BlogDetailPage = () => {
               </div>
             </aside>
           )}
+
         </div>
 
         {/* Latest Blogs Section */}

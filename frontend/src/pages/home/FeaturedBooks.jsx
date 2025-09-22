@@ -9,6 +9,9 @@ const FeaturedBooks = () => {
   const dispatch = useDispatch();
   const { data: books = [] } = useFetchAllBooksQuery();
 
+  // Filter only active books (not suspended)
+  const activeBooks = books.filter((book) => !book.suspended);
+
   const [startIndex, setStartIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -41,10 +44,10 @@ const FeaturedBooks = () => {
   }, []);
 
   useEffect(() => {
-    if (startIndex + itemsPerView > books.length) {
-      setStartIndex(Math.max(books.length - itemsPerView, 0));
+    if (startIndex + itemsPerView > activeBooks.length) {
+      setStartIndex(Math.max(activeBooks.length - itemsPerView, 0));
     }
-  }, [books.length, itemsPerView, startIndex]);
+  }, [activeBooks.length, itemsPerView, startIndex]);
 
   // Scroll width of one book card (exact width including gap)
   const getScrollAmount = () => {
@@ -57,8 +60,8 @@ const FeaturedBooks = () => {
 
   const handleNext = () => {
     if (windowWidth > 1024) {
-      if (startIndex + itemsPerView < books.length) {
-        setStartIndex((prev) => Math.min(prev + 1, books.length - itemsPerView));
+      if (startIndex + itemsPerView < activeBooks.length) {
+        setStartIndex((prev) => Math.min(prev + 1, activeBooks.length - itemsPerView));
       }
     } else {
       if (scrollContainerRef.current) {
@@ -142,7 +145,7 @@ const FeaturedBooks = () => {
                 windowWidth > 1024 ? `translateX(-${(startIndex * 100) / itemsPerView}%)` : "none",
             }}
           >
-            {books.map((book, index) => (
+            {activeBooks.map((book, index) => (
               <div
                 key={index}
                 className={`px-2 flex-shrink-0 ${itemsPerView === 4
@@ -226,10 +229,10 @@ const FeaturedBooks = () => {
         {/* Right Arrow */}
         <button
           onClick={handleNext}
-          disabled={windowWidth > 1024 ? startIndex + itemsPerView >= books.length : false}
+          disabled={windowWidth > 1024 ? startIndex + itemsPerView >= activeBooks.length : false}
           className={`absolute right-0 z-10 text-gray-900 opacity-70 hover:opacity-100 transition 
           -translate-y-1/2 translate-x-[20%] sm:translate-x-[30%] 2xl:translate-x-[30%] 
-          ${windowWidth > 1024 && startIndex + itemsPerView >= books.length ? "opacity-30 cursor-not-allowed" : ""}`}
+          ${windowWidth > 1024 && startIndex + itemsPerView >= activeBooks.length ? "opacity-30 cursor-not-allowed" : ""}`}
           style={{
             top: windowWidth > 1024 ? "220px" : "40%",
             touchAction: "manipulation",

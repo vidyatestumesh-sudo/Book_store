@@ -6,6 +6,9 @@ import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 const Publications = () => {
     const { data: books = [] } = useFetchAllBooksQuery();
 
+    // Only show active (not suspended) books
+    const activeBooks = books.filter((book) => !book.suspended);
+
     return (
         <div className="container">
             <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4 mb-20">
@@ -36,7 +39,7 @@ const Publications = () => {
 
                 {/* Books Grid */}
                 <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-4">
-                    {books.map((book, index) => (
+                    {activeBooks.map((book, index) => (
                         <div
                             key={index}
                             className="group relative bg-white overflow-hidden transition-all duration-500"

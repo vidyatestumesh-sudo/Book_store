@@ -19,6 +19,7 @@ const bookSchema = new mongoose.Schema(
     pages: { type: Number },
     sold: { type: Number, default: 1 },
     stock: { type: Number, default: 1 },
+    suspended: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

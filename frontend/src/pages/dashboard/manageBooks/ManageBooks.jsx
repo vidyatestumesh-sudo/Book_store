@@ -104,6 +104,29 @@ const ManageBooks = () => {
         }
     };
 
+    const handleSuspendBook = async (book) => {
+        const action = book.suspended ? "unsuspend" : "suspend";
+        const result = await Swal.fire({
+            title: `Are you sure you want to ${action} this book?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: action === "suspend" ? "Yes, suspend!" : "Yes, unsuspend!",
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            await axios.put(`${getBaseUrl()}/api/books/${action}/${book._id}`, {}, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+            });
+            Swal.fire("Success", `Book ${action}ed successfully`, "success");
+            refetch();
+        } catch (err) {
+            console.error(err);
+            Swal.fire("Error", "Failed to update book status", "error");
+        }
+    };
+
     useEffect(() => {
         if (!oldPrice) {
             if (lastEdited === "discount") setValue("newPrice", "", { shouldDirty: true });
@@ -197,8 +220,8 @@ const ManageBooks = () => {
 
                     <button
                         className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
-                                ? "text-white"
-                                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                            ? "text-white"
+                            : "text-gray-700 hover:text-gray-900 hover:scale-105"
                             }`}
                         onClick={() => {
                             setViewMode("list");
@@ -361,6 +384,13 @@ const ManageBooks = () => {
                                                         >
                                                             <FiEdit /> Edit
                                                         </button>
+                                                        <button
+                                                            onClick={() => handleSuspendBook(book)}
+                                                            className={`flex items-center gap-1 ${book.suspended ? "bg-green-500 hover:bg-green-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white px-3 py-1 rounded-md transition`}
+                                                        >
+                                                            {book.suspended ? "Unsuspend" : "Suspend"}
+                                                        </button>
+
                                                         <button
                                                             onClick={() => handleDeleteBook(book._id)}
                                                             className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition"

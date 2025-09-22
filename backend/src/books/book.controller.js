@@ -77,11 +77,56 @@ const deleteABook = async (req, res) => {
     res.status(500).send({ message: "Failed to delete a book" });
   }
 };
+const suspendBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findByIdAndUpdate(
+      id,
+      { suspended: true },
+      { new: true }
+    );
+    if (!book) return res.status(404).send({ message: "Book not found" });
+    res.status(200).send({ message: "Book suspended successfully", book });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to suspend book" });
+  }
+};
+
+const unsuspendBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findByIdAndUpdate(
+      id,
+      { suspended: false },
+      { new: true }
+    );
+    if (!book) return res.status(404).send({ message: "Book not found" });
+    res.status(200).send({ message: "Book unsuspended successfully", book });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to unsuspend book" });
+  }
+};
+
+// Modify getAllBooks to show only non-suspended books to users
+const getAllBooksForUsers = async (req, res) => {
+  try {
+    const books = await Book.find({ suspended: false }).sort({ createdAt: -1 });
+    res.status(200).send(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to fetch books" });
+  }
+};
 
 module.exports = {
   postABook,
   getAllBooks,
+  getAllBooksForUsers,
   getSingleBook,
   updateBook,
   deleteABook,
+  suspendBook,
+  unsuspendBook,
 };
