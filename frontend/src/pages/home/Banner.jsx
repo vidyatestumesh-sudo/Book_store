@@ -41,7 +41,7 @@ const Banner = () => {
       {/* Right Text Section */}
       <div className="relative bg-transparent px-4 lg:py-0 text-center flex flex-col justify-center items-center overflow-y-auto max-w-[700px] xl:max-w-[800px] mx-auto h-full">
         {/* Logo */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-3 sm:mb-5">
           <img
             src={data.logoUrl}
             alt={data.title}
