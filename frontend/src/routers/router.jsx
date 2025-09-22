@@ -26,6 +26,7 @@ import BillingDownload from "../pages/dashboard/billing-download/BillingDownload
 import InventoryPage from "../pages/dashboard/inventory/InventoryPage";
 import AdminBanner from "../pages/dashboard/home-banner/AdminBanner";
 import AdminReaderThoughts from "../pages/dashboard/readerthoughts/AdminReaderThoughts";
+import Contact from "../pages/contact/contact";
 
 // Optional: create this later
 // import NotFoundPage from "../pages/NotFoundPage";
@@ -36,20 +37,35 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/orders", element: <PrivateRoute><OrderPage /></PrivateRoute> },
+      { path: "contact", element: <Contact /> },
+      {
+        path: "/orders",
+        element: (
+          <PrivateRoute>
+            <OrderPage />
+          </PrivateRoute>
+        ),
+      },
       { path: "/aboutauthorpage", element: <AboutAuthorPage /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/checkout", element: <CheckoutPage /> },
       { path: "/books/:id", element: <SingleBook /> },
-      { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
+      {
+        path: "/user-dashboard",
+        element: (
+          <PrivateRoute>
+            <UserDashboard />
+          </PrivateRoute>
+        ),
+      },
       { path: "/blogs", element: <BlogsPage /> },
       { path: "/blogs/:id", element: <BlogDetailPage /> },
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
       // { path: "*", element: <NotFoundPage /> }
-    ]
+    ],
   },
   { path: "/admin", element: <AdminLogin /> },
   {
@@ -60,18 +76,81 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
     children: [
-      { path: "", element: <AdminRoute><Dashboard /></AdminRoute> },
-      { path: "manage-books", element: <AdminRoute><ManageBooks /></AdminRoute> },
-      { path: "manage-letters", element: <AdminRoute><ManageLetters /></AdminRoute> },
-      { path: "add-blogs", element: <AdminRoute><AddBlogs /></AdminRoute> },
-      { path: "orders", element: <AdminRoute><AdminOrderPage /></AdminRoute> },
-      { path: "billing-download", element: <AdminRoute><BillingDownload /></AdminRoute> },
-      { path: "inventory", element: <AdminRoute><InventoryPage /></AdminRoute> },
-      { path: "admin-Banner", element: <AdminRoute><AdminBanner /></AdminRoute> },
-      {path: "reader-thoughts", element: <AdminRoute><AdminReaderThoughts /></AdminRoute> },
+      {
+        path: "",
+        element: (
+          <AdminRoute>
+            <Dashboard />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-books",
+        element: (
+          <AdminRoute>
+            <ManageBooks />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manage-letters",
+        element: (
+          <AdminRoute>
+            <ManageLetters />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "add-blogs",
+        element: (
+          <AdminRoute>
+            <AddBlogs />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "orders",
+        element: (
+          <AdminRoute>
+            <AdminOrderPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "billing-download",
+        element: (
+          <AdminRoute>
+            <BillingDownload />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "inventory",
+        element: (
+          <AdminRoute>
+            <InventoryPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin-Banner",
+        element: (
+          <AdminRoute>
+            <AdminBanner />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "reader-thoughts",
+        element: (
+          <AdminRoute>
+            <AdminReaderThoughts />
+          </AdminRoute>
+        ),
+      },
       // { path: "*", element: <NotFoundPage /> }
-    ]
-  }
+    ],
+  },
 ]);
 
 export default router;

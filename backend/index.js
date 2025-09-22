@@ -39,6 +39,7 @@ const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
 const letterRoutes = require("./src/letters/letter.route"); // check filename consistency here
+const contactRoutes = require("./src/contact/contact.route");
 const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
@@ -53,6 +54,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/letters", letterRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Connect to MongoDB and start server
 async function main() {
