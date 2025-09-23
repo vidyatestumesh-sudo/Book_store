@@ -8,18 +8,18 @@ const AdminAuthorEdit = () => {
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  // Fetch existing content on mount
-  useEffect(() => {
-    axiosClient.get("/author")
-      .then(res => {
-        setContent(res.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setError("Failed to load author content.");
-        setLoading(false);
-      });
-  }, []);
+useEffect(() => {
+  axiosClient.get('/api/author')
+    .then(res => {
+      setContent(res.data);
+      setLoading(false);
+    })
+    .catch(err => {
+      setError('Failed to load author content');
+      setLoading(false);
+    });
+}, []);
+
 
   if (loading) return <p>Loading...</p>;
   if (!content) return <p>No content found.</p>;

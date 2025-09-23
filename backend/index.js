@@ -31,7 +31,7 @@ const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
 const authorRoutes = require('./src/author/author.route');
-app.use('/author', authorRoutes);
+app.use('/api/author', authorRoutes);
 
 // Use routes
 app.use("/api/reader-thoughts", readerThoughtRoutes);
