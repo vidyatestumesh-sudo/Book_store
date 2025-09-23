@@ -6,6 +6,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import BookIcon from "@mui/icons-material/Book";
 import DescriptionIcon from "@mui/icons-material/Description";
+import PersonIcon from "@mui/icons-material/Person"; // Added icon for Author
 
 const CMSModule = () => {
   const location = useLocation();
@@ -17,6 +18,9 @@ const CMSModule = () => {
     { name: "Manage Books", icon: <MenuBookIcon className="w-10 h-10 text-yellow-600" />, route: "/dashboard/manage-books" },
     { name: "Manage Letters", icon: <MailOutlineIcon className="w-10 h-10 text-red-600" />, route: "/dashboard/manage-letters" },
     { name: "Other CMS Content", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/other-cms" },
+
+    // New Author Edit Module
+    { name: "Edit Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
   ];
 
   const isCardActive = (route) => location.pathname === route;

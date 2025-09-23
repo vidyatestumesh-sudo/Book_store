@@ -28,7 +28,7 @@ import Contact from "../pages/contact/contact";
 import AdminBanner from "../pages/dashboard/CMS module/AdminBanner";
 import CMSModule from "../pages/dashboard/CMS module/CMSModule";
 import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThoughts";
-
+import AdminAuthorEdit from "../pages/dashboard/CMS module/AdminAuthorEdit";
 // Optional: create this later
 // import NotFoundPage from "../pages/NotFoundPage";
 
@@ -157,6 +157,14 @@ const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+      {
+        path: "edit-author",
+        element: (
+          <AdminRoute>
+            <AdminAuthorEdit />
+          </AdminRoute>
+        ),
+      }
       // { path: "*", element: <NotFoundPage /> }
     ],
   },
