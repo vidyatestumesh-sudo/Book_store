@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../../../api/axiosClient";
 
 const AdminReaderThoughts = () => {
   const navigate = useNavigate();
@@ -16,11 +17,10 @@ const AdminReaderThoughts = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch existing data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/reader-thoughts");
+        const res = await axiosClient.get("/api/reader-thoughts");
         const data = res.data;
         if (data) {
           setTitle(data.title || "");
@@ -28,7 +28,9 @@ const AdminReaderThoughts = () => {
             setImagePreview({ url: data.image.url, mimeType: data.image.mimeType });
           }
           if (Array.isArray(data.thoughts) && data.thoughts.length > 0) {
-            setThoughts(data.thoughts.map((t) => ({ title: t.title, text: t.text, _id: t._id })));
+            setThoughts(
+              data.thoughts.map((t) => ({ title: t.title, text: t.text, _id: t._id }))
+            );
           }
         }
       } catch (err) {
@@ -48,7 +50,6 @@ const AdminReaderThoughts = () => {
       }
     };
   }, [imagePreview]);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;

@@ -17,26 +17,27 @@ const AdminBanner = () => {
 
   const navigate = useNavigate(); // For back navigation
 
-  // Fetch current banner data
-  useEffect(() => {
-    const fetchBanner = async () => {
-      try {
-        const res = await fetch("/api/home/banner");
-        const data = await res.json();
-        setBannerData(data);
-        setForm({
-          title: data.title || "",
-          description: data.description || "",
-          quote: data.quote || "",
-          starsCount: data.starsCount || 5,
-        });
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Error", "Failed to fetch banner data", "error");
-      }
-    };
-    fetchBanner();
-  }, []);
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+useEffect(() => {
+  const fetchBanner = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/api/home/banner`);
+      if (!res.ok) throw new Error("Failed to fetch banner data");
+      const data = await res.json();
+      setBannerData(data);
+      setForm({
+        title: data.title || "",
+        description: data.description || "",
+        quote: data.quote || "",
+        starsCount: data.starsCount || 5,
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Failed to fetch banner data", "error");
+    }
+  };
+  fetchBanner();
+}, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
