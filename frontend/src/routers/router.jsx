@@ -28,6 +28,7 @@ import Contact from "../pages/contact/contact";
 import AdminBanner from "../pages/dashboard/CMS module/AdminBanner";
 import CMSModule from "../pages/dashboard/CMS module/CMSModule";
 import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThoughts";
+import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
 
 // Optional: create this later
 // import NotFoundPage from "../pages/NotFoundPage";
@@ -65,7 +66,8 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <BlogDetailPage /> },
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
-      // { path: "*", element: <NotFoundPage /> }
+      { path: "/sufi-corner", element: <SufiCornerpage /> }
+      // { path="/sufi-corner", element: < /> }
     ],
   },
   { path: "/admin", element: <AdminLogin /> },
