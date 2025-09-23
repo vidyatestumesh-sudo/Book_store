@@ -7,7 +7,6 @@ const Banner = () => {
 
 useEffect(() => {
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  console.log("Using baseUrl:", baseUrl);
 
   fetch(`${baseUrl}/api/home/banner`)
     .then(res => {
@@ -15,7 +14,6 @@ useEffect(() => {
       return res.json();
     })
     .then(data => {
-      console.log("Banner data:", data);
       setData(data);
       setLoading(false);
     })
