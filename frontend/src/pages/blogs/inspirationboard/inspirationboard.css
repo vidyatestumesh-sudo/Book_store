@@ -1,0 +1,240 @@
+@font-face {
+  font-family: "PlayfairDisplay-Regular";
+  src: url("../assets/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Figtree-Light";
+  src: url("../assets/fonts/Figtree-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Figtree-Regular";
+  src: url("../assets/fonts/Figtree-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+h2 {
+  font-family: "PlayfairDisplay-Regular";
+  color: black;
+}
+
+p {
+  font-family: "Figtree-Light";
+}
+
+.inspiration-board {
+  background-color: #fff;
+  margin-bottom: 80px;
+}
+
+.inspiration-board-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.inspiration-board-header h2 {
+  position: relative;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.inspiration-board-header h2::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: url("/motif.webp") no-repeat center;
+  background-size: contain;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.inspiration-board-header span {
+  font-family: "PlayfairDisplay-Regular";
+  font-size: 24px;
+  color: black;
+}
+
+/* ---------------- Carousel Base ---------------- */
+.inspiration-board-top-carousel {
+  margin: 20px 0px 50px 0px;
+}
+
+.inspiration-board-bottom-carousel {
+  margin: 50px 0px 0px 0px;
+}
+
+.inspiration-board-carousel-item {
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+  border: none;
+}
+
+.inspiration-board-carousel-img {
+  width: 100%;
+  height: auto;
+}
+
+.inspiration-board-carousel-item:focus,
+.inspiration-board-carousel-img:focus {
+  outline: none;
+}
+
+.inspiration-board-carousel-image1 {
+  border-radius: 8px;
+}
+
+.inspiration-board-carousel-image2 {
+  border-radius: 4px;
+}
+
+.inspiration-board-carousel-text {
+  padding: 10px 0px;
+}
+
+.inspiration-board-carousel-text h3 {
+  font-family: "Figtree-Regular";
+  font-size: 24px;
+  color: black;
+  margin-top: 10px;
+}
+
+/* Slick arrow  */
+.inspiration-board-custom-nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 15px;
+  padding-left: 10px;
+  gap: 20px;
+}
+
+.inspiration-board-nav-btn {
+  border: 2px solid black;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.inspiration-board-nav-btn-icon {
+  font-size: 18px !important;
+}
+
+.inspiration-board-nav-btn:hover {
+  background-color: #872f24;
+  color: white;
+  border: none;
+}
+
+.inspiration-board-slide-counter {
+  font-family: "Figtree-Light";
+  font-size: 18px;
+  color: black;
+}
+
+/* Media Queries */
+
+@media (max-width: 991px) {
+  .inspiration-board {
+    margin-bottom: 40px;
+  }
+
+  .inspiration-board-header {
+    margin-bottom: 20px;
+  }
+
+  .inspiration-board-header h2 {
+    font-size: 40px;
+  }
+
+  .inspiration-board-header h2::after {
+    width: 80px;
+    height: 80px;
+  }
+
+  .inspiration-board-header span {
+    font-size: 22px;
+  }
+
+  .inspiration-board-carousel-text {
+  padding: 0px 0px;
+}
+
+  .inspiration-board-carousel-text h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .inspiration-board {
+    margin-bottom: 30px;
+  }
+
+  .inspiration-board-header {
+    margin-bottom: 10px;
+  }
+
+  .inspiration-board-header h2 {
+    font-size: 32px;
+  }
+
+  .inspiration-board-header h2::after {
+    width: 60px;
+    height: 60px;
+  }
+
+  .inspiration-board-header span {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 575px) {
+  .inspiration-board {
+    margin-bottom: 20px;
+  }
+
+  .inspiration-board-header {
+    margin-bottom: 10px;
+  }
+
+  .inspiration-board-header h2 {
+    font-size: 24px;
+  }
+
+  .inspiration-board-header h2::after {
+    width: 50px;
+    height: 50px;
+  }
+
+  .inspiration-board-header span {
+    font-size: 18px;
+  }
+
+  .inspiration-board-custom-nav {
+    margin-top: 0px;
+  }
+
+  .inspiration-board-top-carousel {
+    margin: 10px 0px;
+  }
+
+  .inspiration-board-bottom-carousel {
+    margin: 10px 0px;
+  }
+}

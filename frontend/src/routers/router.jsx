@@ -30,6 +30,7 @@ import CMSModule from "../pages/dashboard/CMS module/CMSModule";
 import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThoughts";
 import AdminAuthorEdit from "../pages/dashboard/CMS module/AdminAuthorEdit";
 import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
+import InspirationBoard from "../pages/blogs/inspirationboard/inspirationboard";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "contact", element: <Contact /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/inspiration-board", element: <InspirationBoard /> },
       {
         path: "/orders",
         element: (
@@ -64,7 +66,7 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <BlogDetailPage /> },
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
-      { path: "/sufi-corner", element: <SufiCornerpage /> }
+      { path: "/sufi-corner", element: <SufiCornerpage /> },
       // { path="/sufi-corner", element: < /> }
     ],
   },
@@ -164,7 +166,7 @@ const router = createBrowserRouter([
             <AdminAuthorEdit />
           </AdminRoute>
         ),
-      }
+      },
       // { path: "*", element: <NotFoundPage /> }
     ],
   },

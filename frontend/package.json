@@ -37,7 +37,7 @@
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.23.0",
-    "swiper": "^11.1.14",
+    "swiper": "^11.2.10",
     "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {

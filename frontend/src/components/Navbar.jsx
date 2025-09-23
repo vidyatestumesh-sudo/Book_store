@@ -304,12 +304,15 @@ const Navbar = () => {
                   <Link to="/foundation">THE FOUNDATION</Link>
                 </li>
                 <li className="navbar-blogs-menu">
-                  <Link
-                    to="/blogs"
-                    onClick={handleBlogsDesktopClick}
-                    className="blogs-link">
-                    BLOGS <ExpandMoreIcon fontSize="small" />
+                  <Link to="/blogs" className="blogs-link">
+                    BLOGS
                   </Link>
+                  <IconButton
+                    className="blogs-dropdown-btn"
+                    onClick={handleBlogsDesktopClick}
+                    size="small">
+                    <ExpandMoreIcon fontSize="small" />
+                  </IconButton>
                   <Menu
                     anchorEl={blogsDesktopAnchor}
                     open={isBlogsDesktopOpen}
