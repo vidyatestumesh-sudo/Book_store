@@ -29,8 +29,7 @@ import AdminBanner from "../pages/dashboard/CMS module/AdminBanner";
 import CMSModule from "../pages/dashboard/CMS module/CMSModule";
 import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThoughts";
 import AdminAuthorEdit from "../pages/dashboard/CMS module/AdminAuthorEdit";
-// Optional: create this later
-// import NotFoundPage from "../pages/NotFoundPage";
+import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
 
 const router = createBrowserRouter([
   {
@@ -65,7 +64,8 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <BlogDetailPage /> },
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
-      // { path: "*", element: <NotFoundPage /> }
+      { path: "/sufi-corner", element: <SufiCornerpage /> }
+      // { path="/sufi-corner", element: < /> }
     ],
   },
   { path: "/admin", element: <AdminLogin /> },
