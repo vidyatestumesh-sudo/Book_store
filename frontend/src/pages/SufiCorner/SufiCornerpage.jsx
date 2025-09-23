@@ -34,14 +34,17 @@ const useWindowWidth = () => {
 const SufiCornerpage = () => {
   const [posIndex, setPosIndex] = useState(0);
   const [precIndex, setPrecIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // For animation direction
   const width = useWindowWidth();
 
   // Top section handlers
   const handlePosChange = (dir) => {
+    setDirection(dir);
     setPosIndex((prev) => (prev + dir + SufiCorner.length) % SufiCorner.length);
   };
 
   const handlePrecChange = (dir) => {
+    setDirection(dir);
     setPrecIndex((prev) => (prev + dir + preceptsSlides.length) % preceptsSlides.length);
   };
 
@@ -50,7 +53,6 @@ const SufiCornerpage = () => {
     return [SufiCorner[posIndex], SufiCorner[secondIndex]];
   };
 
-  // Determine how many slides to show in Precepts section
   const slidesToShow = width < 640 ? 1 : width < 1024 ? 2 : 3;
 
   const getVisiblePreceptsSlides = () => {
@@ -60,6 +62,25 @@ const SufiCornerpage = () => {
       slides.push(preceptsSlides[(precIndex + i) % total]);
     }
     return slides;
+  };
+
+  // Animation variants
+  const slideVariants = {
+    enter: (dir) => ({
+      x: dir > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.8,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (dir) => ({
+      x: dir < 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.8,
+    }),
   };
 
   return (
@@ -123,16 +144,18 @@ const SufiCornerpage = () => {
                   >
                     <div className="w-full flex justify-center">
                       <div className="w-full max-w-[700px] h-[300px] sm:h-[350px] md:h-[390px] lg:h-[460px] overflow-hidden rounded-md p-5">
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence mode="wait" custom={direction}>
                           <motion.img
                             key={slide.image}
                             src={slide.image}
                             alt="slide"
                             className="w-full h-full object-cover block"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.4 }}
+                            custom={direction}
+                            variants={slideVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{ duration: 0.5, ease: "easeInOut" }}
                             loading="lazy"
                           />
                         </AnimatePresence>
@@ -182,11 +205,20 @@ const SufiCornerpage = () => {
                 key={idx}
                 className="rounded-lg shadow-md overflow-hidden relative w-full h-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px]"
               >
-                <img
-                  src={slide.image}
-                  alt="Precept"
-                  className="w-full h-full object-cover absolute inset-0"
-                />
+                <AnimatePresence mode="wait" custom={direction}>
+                  <motion.img
+                    key={slide.image}
+                    src={slide.image}
+                    alt="Precept"
+                    className="w-full h-full object-cover absolute inset-0"
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  />
+                </AnimatePresence>
               </div>
             ))}
           </div>
