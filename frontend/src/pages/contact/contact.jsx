@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import "./Contact.css";
+import "./contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
