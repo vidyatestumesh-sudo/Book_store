@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import getBaseUrl from "../../utils/baseURL";
@@ -13,43 +13,45 @@ const Dashboard = () => {
   const [totalSales, setTotalSales] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const response = await axios.get(`${getBaseUrl()}/api/admin`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
+  // Extracted fetch function to be reused
+  const fetchDashboardData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${getBaseUrl()}/api/admin`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        setData(response.data);
+      setData(response.data);
 
-        const ordersRes = await axios.get(`${getBaseUrl()}/api/orders`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+      const ordersRes = await axios.get(`${getBaseUrl()}/api/orders`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-        const orders = ordersRes.data;
+      const orders = ordersRes.data;
 
-        const total = orders.reduce((sum, order) => {
-          if (order.status !== "Cancelled") {
-            return sum + (order.totalPrice || 0);
-          }
-          return sum;
-        }, 0);
+      const total = orders.reduce((sum, order) => {
+        if (order.status !== "Cancelled") {
+          return sum + (order.totalPrice || 0);
+        }
+        return sum;
+      }, 0);
 
-        setTotalSales(total);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
+      setTotalSales(total);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   if (loading) return <Loading />;
 

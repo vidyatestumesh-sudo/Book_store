@@ -271,7 +271,7 @@ const AdminOrderPage = () => {
                         onClick={() => generatePDF(order)}
                         className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
                       >
-                        Download PDF
+                        Invoice
                       </button>
                     </td>
                   </tr>
