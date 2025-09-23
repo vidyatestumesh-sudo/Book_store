@@ -5,24 +5,27 @@ const Banner = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchBannerData = async () => {
-      try {
-        const response = await fetch("/api/home/banner"); // adjust if using proxy or full domain
-        if (!response.ok) throw new Error("Failed to fetch banner data");
+useEffect(() => {
+  const fetchBannerData = async () => {
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"; // ✅ Use correct backend URL
 
-        const bannerData = await response.json();
-        setData(bannerData);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load banner content");
-        setLoading(false);
-      }
-    };
+    try {
+      const response = await fetch(`${baseUrl}/api/home/banner`);
+      if (!response.ok) throw new Error("Failed to fetch banner data");
 
-    fetchBannerData();
-  }, []);
+      const bannerData = await response.json();
+      setData(bannerData);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load banner content");
+      setLoading(false);
+    }
+  };
+
+  fetchBannerData();
+}, []);
+
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
