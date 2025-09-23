@@ -12,13 +12,32 @@ const {
   getAllBooksForUsers,
 } = require("./book.controller");
 
-router.post("/create-book", postABook);           
-router.get("/", getAllBooks);           
-router.get("/:id", getSingleBook);      
-router.put("/edit/:id", updateBook);    
-router.delete("/:id", deleteABook);     
-router.put("/suspend/:id", suspendBook);    // Suspend a book
-router.put("/unsuspend/:id", unsuspendBook); // Revert suspension
-router.get("/user", getAllBooksForUsers);   // Only non-suspended books for normal users
+// Corrected path to upload middleware
+const upload = require("../middlewares/upload.middleware");
+
+router.post(
+  "/create-book",
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "backImage", maxCount: 1 },
+  ]),
+  postABook
+);
+
+router.put(
+  "/edit/:id",
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "backImage", maxCount: 1 },
+  ]),
+  updateBook
+);
+
+router.get("/", getAllBooks);                  // All books (admin)
+router.get("/user", getAllBooksForUsers);      // Only non-suspended (user)
+router.get("/:id", getSingleBook);             // Single book by ID
+router.delete("/:id", deleteABook);            // Delete book
+router.put("/suspend/:id", suspendBook);       // Suspend
+router.put("/unsuspend/:id", unsuspendBook);   // Unsuspend
 
 module.exports = router;
