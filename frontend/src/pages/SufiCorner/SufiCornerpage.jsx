@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Slides for Top Section (Sufi Corner)
 const SufiCorner = [
@@ -34,7 +34,7 @@ const useWindowWidth = () => {
 const SufiCornerpage = () => {
   const [posIndex, setPosIndex] = useState(0);
   const [precIndex, setPrecIndex] = useState(0);
-  const [direction, setDirection] = useState(0); // For animation direction
+  const [direction, setDirection] = useState(0);
   const width = useWindowWidth();
 
   // Top section handlers
@@ -43,28 +43,26 @@ const SufiCornerpage = () => {
     setPosIndex((prev) => (prev + dir + SufiCorner.length) % SufiCorner.length);
   };
 
+  // Precepts carousel handlers
+  const slidesToShow = width < 640 ? 1 : width < 1024 ? 2 : 3;
+
   const handlePrecChange = (dir) => {
     setDirection(dir);
     setPrecIndex((prev) => (prev + dir + preceptsSlides.length) % preceptsSlides.length);
   };
 
+  const sufiSlidesToShow = width < 1024 ? 1 : 2; // 1 for mobile/tablet, 2 for desktop
+
   const getPosSlides = () => {
-    const secondIndex = (posIndex + 1) % SufiCorner.length;
-    return [SufiCorner[posIndex], SufiCorner[secondIndex]];
-  };
-
-  const slidesToShow = width < 640 ? 1 : width < 1024 ? 2 : 3;
-
-  const getVisiblePreceptsSlides = () => {
-    const total = preceptsSlides.length;
     const slides = [];
-    for (let i = 0; i < slidesToShow; i++) {
-      slides.push(preceptsSlides[(precIndex + i) % total]);
+    for (let i = 0; i < sufiSlidesToShow; i++) {
+      slides.push(SufiCorner[(posIndex + i) % SufiCorner.length]);
     }
     return slides;
   };
 
-  // Animation variants
+
+  // Animation variants for Sufi Corner
   const slideVariants = {
     enter: (dir) => ({
       x: dir > 0 ? 300 : -300,
@@ -82,6 +80,7 @@ const SufiCornerpage = () => {
       scale: 0.8,
     }),
   };
+
 
   return (
     <div className="container">
@@ -122,7 +121,7 @@ const SufiCornerpage = () => {
             Uplift your spirit
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 justify-center items-start w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 justify-center items-start w-full">
             {getPosSlides().map((slide, idx) => {
               const isLeft = idx === 0;
               const cardBg = isLeft ? "#bc6430" : "#8c2f24";
@@ -143,22 +142,20 @@ const SufiCornerpage = () => {
                     style={{ backgroundColor: cardBg }}
                   >
                     <div className="w-full flex justify-center">
-                      <div className="w-full max-w-[700px] h-[300px] sm:h-[350px] md:h-[390px] lg:h-[460px] overflow-hidden rounded-md p-5">
-                        <AnimatePresence mode="wait" custom={direction}>
-                          <motion.img
-                            key={slide.image}
-                            src={slide.image}
-                            alt="slide"
-                            className="w-full h-full object-cover block"
-                            custom={direction}
-                            variants={slideVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.5, ease: "easeInOut" }}
-                            loading="lazy"
-                          />
-                        </AnimatePresence>
+                      <div className="w-full max-w-[700px] h-[300px] sm:h-[350px] md:h-[390px] lg:h-[460px] overflow-hidden rounded-md p-5 relative">
+                        <motion.img
+                          key={slide.image}
+                          src={slide.image}
+                          alt="slide"
+                          className="w-full h-full object-cover block"
+                          custom={direction}
+                          variants={slideVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{ duration: 0.5, ease: "easeInOut" }}
+                          loading="lazy"
+                        />
                       </div>
                     </div>
                   </div>
@@ -166,6 +163,7 @@ const SufiCornerpage = () => {
               );
             })}
           </div>
+
 
           <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black text-[16px] sm:text-[18px]">
             <button
@@ -199,31 +197,30 @@ const SufiCornerpage = () => {
             />
           </div>
 
-          <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 w-full px-2 sm:px-6 md:px-12 lg:px-20`}>
-            {getVisiblePreceptsSlides().map((slide, idx) => (
-              <div
-                key={idx}
-                className="rounded-lg shadow-md overflow-hidden relative w-full h-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px]"
-              >
-                <AnimatePresence mode="wait" custom={direction}>
-                  <motion.img
-                    key={slide.image}
+          {/* Precepts Slider */}
+          <div className="overflow-hidden w-full">
+            <motion.div
+              className="flex gap-6 sm:gap-8"
+              animate={{ x: -precIndex * (100 / slidesToShow) + "%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {[...preceptsSlides, ...preceptsSlides].map((slide, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-lg shadow-md overflow-hidden relative w-full h-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] flex-shrink-0"
+                  style={{ width: `${93 / slidesToShow}%` }}
+                >
+                  <img
                     src={slide.image}
                     alt="Precept"
                     className="w-full h-full object-cover absolute inset-0"
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
                   />
-                </AnimatePresence>
-              </div>
-            ))}
+                </div>
+              ))}
+            </motion.div>
           </div>
 
-          <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black text-[16px] sm:text-[18px] px-4 sm:px-8 md:px-16 lg:px-24">
+          <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black text-[16px] sm:text-[18px]">
             <button
               onClick={() => handlePrecChange(-1)}
               className="w-8 h-8 flex items-center justify-center rounded-full border border-black hover:bg-[#8c2f24] hover:text-white transition"

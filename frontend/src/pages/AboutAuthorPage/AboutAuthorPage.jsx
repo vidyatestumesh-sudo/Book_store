@@ -12,17 +12,30 @@ const AboutAuthorPage = () => {
           alt="Author"
           className="w-64 h-64 rounded-full border-4 border-pink-500 shadow-lg object-cover transform hover:scale-105 hover:rotate-3 transition-all duration-500"
         />
+
         <div className="text-center md:text-left space-y-6">
-          <h1 className="text-5xl font-bold text-purple-800 hover:text-pink-600 transition-colors duration-300">
-            Meet Anil Kumar
-          </h1>
+          <div className="relative inline-block">
+            <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-snug mb-7 mt-8 text-purple-800 hover:text-pink-600 transition-colors duration-300">
+              Meet Anil Kumar
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 mb-2"
+            />
+          </div>
+
+
           <p className="text-lg text-gray-800 leading-relaxed">
-            Welcome to Langshott Leadership Foundation, a charitable organisation and provider of mentorship and guidance in personal leadership through seminars, workshops, talks, books, inspirational collections, blogs, and uplifting wisdom in the form of quotations. See this site as your home for inspiration and enlightenment.
+            This is me in the given picture. You and I are one.
+          </p>
+          <p className="text-lg text-gray-800 leading-relaxed">
+            At a very young age Anil Kumar sensed conflict, physical, social and psychological, both inside and around him, and discovered a secret ally which he calls Nature that has always given him the strength to withstand adversity and courage…
           </p>
           <br />
           <span className="text-purple-600 font-semibold underline decoration-pink-400 decoration-2 underline-offset-4 hover:text-orange-500 transition-colors duration-300">
-              “The solutions you’re searching for are within you, we can only help you to get there”
-            </span>
+            “The solutions you’re searching for are within you, we can only help you to get there”
+          </span>
           <div className="flex justify-center md:justify-start gap-4 pt-4">
             {[
               { icon: <FaTwitter />, bg: "bg-pink-500", hover: "hover:bg-pink-600" },
