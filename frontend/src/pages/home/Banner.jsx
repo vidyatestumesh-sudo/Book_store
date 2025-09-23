@@ -6,24 +6,24 @@ const Banner = () => {
   const [error, setError] = useState(null);
 
 useEffect(() => {
-  const fetchBannerData = async () => {
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"; // ✅ Use correct backend URL
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  console.log("Using baseUrl:", baseUrl);
 
-    try {
-      const response = await fetch(`${baseUrl}/api/home/banner`);
-      if (!response.ok) throw new Error("Failed to fetch banner data");
-
-      const bannerData = await response.json();
-      setData(bannerData);
+  fetch(`${baseUrl}/api/home/banner`)
+    .then(res => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then(data => {
+      console.log("Banner data:", data);
+      setData(data);
       setLoading(false);
-    } catch (err) {
-      console.error(err);
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
       setError("Failed to load banner content");
       setLoading(false);
-    }
-  };
-
-  fetchBannerData();
+    });
 }, []);
 
 
