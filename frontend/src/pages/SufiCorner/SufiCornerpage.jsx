@@ -86,7 +86,7 @@ const SufiCornerpage = () => {
 
         {/* ===================== SECTION 1 : SUFI CORNER ===================== */}
         <section className="py-0 mb-0 w-full">
-          <div className="relative inline-block mb-3">
+          <div className="relative inline-block mb-2">
             <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-4">
               The Sufi Corner
             </h2>
@@ -97,7 +97,7 @@ const SufiCornerpage = () => {
             />
           </div>
 
-          <p className="text-[18px] sm:text-[20px] md:text-[24px] font-Figtree text-center mb-10">
+          <p className="text-[18px] sm:text-[20px] md:text-[24px] font-Figtree text-center font-playfair font-regular mb-10">
             Uplift your spirit
           </p>
 
