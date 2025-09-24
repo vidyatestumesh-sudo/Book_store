@@ -120,12 +120,12 @@ p {
 }
 
 .inspiration-board-nav-btn {
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 50%;
   background-color: white;
   color: black;
-  width: 25px;
-  height: 25px;
+  width: 33px;
+  height: 33px;
   display: flex;
   justify-content: center;
   align-items: center;
