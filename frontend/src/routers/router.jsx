@@ -32,6 +32,7 @@ import AdminAuthorEdit from "../pages/dashboard/CMS module/AdminAuthorEdit";
 import InspirationBoard from "../pages/blogs/inspirationboard/inspirationboard";
 import AdminCorners from "../pages/dashboard/CMS module/AdminCorners";
 import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
+import AdminSufiCorner from "../pages/dashboard/CMS module/AdminSufiCorner";
 
 const router = createBrowserRouter([
   {
@@ -172,6 +173,13 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AdminCorners />
+          </AdminRoute>
+        ),
+      },{
+        path: "admin-sufi-corner",
+        element: (
+          <AdminRoute>
+            <AdminSufiCorner />
           </AdminRoute>
         ),
       },

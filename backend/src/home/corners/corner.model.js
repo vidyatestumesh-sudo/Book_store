@@ -1,22 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const slideSchema = new mongoose.Schema(
-  {
-    image: { type: String, required: true },
-    text: { type: String, required: true },
-    author: { type: String },
-  },
-  { _id: false }
-);
+// Slide schema
+const SlideSchema = new mongoose.Schema({
+  image: { type: String, required: true }, // URL of uploaded image
+  text: { type: String, default: "" },
+  author: { type: String, default: "" },
+}, { _id: false });
 
-const cornerSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    bgColor: { type: String, default: "#000000" },
-    readMoreUrl: { type: String },
-    slides: [slideSchema],
-  },
-  { timestamps: true }
-);
+// Corner schema
+const CornerSchema = new mongoose.Schema({
+  id: { type: Number, required: true, unique: true },
+  title: { type: String, required: true },
+  bgColor: { type: String, default: "#ffffff" },
+  readMoreUrl: { type: String, default: "" },
+  slides: { type: [SlideSchema], default: [] },
+}, {
+  timestamps: true,
+});
 
-module.exports = mongoose.model("Corner", cornerSchema);
+module.exports = mongoose.model('Corner', CornerSchema);
