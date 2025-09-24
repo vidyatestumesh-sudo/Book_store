@@ -3,66 +3,79 @@ import Swal from "sweetalert2";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// Helper to set nested value based on dot notation (e.g. "aboutAuthor.leftText.heading")
+const setNestedValue = (obj, path, value) => {
+  const keys = path.split(".");
+  const lastKey = keys.pop();
+  const nested = keys.reduce((acc, key) => acc[key], obj);
+  nested[lastKey] = value;
+  return { ...obj };
+};
 
 const AdminAuthorEdit = () => {
-  const [authorData, setAuthorData] = useState(null);
-  const [form, setForm] = useState({
-    sectionHeading: { text: "" },
-    aboutAuthor: {
-      leftText: { heading: "", paragraphs: [{ text: "" }] },
-      rightImage: { src: "", alt: "" },
-    },
-    workingCreed: {
-      leftImage: { src: "", alt: "" },
-      rightText: {
-        heading: "",
-        paragraphs: [{ text: "" }],
-        link: { text: "", to: "" },
-      },
-    },
-  });
+  const [form, setForm] = useState(null);
+
+  const [motifFile, setMotifFile] = useState(null);
+  const [motifPreview, setMotifPreview] = useState(null);
+
+  const [rightFile, setRightFile] = useState(null);
+  const [rightPreview, setRightPreview] = useState(null);
+
+  const [leftFile, setLeftFile] = useState(null);
+  const [leftPreview, setLeftPreview] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAuthor = async () => {
+    const fetchData = async () => {
       try {
-        setLoading(true);
-        const res = await fetch(`${baseUrl}/api/author`);
-        if (!res.ok) throw new Error("Failed to fetch author data");
+        const res = await fetch("http://localhost:5000/api/author");
+        if (!res.ok) {
+          console.warn("GET /api/author returned", res.status);
+          return;
+        }
         const data = await res.json();
-        setAuthorData(data);
         setForm(data);
+
+        if (data.sectionHeading?.motifImage?.src)
+          setMotifPreview(data.sectionHeading.motifImage.src);
+        if (data.aboutAuthor?.rightImage?.src)
+          setRightPreview(data.aboutAuthor.rightImage.src);
+        if (data.workingCreed?.leftImage?.src)
+          setLeftPreview(data.workingCreed.leftImage.src);
       } catch (err) {
-        Swal.fire("Error", err.message || "Failed to fetch author data", "error");
-      } finally {
-        setLoading(false);
+        console.error("Failed to load author data", err);
       }
     };
-
-    fetchAuthor();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // For nested properties, you may need a more complex handler or libraries like lodash set
-    // For simplicity, this example only updates shallow properties
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prevForm) => setNestedValue({ ...prevForm }, name, value));
   };
 
-  // Example for nested fields update (you will need to extend this for your nested form)
-  const handleNestedChange = (section, key, value) => {
-    setForm((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [key]: value,
-      },
-    }));
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    switch (type) {
+      case "motif":
+        setMotifFile(file);
+        setMotifPreview(URL.createObjectURL(file));
+        break;
+      case "right":
+        setRightFile(file);
+        setRightPreview(URL.createObjectURL(file));
+        break;
+      case "left":
+        setLeftFile(file);
+        setLeftPreview(URL.createObjectURL(file));
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,270 +83,224 @@ const AdminAuthorEdit = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${baseUrl}/api/author`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(form));
+
+      if (motifFile) formData.append("motifImage", motifFile);
+      if (rightFile) formData.append("rightImage", rightFile);
+      if (leftFile) formData.append("leftImage", leftFile);
+
+      const res = await fetch("http://localhost:5000/api/author", {
+        method: "POST",
+        body: formData,
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Failed to update author data");
-      }
+      if (!res.ok) throw new Error("Failed to update author content");
 
-      const result = await res.json();
-      setAuthorData(result);
-      Swal.fire("Success", "Author content updated successfully", "success");
+      Swal.fire("Success", "Author content updated successfully!", "success");
     } catch (err) {
-      Swal.fire("Error", err.message || "Failed to update author data", "error");
+      console.error(err);
+      Swal.fire("Error", "Failed to update author content", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading && !authorData) return <div>Loading author content...</div>;
-  if (!authorData) return <div>No author content found.</div>;
+  if (!form) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="container mt-[100px] max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center mb-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded px-3 py-1 shadow transition transform hover:scale-105"
-      >
-        <ArrowBackIcon className="w-4 h-4 mr-1" />
-        Back
-      </button>
+    <div className="container mt-[100px]">
+      <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+        <div className="mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105"
+          >
+            <ArrowBackIcon className="w-3 h-3" />
+            Back
+          </button>
 
-      <h2 className="text-2xl font-bold mb-6 text-center">Edit Author Content</h2>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Section Heading */}
-        <div>
-          <label className="block font-medium mb-1">Section Heading</label>
-          <input
-            type="text"
-            name="sectionHeadingText"
-            value={form.sectionHeading.text || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                sectionHeading: { ...prev.sectionHeading, text: e.target.value },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+            Edit Author Content
+          </h2>
         </div>
 
-        {/* About Author - Left Text Heading */}
-        <div>
-          <label className="block font-medium mb-1">About Author - Left Text Heading</label>
-          <input
-            type="text"
-            value={form.aboutAuthor.leftText.heading || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                aboutAuthor: {
-                  ...prev.aboutAuthor,
-                  leftText: { ...prev.aboutAuthor.leftText, heading: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* --- TEXT CONTENT FIELDS (TOP) --- */}
 
-        {/* About Author - Left Text Paragraph (first one) */}
-        <div>
-          <label className="block font-medium mb-1">About Author - Paragraph</label>
-          <textarea
-            rows={4}
-            value={(form.aboutAuthor.leftText.paragraphs?.[0]?.text) || ""}
-            onChange={(e) => {
-              const newParagraphs = [...(form.aboutAuthor.leftText.paragraphs || [])];
-              newParagraphs[0] = { text: e.target.value };
-              setForm((prev) => ({
-                ...prev,
-                aboutAuthor: {
-                  ...prev.aboutAuthor,
-                  leftText: { ...prev.aboutAuthor.leftText, paragraphs: newParagraphs },
-                },
-              }));
-            }}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* Section Heading */}
+          <div>
+            <label className="block mb-1 font-medium">Section Heading</label>
+            <input
+              type="text"
+              name="sectionHeading.text"
+              value={form.sectionHeading.text}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        {/* About Author - Right Image URL */}
-        <div>
-          <label className="block font-medium mb-1">About Author - Right Image URL</label>
-          <input
-            type="text"
-            value={form.aboutAuthor.rightImage.src || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                aboutAuthor: {
-                  ...prev.aboutAuthor,
-                  rightImage: { ...prev.aboutAuthor.rightImage, src: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* About Author Heading */}
+          <div>
+            <label className="block mb-1 font-medium">About Author Heading</label>
+            <input
+              type="text"
+              name="aboutAuthor.leftText.heading"
+              value={form.aboutAuthor.leftText.heading}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        {/* About Author - Right Image Alt */}
-        <div>
-          <label className="block font-medium mb-1">About Author - Right Image Alt</label>
-          <input
-            type="text"
-            value={form.aboutAuthor.rightImage.alt || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                aboutAuthor: {
-                  ...prev.aboutAuthor,
-                  rightImage: { ...prev.aboutAuthor.rightImage, alt: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* About Author Paragraphs */}
+          <div>
+            <label className="block mb-1 font-medium">About Author Paragraphs</label>
+            {form.aboutAuthor.leftText.paragraphs.map((para, index) => (
+              <textarea
+                key={index}
+                name={`aboutAuthor.leftText.paragraphs.${index}.text`}
+                value={para.text}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded mb-2"
+              />
+            ))}
+          </div>
 
-        {/* Working Creed - Left Image URL */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Left Image URL</label>
-          <input
-            type="text"
-            value={form.workingCreed.leftImage.src || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  leftImage: { ...prev.workingCreed.leftImage, src: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* Working Creed Heading */}
+          <div>
+            <label className="block mb-1 font-medium">Working Creed Heading</label>
+            <input
+              type="text"
+              name="workingCreed.rightText.heading"
+              value={form.workingCreed.rightText.heading}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
 
-        {/* Working Creed - Left Image Alt */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Left Image Alt</label>
-          <input
-            type="text"
-            value={form.workingCreed.leftImage.alt || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  leftImage: { ...prev.workingCreed.leftImage, alt: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* Working Creed Paragraphs */}
+          <div>
+            <label className="block mb-1 font-medium">Working Creed Paragraphs</label>
+            {form.workingCreed.rightText.paragraphs.map((para, index) => (
+              <textarea
+                key={index}
+                name={`workingCreed.rightText.paragraphs.${index}.text`}
+                value={para.text}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded mb-2"
+              />
+            ))}
+          </div>
 
-        {/* Working Creed - Right Text Heading */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Right Text Heading</label>
-          <input
-            type="text"
-            value={form.workingCreed.rightText.heading || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  rightText: { ...prev.workingCreed.rightText, heading: e.target.value },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+          {/* Working Creed Link */}
+          {/* <div>
+            <label className="block mb-1 font-medium">Working Creed Link</label>
+            <input
+              type="text"
+              name="workingCreed.rightText.link.to"
+              value={form.workingCreed.rightText.link.to}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div> */}
 
-        {/* Working Creed - Right Text Paragraph (first one) */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Paragraph</label>
-          <textarea
-            rows={4}
-            value={(form.workingCreed.rightText.paragraphs?.[0]?.text) || ""}
-            onChange={(e) => {
-              const newParagraphs = [...(form.workingCreed.rightText.paragraphs || [])];
-              newParagraphs[0] = { text: e.target.value };
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  rightText: { ...prev.workingCreed.rightText, paragraphs: newParagraphs },
-                },
-              }));
-            }}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+{/* --- IMAGE UPLOAD FIELDS IN A SINGLE HORIZONTAL LINE --- */}
+<div className="flex gap-8 mt-8 justify-center">
+  {/* Motif Image */}
+  {/* <div className="flex flex-col items-center">
+    <label className="block mb-1 font-medium text-center">Motif Image</label>
+    <input
+      id="motifFileInput"
+      type="file"
+      accept="image/*"
+      onChange={(e) => handleFileChange(e, "motif")}
+      className="hidden"
+    />
+    <label
+      htmlFor="motifFileInput"
+      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Choose Image
+    </label>
+    {motifPreview ? (
+      <img
+        src={motifPreview}
+        alt="Motif Preview"
+        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
+      />
+    ) : (
+      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
+    )}
+  </div> */}
 
-        {/* Working Creed - Right Text Link Text */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Link Text</label>
-          <input
-            type="text"
-            value={form.workingCreed.rightText.link?.text || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  rightText: {
-                    ...prev.workingCreed.rightText,
-                    link: { ...prev.workingCreed.rightText.link, text: e.target.value },
-                  },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+  {/* Right Image */}
+  <div className="flex flex-col items-center">
+    <label className="block mb-1 font-medium text-center">Right Image (About Author)</label>
+    <input
+      id="rightFileInput"
+      type="file"
+      accept="image/*"
+      onChange={(e) => handleFileChange(e, "right")}
+      className="hidden"
+    />
+    <label
+      htmlFor="rightFileInput"
+      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Choose Image
+    </label>
+    {rightPreview ? (
+      <img
+        src={rightPreview}
+        alt="Right Image Preview"
+        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
+      />
+    ) : (
+      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
+    )}
+  </div>
 
-        {/* Working Creed - Right Text Link To */}
-        <div>
-          <label className="block font-medium mb-1">Working Creed - Link To</label>
-          <input
-            type="text"
-            value={form.workingCreed.rightText.link?.to || ""}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                workingCreed: {
-                  ...prev.workingCreed,
-                  rightText: {
-                    ...prev.workingCreed.rightText,
-                    link: { ...prev.workingCreed.rightText.link, to: e.target.value },
-                  },
-                },
-              }))
-            }
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+  {/* Left Image */}
+  <div className="flex flex-col items-center">
+    <label className="block mb-1 font-medium text-center">Left Image (Working Creed)</label>
+    <input
+      id="leftFileInput"
+      type="file"
+      accept="image/*"
+      onChange={(e) => handleFileChange(e, "left")}
+      className="hidden"
+    />
+    <label
+      htmlFor="leftFileInput"
+      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Choose Image
+    </label>
+    {leftPreview ? (
+      <img
+        src={leftPreview}
+        alt="Left Image Preview"
+        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
+      />
+    ) : (
+      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
+    )}
+  </div>
+</div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-3 mt-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {loading ? "Saving..." : "Update Author Content"}
-        </button>
-      </form>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Updating..." : "Update Author Content"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

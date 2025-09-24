@@ -1,25 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { upsertAuthorContent, getAuthorContent } = require('./author.controller');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-router.post('/author', async (req, res) => {
-  try {
-    const content = req.body; // Validate as needed!
-    const result = await upsertAuthorContent(content);
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to save author content' });
-  }
-});
+const {
+  getAuthorContent,
+  upsertAuthorContent
+} = require('./author.controller');
 
-router.get('/author', async (req, res) => {
-  try {
-    const content = await getAuthorContent();
-    if (!content) return res.status(404).json({ error: 'Content not found' });
-    res.status(200).json(content);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve author content' });
-  }
-});
+router.get('/', getAuthorContent);
+router.post('/', upload.fields([
+  { name: 'motifImage', maxCount: 1 },
+  { name: 'rightImage', maxCount: 1 },
+  { name: 'leftImage', maxCount: 1 },
+]), upsertAuthorContent);
 
 module.exports = router;

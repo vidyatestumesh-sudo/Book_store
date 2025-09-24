@@ -1,34 +1,37 @@
-// src/config/cloudinary.js
 const cloudinary = require('cloudinary').v2;
-
-// Configure Cloudinary with your credentials
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true, // Use HTTPS
+  secure: true, // Use HTTPS URLs
 });
 
-// Function to upload an image buffer to Cloudinary
+/**
+ * Uploads an image buffer to Cloudinary inside a specified folder.
+ * @param {Buffer} buffer - The image buffer to upload.
+ * @param {string} folderName - The folder name in Cloudinary (default: "uploads").
+ * @returns {Promise<Object>} The Cloudinary upload result.
+ */
 const uploadToCloudinary = async (buffer, folderName = "uploads") => {
   return new Promise((resolve, reject) => {
-    // Create an upload stream
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: folderName, // Specify a folder in Cloudinary
-        resource_type: "auto", // Automatically detect file type
+        folder: folderName,
+        resource_type: "auto", // detects image/video/raw automatically
       },
       (error, result) => {
         if (error) {
           console.error("Cloudinary upload error:", error);
           return reject(error);
         }
-        resolve(result); // result contains secure_url, public_id, etc.
+        // Uncomment the next line if you want to log successful uploads
+        // console.log("Cloudinary upload successful:", result.secure_url);
+        resolve(result);
       }
     );
-    // Pipe the buffer to the upload stream
+
     uploadStream.end(buffer);
   });
 };
 
-module.exports = { cloudinary, uploadToCloudinary };
+module.exports = { uploadToCloudinary };
