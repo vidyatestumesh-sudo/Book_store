@@ -21,6 +21,8 @@ const CMSModule = () => {
 
     // New Author Edit Module
     { name: "Edit Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
+    { name: "Sufi corners", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/admin-sufi-corner" },
+
   ];
 
   const isCardActive = (route) => location.pathname === route;
