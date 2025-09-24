@@ -1,108 +1,222 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaTwitter, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
+import { getImgUrl } from "../../utils/getImgUrl";
+import { CalendarDays } from "lucide-react";
 
 const AboutAuthorPage = () => {
-  return (
-    <div className="max-w-7xl mx-auto px-6 py-20 font-['Poppins'] space-y-24">
-      {/* Hero Section */}
-      <section className="flex flex-col md:flex-row items-center gap-10 bg-gradient-to-r from-purple-100 via-pink-100 to-yellow-100 rounded-3xl shadow-xl p-12 hover:shadow-2xl transition-all duration-700">
-        <img
-          src="/author_logo.webp"
-          alt="Author"
-          className="w-64 h-64 rounded-full border-4 border-pink-500 shadow-lg object-cover transform hover:scale-105 hover:rotate-3 transition-all duration-500"
-        />
+  // Backend URL (set according to your environment)
+  const BACKEND_BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://bookstore-backend-hshq.onrender.com";
 
-        <div className="text-center md:text-left space-y-6">
+  // Fetch Books
+  const { data: books = [] } = useFetchAllBooksQuery();
+  const activeBooks = books.filter((book) => !book.suspended);
+
+  // Fetch Blogs
+  const [blogs, setBlogs] = useState([]);
+  useEffect(() => {
+    fetch(`${BACKEND_BASE_URL}/api/blogs`)
+      .then((res) => res.json())
+      .then((data) => {
+        setBlogs(
+          data
+            .filter((b) => !b.suspended)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        );
+      })
+      .catch(console.error);
+  }, [BACKEND_BASE_URL]);
+
+  return (
+    <div className="container">
+      <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4 mb-20">
+        <div className="breadcrumb-container w-full text-left mb-0 font-figtree font-lite">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb m-0 p-0">
+              <li className="breadcrumb-item">
+                <a href="/" className="text-gray">Home</a>
+              </li>
+              <li className="breadcrumb-item">
+                <a href="/aboutauthorpage" className="!text-gray-600">About Author</a>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        <section className="flex flex-col lg:flex-row items-center">
+          {/* Left Image Section */}
+          <div className="flex justify-center lg:justify-start flex-shrink-0 w-full lg:w-1/2 mt-5">
+            <img
+              src="/ak-i.webp"
+              alt="Author"
+              className="w-full max-w-[500px] lg:max-w-[550px] object-contain rounded-lg select-none transition duration-300"
+            />
+          </div>
+
+          {/* Right Text Section */}
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-1/2">
+            {/* Title Section */}
+            <div className="relative inline-block">
+              <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
+                Anil Kumar
+              </h1>
+              <img
+                src="/motif.webp"
+                alt="feather"
+                className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
+              />
+            </div>
+            <div className="text-left mt-4">
+              <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-gray-800 font-Figtree leading-relaxed mb-4">
+                This is me in the given picture. You and I are one.
+              </p>
+              <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-gray-800 font-Figtree leading-relaxed mb-4">
+                At a very young age Anil Kumar sensed conflict, physical, social, and psychological,
+                both inside and around him, and discovered a secret ally which he calls Nature that
+                has always given him the strength to withstand adversity and courage…
+              </p>
+              <span className="text-[17px] sm:text-[22px] md:text-[24px] lg:text-[25px] xl:text-[25px] font-Figtree font-regular leading-snug leading-tight italic lg:leading-[1.3]">
+                “The solutions you’re searching for are within you, we can only help you to get there”
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* Blogs Section */}
+        <section className="mt-4">
           <div className="relative inline-block">
-            <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-snug mb-7 mt-8 text-purple-800 hover:text-pink-600 transition-colors duration-300">
-              Meet Anil Kumar
+            <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
+              Recent Blogs by Anil Kumar
             </h1>
             <img
               src="/motif.webp"
               alt="feather"
-              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 mb-2"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
+            />
+          </div>
+          {/* Blogs Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-4 max-w-8xl mx-auto">
+            {blogs.slice(0, 4).map((blog) => (
+              <Link
+                key={blog._id}
+                to={`/blogs/${blog._id}`}
+                className="relative group w-full h-full sm:h-50  overflow-hidden rounded-xl duration-500 cursor-pointer"
+              >
+                {/* Blog Image */}
+                {blog.image && (
+                  <img
+                    src={blog.image.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
+                    alt={blog.title}
+                    className="w-full h-44 object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                )}
+
+                {/* Hover Overlay */}
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 z-10"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.6)";
+                    Array.from(e.currentTarget.children).forEach((child) => (child.style.opacity = "1"));
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
+                    Array.from(e.currentTarget.children).forEach((child) => (child.style.opacity = "0"));
+                  }}
+                >
+                  {/* Title Row */}
+                  <span
+                    className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer mb-2 text-center px-2"
+                    style={{ opacity: 0, transition: "opacity 0.5s ease" }}
+                  >
+                    {blog.title}
+                  </span>
+
+                  {/* Date Row */}
+                  <span
+                    className="text-gray-300 text-sm"
+                    style={{ opacity: 0, transition: "opacity 0.5s ease" }}
+                  >
+                    {new Date(blog.createdAt).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {/* Explore Blogs Button */}
+          <div className="mt-12 flex justify-center">
+            <Link
+              to="/blogs"
+              className="px-3 py-2 no-underline rounded-full bg-[#983120] text-base hover:bg-[#7a241b] text-white font-medium text-base transition-all duration-300"
+            >
+              Explore more Blogs
+            </Link>
+          </div>
+        </section>
+
+        {/* Recent Books Section */}
+        <section className="mt-5 sm:mt-4">
+          <div className="relative inline-block">
+            <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
+              Recent Books by Anil Kumar
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-2"
             />
           </div>
 
-
-          <p className="text-lg text-gray-800 leading-relaxed">
-            This is me in the given picture. You and I are one.
-          </p>
-          <p className="text-lg text-gray-800 leading-relaxed">
-            At a very young age Anil Kumar sensed conflict, physical, social and psychological, both inside and around him, and discovered a secret ally which he calls Nature that has always given him the strength to withstand adversity and courage…
-          </p>
-          <br />
-          <span className="text-purple-600 font-semibold underline decoration-pink-400 decoration-2 underline-offset-4 hover:text-orange-500 transition-colors duration-300">
-            “The solutions you’re searching for are within you, we can only help you to get there”
-          </span>
-          <div className="flex justify-center md:justify-start gap-4 pt-4">
-            {[
-              { icon: <FaTwitter />, bg: "bg-pink-500", hover: "hover:bg-pink-600" },
-              { icon: <FaFacebookF />, bg: "bg-purple-500", hover: "hover:bg-purple-600" },
-              { icon: <FaLinkedinIn />, bg: "bg-yellow-500", hover: "hover:bg-yellow-600" },
-            ].map(({ icon, bg, hover }, i) => (
-              <a
-                key={i}
-                href="#"
-                className={`w-10 h-10 flex items-center justify-center text-white ${bg} ${hover} rounded-full transition transform hover:scale-110 shadow-md hover:shadow-lg`}
+          {/* Books Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-2 max-w-8xl mx-auto">
+            {activeBooks.slice(0, 4).map((book) => (
+              <div
+                key={book._id}
+                className="rv-card relative group w-full cursor-pointer rounded-xl duration-500"
               >
-                {icon}
-              </a>
+                <Link to={`/books/${book._id}`} className="flex flex-col items-center">
+                  {/* Book Image */}
+                  <div className="w-full">
+                    <img
+                      src={getImgUrl(book?.coverImage)}
+                      alt={book.title}
+                      className="w-[70%] mx-auto mt-6 object-cover transition-transform duration-500"
+                    />
+                  </div>
+
+                  {/* Book Title & Pricing */}
+                  <h4 className="mt-0 font-Figtree-Regular text-[20px] text-center">{book.title}</h4>
+                  <p className="text-[20px] mt-0 text-center">
+                    <span className="old-price">₹ {book.oldPrice}</span>
+                    <span className="current-price">₹ {book.newPrice}</span>
+                    {book.oldPrice > book.newPrice && (
+                      <span className="discount">
+                        {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
+                      </span>
+                    )}
+                  </p>
+                </Link>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Timeline / Story */}
-      <section className="space-y-12">
-        <h2 className="text-4xl text-center font-bold text-purple-700 mb-4 hover:text-pink-600 transition-colors">
-          Anil Kumar’s Journey
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Early Life",
-              desc: "Inspired by the world around him, Anil began journaling and exploring personal development from a young age.",
-            },
-            {
-              title: "Writing Career",
-              desc: "He published over 10 best-selling books focused on mindfulness and living intentionally.",
-            },
-            {
-              title: "Community Impact",
-              desc: "Anil leads retreats, workshops, and events globally to help others heal, reflect, and grow.",
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
+          {/* Explore Books Button */}
+          <div className="mt-8 xl:mb-4 flex justify-center">
+            <Link
+              to="/publications"
+              className="px-3 py-2 no-underline rounded-full bg-[#983120] text-white font-medium text-base shadow hover:bg-[#7a241b] hover:shadow-lg transition-all duration-300"
             >
-              <h3 className="text-2xl font-semibold text-purple-700 mb-2 hover:text-pink-600 transition-colors">
-                {item.title}
-              </h3>
-              <p className="text-gray-700 leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="text-center bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl py-16 px-10 shadow-inner relative overflow-hidden">
-        <h2 className="text-4xl font-bold text-purple-800 mb-4 hover:text-pink-600 transition-colors">
-          Discover More from Anil
-        </h2>
-        <p className="max-w-2xl mx-auto text-gray-800 leading-relaxed mb-8">
-          Dive into blog articles, resources, and exclusive behind-the-scenes insights curated for
-          passionate readers and seekers like you.
-        </p>
-        <Link
-          to="/blogs"
-          className="relative inline-block px-8 py-3 rounded-full bg-purple-600 text-white font-semibold text-lg tracking-wide uppercase transition-all duration-300 shadow-md hover:bg-pink-500 hover:shadow-xl hover:scale-105"
-        >
-          Explore Blogs
-        </Link>
-      </section>
+              Explore more Books
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };
