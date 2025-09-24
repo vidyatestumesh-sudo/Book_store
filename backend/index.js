@@ -25,18 +25,15 @@ const orderRoutes = require("./src/orders/order.route");
 const userRoutes = require("./src/users/user.route");
 const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
-const letterRoutes = require("./src/letters/letter.route"); // check filename consistency here
+const letterRoutes = require("./src/letters/letter.route");
 const contactRoutes = require("./src/contact/contact.route");
 const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
-const authorRoutes = require('./src/author/author.route');
-app.use('/api/author', authorRoutes);
+const authorRoutes = require("./src/author/author.route");
+const cornerRoutes = require("./src/home/corners/corner.routes"); 
 
 // Use routes
-app.use("/api/reader-thoughts", readerThoughtRoutes);
-app.use("/api/home/banner", bannerRoutes);
-app.use("/", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", userRoutes);
@@ -44,6 +41,11 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/letters", letterRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/reader-thoughts", readerThoughtRoutes);
+app.use("/api/home/banner", bannerRoutes);
+app.use("/api/home/corners", cornerRoutes); 
+app.use("/api/author", authorRoutes);
+app.use("/", authRoutes);
 
 // Connect to MongoDB and start server
 async function main() {

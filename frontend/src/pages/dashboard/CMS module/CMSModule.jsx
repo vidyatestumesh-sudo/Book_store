@@ -17,7 +17,7 @@ const CMSModule = () => {
     { name: "Manage Blogs", icon: <LibraryBooksIcon className="w-10 h-10 text-blue-600" />, route: "/dashboard/add-blogs" },
     { name: "Manage Books", icon: <MenuBookIcon className="w-10 h-10 text-yellow-600" />, route: "/dashboard/manage-books" },
     { name: "Manage Letters", icon: <MailOutlineIcon className="w-10 h-10 text-red-600" />, route: "/dashboard/manage-letters" },
-    { name: "Other CMS Content", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/other-cms" },
+    { name: "Home - corners", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/admin-corners" },
 
     // New Author Edit Module
     { name: "Edit Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
