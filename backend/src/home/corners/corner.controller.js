@@ -1,14 +1,12 @@
 const Corner = require('./corner.model');
 const { uploadToCloudinary } = require('../../config/cloudinary');
 
-// Uploads a single file buffer to Cloudinary, returns the URL
 async function handleImageUpload(file, folder = "corners") {
   if (!file || !file.buffer) return null;
   const result = await uploadToCloudinary(file.buffer, folder);
   return result.secure_url;
 }
 
-// GET /api/home/corners - fetch all corners sorted by id
 const getCorners = async (req, res) => {
   try {
     const corners = await Corner.find().sort({ id: 1 });

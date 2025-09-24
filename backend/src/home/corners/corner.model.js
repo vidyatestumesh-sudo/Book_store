@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 
-// Slide schema
 const SlideSchema = new mongoose.Schema({
   image: { type: String, required: true }, // URL of uploaded image
   text: { type: String, default: "" },
   author: { type: String, default: "" },
 }, { _id: false });
 
-// Corner schema
 const CornerSchema = new mongoose.Schema({
   id: { type: Number, required: true, unique: true },
   title: { type: String, required: true },

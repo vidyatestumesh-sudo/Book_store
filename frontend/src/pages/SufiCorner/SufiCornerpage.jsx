@@ -2,24 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 
-// Slides for Top Section (Sufi Corner)
-const SufiCorner = [
-  { image: "/the-sufi-corner-1.webp" },
-  { image: "https://langshott.org/wp-content/uploads/2024/09/Media.png" },
-  { image: "https://langshott.org/wp-content/uploads/2024/08/Media-4.jpeg" },
-  { image: "https://langshott.org/wp-content/uploads/2024/07/big-Add-a-subheading.png" },
-  { image: "https://langshott.org/wp-content/uploads/2024/01/161953452_1910493185772176_7479154913878273194_o.jpeg" },
-];
-
-// Slides for Bottom Section (Precepts of Spirituality)
-const preceptsSlides = [
-  { image: "https://langshott.org/wp-content/uploads/2025/02/1.png" },
-  { image: "https://langshott.org/wp-content/uploads/2025/02/2.png" },
-  { image: "https://langshott.org/wp-content/uploads/2025/02/3.png" },
-  { image: "https://langshott.org/wp-content/uploads/2025/02/4.png" },
-  { image: "https://langshott.org/wp-content/uploads/2025/02/5.png" },
-];
-
 // Custom hook to get window width
 const useWindowWidth = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -32,35 +14,69 @@ const useWindowWidth = () => {
 };
 
 const SufiCornerpage = () => {
+  const [corners, setCorners] = useState([]);
+  const [precepts, setPrecepts] = useState([]);
+  const [sufiSlides, setSufiSlides] = useState([]);
   const [posIndex, setPosIndex] = useState(0);
   const [precIndex, setPrecIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+
   const width = useWindowWidth();
 
-  // Top section handlers
+  useEffect(() => {
+    const fetchCorners = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/home/corners");
+        if (!res.ok) throw new Error("Failed to fetch corners");
+        const data = await res.json();
+
+        setCorners(data);
+        const sufiCorner = data.find(c => c.title === "The Sufi Corner");
+        if (sufiCorner && Array.isArray(sufiCorner.slides)) {
+          setSufiSlides(sufiCorner.slides);
+        } else {
+          setSufiSlides([]);
+        }
+      } catch (error) {
+        console.error("Fetch corners failed:", error);
+      }
+    };
+
+    const fetchPrecepts = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/precepts");
+        if (!res.ok) throw new Error("Failed to fetch precepts");
+        const data = await res.json();
+        setPrecepts(data);
+      } catch (error) {
+        console.error("Fetch precepts failed:", error);
+      }
+    };
+
+    fetchCorners();
+    fetchPrecepts();
+  }, []);
+
+  // Sufi Corner carousel logic
+  const sufiSlidesToShow = width < 1024 ? 1 : 2;
   const handlePosChange = (dir) => {
     setDirection(dir);
-    setPosIndex((prev) => (prev + dir + SufiCorner.length) % SufiCorner.length);
+    setPosIndex((prev) => (prev + dir + sufiSlides.length) % sufiSlides.length);
   };
-
-  // Precepts carousel handlers
-  const slidesToShow = width < 640 ? 1 : width < 1024 ? 2 : 3;
-
-  const handlePrecChange = (dir) => {
-    setDirection(dir);
-    setPrecIndex((prev) => (prev + dir + preceptsSlides.length) % preceptsSlides.length);
-  };
-
-  const sufiSlidesToShow = width < 1024 ? 1 : 2; // 1 for mobile/tablet, 2 for desktop
-
   const getPosSlides = () => {
     const slides = [];
     for (let i = 0; i < sufiSlidesToShow; i++) {
-      slides.push(SufiCorner[(posIndex + i) % SufiCorner.length]);
+      slides.push(sufiSlides[(posIndex + i) % sufiSlides.length]);
     }
     return slides;
   };
 
+  // Precepts carousel logic
+  const slidesToShow = width < 640 ? 1 : width < 1024 ? 2 : 3;
+  const handlePrecChange = (dir) => {
+    setDirection(dir);
+    setPrecIndex((prev) => (prev + dir + precepts.length) % precepts.length);
+  };
 
   // Animation variants for Sufi Corner
   const slideVariants = {
@@ -80,7 +96,6 @@ const SufiCornerpage = () => {
       scale: 0.8,
     }),
   };
-
 
   return (
     <div className="container">
@@ -123,6 +138,7 @@ const SufiCornerpage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 justify-center items-start w-full">
             {getPosSlides().map((slide, idx) => {
+              if (!slide || !slide.image) return null;
               const isLeft = idx === 0;
               const cardBg = isLeft ? "#bc6430" : "#8c2f24";
               const hangerColor = isLeft ? "#8c2f24" : "#bc6430";
@@ -164,7 +180,6 @@ const SufiCornerpage = () => {
             })}
           </div>
 
-
           <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black text-[16px] sm:text-[18px]">
             <button
               onClick={() => handlePosChange(-1)}
@@ -179,14 +194,14 @@ const SufiCornerpage = () => {
               <FiArrowRight size={18} />
             </button>
             <span className="text-gray-700">
-              {String(posIndex + 1).padStart(2, "0")} / {String(SufiCorner.length).padStart(2, "0")}
+              {String(posIndex + 1).padStart(2, "0")} / {String(sufiSlides.length).padStart(2, "0")}
             </span>
           </div>
         </section>
 
         {/* ===================== SECTION 2 : PRECEPTS ===================== */}
-        <section className="py-8 w-full bg-white">
-          <div className="relative inline-block mb-6">
+        <section className="py-16 w-full">
+          <div className="relative inline-block mb-8">
             <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-4">
               Precepts of Spirituality
             </h2>
@@ -197,23 +212,23 @@ const SufiCornerpage = () => {
             />
           </div>
 
-          {/* Precepts Slider */}
           <div className="overflow-hidden w-full">
             <motion.div
               className="flex gap-6 sm:gap-8"
               animate={{ x: -precIndex * (100 / slidesToShow) + "%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              {[...preceptsSlides, ...preceptsSlides].map((slide, idx) => (
+              {[...precepts, ...precepts].map((slide, idx) => (
                 <div
                   key={idx}
                   className="rounded-lg shadow-md overflow-hidden relative w-full h-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] flex-shrink-0"
                   style={{ width: `${93 / slidesToShow}%` }}
                 >
                   <img
-                    src={slide.image}
+                    src={slide.imageUrl}
                     alt="Precept"
                     className="w-full h-full object-cover absolute inset-0"
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -234,7 +249,7 @@ const SufiCornerpage = () => {
               <FiArrowRight size={18} />
             </button>
             <span className="text-gray-700">
-              {String(precIndex + 1).padStart(2, "0")} / {String(preceptsSlides.length).padStart(2, "0")}
+              {String(precIndex + 1).padStart(2, "0")} / {String(precepts.length).padStart(2, "0")}
             </span>
           </div>
         </section>

@@ -32,7 +32,9 @@ const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
 const authorRoutes = require("./src/author/author.route");
 const cornerRoutes = require("./src/home/corners/corner.routes"); 
+const preceptsRoutes = require("./src/precepts/precepts.routes");
 
+app.use("/api/precepts", preceptsRoutes);
 // Use routes
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
