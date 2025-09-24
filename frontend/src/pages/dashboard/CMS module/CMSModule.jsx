@@ -14,13 +14,13 @@ const CMSModule = () => {
   const modules = [
     { name: "Home - Banner", icon: <ImageIcon className="w-10 h-10 text-purple-600" />, route: "/dashboard/admin-banner" },
     { name: "Home - Reader Thoughts", icon: <DescriptionIcon className="w-10 h-10 text-green-600" />, route: "/dashboard/reader-thoughts" },
+    { name: "Home - corners", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/admin-corners" },
+
     { name: "Manage Blogs", icon: <LibraryBooksIcon className="w-10 h-10 text-blue-600" />, route: "/dashboard/add-blogs" },
     { name: "Manage Books", icon: <MenuBookIcon className="w-10 h-10 text-yellow-600" />, route: "/dashboard/manage-books" },
     { name: "Manage Letters", icon: <MailOutlineIcon className="w-10 h-10 text-red-600" />, route: "/dashboard/manage-letters" },
-    { name: "Home - corners", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/admin-corners" },
-
-    // New Author Edit Module
-    { name: "Edit Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
+    
+    { name: "Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
     { name: "Sufi corners", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/admin-sufi-corner" },
 
   ];

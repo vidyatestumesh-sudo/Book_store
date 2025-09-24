@@ -47,18 +47,18 @@ const AboutAuthorPage = () => {
           </nav>
         </div>
 
-        <section className="flex flex-col gap-5 lg:flex-row items-center">
+        <section className="flex flex-col lg:flex-row gap-0 lg:gap-5 items-center">
           {/* Left Image Section */}
           <div className="flex justify-center lg:justify-start flex-shrink-0 w-full lg:w-1/2 mt-5">
             <img
               src="/ak-i.webp"
               alt="Author"
-              className="w-full max-w-[500px] lg:max-w-[550px] object-contain rounded-lg select-none transition duration-300"
+              className="w-full max-w-[500px] lg:max-w-[550px] object-contain rounded-lg select-none transition duration-300 md:px-5"
             />
           </div>
 
           {/* Right Text Section */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-1/2">
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-1/2 md:px-5">
             {/* Title Section */}
             <div className="relative inline-block">
               <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
