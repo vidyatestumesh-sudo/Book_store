@@ -126,7 +126,7 @@ const BlogDetailPage = () => {
         </div>
 
         {/* Blog Content */}
-        <div className="max-w-8xl mx-auto px-0 py-8 grid gap-10 lg:grid-cols-1 xl:grid-cols-4">
+        <div className="max-w-8xl mx-auto px-0 py-6 grid gap-10 lg:grid-cols-1 xl:grid-cols-4">
           <div className="col-span-1 xl:col-span-3">
             <p className="flex items-center gap-2 text-gray-400 text-md font-regular mt-0 mb-2">
               <CalendarDays className="w-5 h-5" />
@@ -168,10 +168,10 @@ const BlogDetailPage = () => {
 
                     <div className="flex items-center justify-center gap-6 mt-auto relative z-10">
                       <button onClick={handlePrev} className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100">
-                        <ArrowLeft size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500"/>
+                        <ArrowLeft size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500" />
                       </button>
                       <button onClick={handleNext} className="w-8 h-8 flex items-center justify-center border border-black rounded-full group hover:bg-gray-100">
-                        <ArrowRight size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500"/>
+                        <ArrowRight size={20} strokeWidth={2} className="text-black transition-colors duration-300 group-hover:text-red-500" />
                       </button>
                     </div>
                   </div>
@@ -183,10 +183,17 @@ const BlogDetailPage = () => {
 
         {/* Latest Blogs */}
         <div className="max-w-8xl mx-auto py-0">
-          <h2 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-snug mb-4 mt-2">
-            Latest Blogs
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="relative inline-block">
+            <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
+              Latest Blogs
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-1"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10 gap-10">
             {currentBlogs.map((blog) => (
               <div
                 key={blog._id}
@@ -230,10 +237,10 @@ const BlogDetailPage = () => {
                       to={`/blogs/${blog._id}`}
                       className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
                     >
-                      <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] font-light no-underline">
+                      <span className="inline-flex text-[#993333] items-center gap-1 text-[16px] sm:text-[18px] font-regular no-underline">
                         Read More
                       </span>
-                      <span className="text-black transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                      <span className="text-[#993333] transform transition-transform duration-200 group-hover:translate-x-[5px]">
                         <ArrowRight size={20} strokeWidth={2} />
                       </span>
                     </Link>
@@ -258,8 +265,8 @@ const BlogDetailPage = () => {
                 key={num}
                 onClick={() => setCurrentPage(num)}
                 className={`w-8 h-8 flex items-center justify-center rounded-full ${currentPage === num
-                    ? "bg-[#993333] text-white"
-                    : "border-transparent text-black hover:border-black"
+                  ? "bg-[#993333] text-white"
+                  : "border-transparent text-black hover:border-black"
                   }`}
               >
                 {num}

@@ -84,7 +84,7 @@ const BlogsPage = () => {
             <p className="text-center text-gray-500">No blogs found.</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
                 {currentBlogs.map((blog) => (
                   <div
                     key={blog._id}
@@ -135,10 +135,10 @@ const BlogsPage = () => {
                           to={`/blogs/${blog._id}`}
                           className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
                         >
-                          <span className="inline-flex items-center gap-1 text-black text-[16px] sm:text-[18px] font-light no-underline">
+                          <span className="inline-flex font-regular items-center gap-1 text-[#993333] text-[16px] sm:text-[18px] no-underline">
                             Read More
                           </span>
-                          <span className="text-black transform transition-transform duration-200 group-hover:translate-x-[5px]">
+                          <span className="text-[#993333] transform transition-transform duration-200 group-hover:translate-x-[5px]">
                             <ArrowRight size={20} strokeWidth={2} />
                           </span>
                         </Link>

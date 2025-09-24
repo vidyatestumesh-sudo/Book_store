@@ -99,7 +99,7 @@ const AboutAuthorPage = () => {
             />
           </div>
           {/* Blogs Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-4 max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-5 max-w-8xl mx-auto">
             {blogs.slice(0, 4).map((blog) => (
               <Link
                 key={blog._id}
@@ -151,7 +151,7 @@ const AboutAuthorPage = () => {
             ))}
           </div>
           {/* Explore Blogs Button */}
-          <div className="mt-12 flex justify-center">
+          <div className="mt-14 flex justify-center">
             <Link
               to="/blogs"
               className="px-3 py-2 no-underline rounded-full bg-[#983120] text-base hover:bg-[#7a241b] text-white font-medium text-base transition-all duration-300"
@@ -175,7 +175,7 @@ const AboutAuthorPage = () => {
           </div>
 
           {/* Books Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-2 max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-3 max-w-8xl mx-auto">
             {activeBooks.slice(0, 4).map((book) => (
               <div
                 key={book._id}
@@ -207,7 +207,7 @@ const AboutAuthorPage = () => {
             ))}
           </div>
           {/* Explore Books Button */}
-          <div className="mt-8 xl:mb-4 flex justify-center">
+          <div className="mt-10 xl:mb-4 flex justify-center">
             <Link
               to="/publications"
               className="px-3 py-2 no-underline rounded-full bg-[#983120] text-white font-medium text-base hover:bg-[#7a241b] hover:shadow-lg transition-all duration-300"

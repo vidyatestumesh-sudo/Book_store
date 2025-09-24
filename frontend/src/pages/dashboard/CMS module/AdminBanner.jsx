@@ -246,7 +246,7 @@ useEffect(() => {
           <button
             type="submit"
             disabled={loading}
-            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
           >
             {loading ? (

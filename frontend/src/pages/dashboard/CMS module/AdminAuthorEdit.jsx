@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 
-// Helper to set nested value based on dot notation (e.g. "aboutAuthor.leftText.heading")
+// Helper to set nested value based on dot notation
 const setNestedValue = (obj, path, value) => {
   const keys = path.split(".");
   const lastKey = keys.pop();
@@ -14,9 +14,6 @@ const setNestedValue = (obj, path, value) => {
 
 const AdminAuthorEdit = () => {
   const [form, setForm] = useState(null);
-
-  const [motifFile, setMotifFile] = useState(null);
-  const [motifPreview, setMotifPreview] = useState(null);
 
   const [rightFile, setRightFile] = useState(null);
   const [rightPreview, setRightPreview] = useState(null);
@@ -31,15 +28,10 @@ const AdminAuthorEdit = () => {
     const fetchData = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/author");
-        if (!res.ok) {
-          console.warn("GET /api/author returned", res.status);
-          return;
-        }
+        if (!res.ok) return;
         const data = await res.json();
         setForm(data);
 
-        if (data.sectionHeading?.motifImage?.src)
-          setMotifPreview(data.sectionHeading.motifImage.src);
         if (data.aboutAuthor?.rightImage?.src)
           setRightPreview(data.aboutAuthor.rightImage.src);
         if (data.workingCreed?.leftImage?.src)
@@ -60,22 +52,49 @@ const AdminAuthorEdit = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    switch (type) {
-      case "motif":
-        setMotifFile(file);
-        setMotifPreview(URL.createObjectURL(file));
-        break;
-      case "right":
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = () => {
+      let requiredWidth, requiredHeight;
+
+      if (type === "right") {
+        requiredWidth = 495;
+        requiredHeight = 345;
+      } else if (type === "left") {
+        requiredWidth = 640;
+        requiredHeight = 275;
+      }
+
+      const withinRange =
+        Math.abs(img.width - requiredWidth) <= 25 &&
+        Math.abs(img.height - requiredHeight) <= 25;
+
+      if (!withinRange) {
+        Swal.fire({
+          icon: "warning",
+          title: "Image Size Warning",
+          html: `
+            <p>Recommended: <b>${requiredWidth} × ${requiredHeight}px</b></p>
+            <p>You uploaded: <b>${img.width} × ${img.height}px</b></p>
+            <p>Do you want to use this image anyway?</p>
+          `,
+          showCancelButton: true,
+          confirmButtonText: "Yes, use it",
+          cancelButtonText: "No, re-upload",
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+        });
+      }
+
+      if (type === "right") {
         setRightFile(file);
         setRightPreview(URL.createObjectURL(file));
-        break;
-      case "left":
+      } else if (type === "left") {
         setLeftFile(file);
         setLeftPreview(URL.createObjectURL(file));
-        break;
-      default:
-        break;
-    }
+      }
+    };
   };
 
   const handleSubmit = async (e) => {
@@ -85,8 +104,6 @@ const AdminAuthorEdit = () => {
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(form));
-
-      if (motifFile) formData.append("motifImage", motifFile);
       if (rightFile) formData.append("rightImage", rightFile);
       if (leftFile) formData.append("leftImage", leftFile);
 
@@ -111,12 +128,13 @@ const AdminAuthorEdit = () => {
   return (
     <div className="container mt-[100px]">
       <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+        {/* Back Button & Header */}
         <div className="mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105"
+            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-3 py-1 transition-transform transform hover:scale-105 mb-4 md:mb-0"
           >
-            <ArrowBackIcon className="w-3 h-3" />
+            <ArrowBackIcon className="w-4 h-4 mr-1" />
             Back
           </button>
 
@@ -125,9 +143,7 @@ const AdminAuthorEdit = () => {
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* --- TEXT CONTENT FIELDS (TOP) --- */}
-
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Section Heading */}
           <div>
             <label className="block mb-1 font-medium">Section Heading</label>
@@ -192,113 +208,90 @@ const AdminAuthorEdit = () => {
             ))}
           </div>
 
-          {/* Working Creed Link */}
-          {/* <div>
-            <label className="block mb-1 font-medium">Working Creed Link</label>
-            <input
-              type="text"
-              name="workingCreed.rightText.link.to"
-              value={form.workingCreed.rightText.link.to}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-            />
-          </div> */}
+          {/* IMAGE UPLOADS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 mt-6 justify-items-center items-center">
+            {/* Right Image */}
+            <div>
+              <label className="block mb-1 font-medium">Right Image (About Author)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, "right")}
+                className="block"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended size: <span className="font-semibold">495 × 345 px</span>
+              </p>
+              {rightPreview ? (
+                <img
+                  src={rightPreview}
+                  alt="Right Image Preview"
+                  className="w-[165px] h-[115px] mt-2 object-contain border rounded"
+                />
+              ) : (
+                <p className="mt-2 text-gray-500 italic text-center w-[165px]">No image selected</p>
+              )}
+            </div>
 
-{/* --- IMAGE UPLOAD FIELDS IN A SINGLE HORIZONTAL LINE --- */}
-<div className="flex gap-8 mt-8 justify-center">
-  {/* Motif Image */}
-  {/* <div className="flex flex-col items-center">
-    <label className="block mb-1 font-medium text-center">Motif Image</label>
-    <input
-      id="motifFileInput"
-      type="file"
-      accept="image/*"
-      onChange={(e) => handleFileChange(e, "motif")}
-      className="hidden"
-    />
-    <label
-      htmlFor="motifFileInput"
-      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-    >
-      Choose Image
-    </label>
-    {motifPreview ? (
-      <img
-        src={motifPreview}
-        alt="Motif Preview"
-        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
-      />
-    ) : (
-      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
-    )}
-  </div> */}
+            {/* Left Image */}
+            <div>
+              <label className="block mb-1 font-medium">Left Image (Working Creed)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, "left")}
+                className="block"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Recommended size: <span className="font-semibold">640 × 275 px</span>
+              </p>
+              {leftPreview ? (
+                <img
+                  src={leftPreview}
+                  alt="Left Image Preview"
+                  className="w-[185px] h-[80px] mt-2 object-contain border rounded"
+                />
+              ) : (
+                <p className="mt-2 text-gray-500 italic text-center w-[185px]">No image selected</p>
+              )}
+            </div>
+          </div>
 
-  {/* Right Image */}
-  <div className="flex flex-col items-center">
-    <label className="block mb-1 font-medium text-center">Right Image (About Author)</label>
-    <input
-      id="rightFileInput"
-      type="file"
-      accept="image/*"
-      onChange={(e) => handleFileChange(e, "right")}
-      className="hidden"
-    />
-    <label
-      htmlFor="rightFileInput"
-      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-    >
-      Choose Image
-    </label>
-    {rightPreview ? (
-      <img
-        src={rightPreview}
-        alt="Right Image Preview"
-        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
-      />
-    ) : (
-      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
-    )}
-  </div>
-
-  {/* Left Image */}
-  <div className="flex flex-col items-center">
-    <label className="block mb-1 font-medium text-center">Left Image (Working Creed)</label>
-    <input
-      id="leftFileInput"
-      type="file"
-      accept="image/*"
-      onChange={(e) => handleFileChange(e, "left")}
-      className="hidden"
-    />
-    <label
-      htmlFor="leftFileInput"
-      className="inline-block cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-    >
-      Choose Image
-    </label>
-    {leftPreview ? (
-      <img
-        src={leftPreview}
-        alt="Left Image Preview"
-        className="w-[150px] h-[150px] mt-2 object-contain border rounded"
-      />
-    ) : (
-      <p className="mt-2 text-gray-500 italic text-center w-[150px]">No image selected</p>
-    )}
-  </div>
-</div>
-
-
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-regular px-6 rounded-lg flex items-center justify-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-            {loading ? "Updating..." : "Update Author Content"}
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Updating...
+              </>
+            ) : (
+              "Update Content"
+            )}
           </button>
+
         </form>
       </div>
     </div>

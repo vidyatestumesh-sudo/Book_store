@@ -38,7 +38,7 @@ const Publications = () => {
                 </div>
 
                 {/* Books Grid */}
-                <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-4">
+                <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-10">
                     {activeBooks.map((book, index) => (
                         <div
                             key={index}
