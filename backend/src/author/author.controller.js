@@ -1,25 +1,30 @@
-// backend/author/author.controller.js
 const Author = require('./author.model');
 
-// Get author content
-exports.getAuthorContent = async (req, res) => {
+// Save or update the singleton author document
+async function upsertAuthorContent(content) {
   try {
-    const author = await Author.findOne();
-    if (!author) {
-      return res.status(404).json({ message: "Author content not found" });
-    }
-    res.json(author);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    const singletonId = 'singleton_author';
 
-// Update or create author content
-exports.updateAuthorContent = async (req, res) => {
-  try {
-    const updatedAuthor = await Author.findOneAndUpdate({}, req.body, { new: true, upsert: true, runValidators: true });
-    res.json(updatedAuthor);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const updatedDoc = await Author.findOneAndUpdate(
+      { _id: singletonId },  // Query by fixed _id
+      { ...content, _id: singletonId }, // Ensure _id is set on update
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    return updatedDoc;
+  } catch (error) {
+    console.error('Error saving author content:', error);
+    throw error;
   }
+}
+
+// Retrieve the singleton author document
+async function getAuthorContent() {
+  const singletonId = 'singleton_author';
+  return await Author.findById(singletonId);
+}
+
+module.exports = {
+  upsertAuthorContent,
+  getAuthorContent,
 };

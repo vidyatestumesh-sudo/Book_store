@@ -1,215 +1,337 @@
 import React, { useEffect, useState } from "react";
-import axiosClient from "../../../api/axiosClient";
+import Swal from "sweetalert2";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
+
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const AdminAuthorEdit = () => {
-  const [content, setContent] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMsg, setSuccessMsg] = useState(null);
+  const [authorData, setAuthorData] = useState(null);
+  const [form, setForm] = useState({
+    sectionHeading: { text: "" },
+    aboutAuthor: {
+      leftText: { heading: "", paragraphs: [{ text: "" }] },
+      rightImage: { src: "", alt: "" },
+    },
+    workingCreed: {
+      leftImage: { src: "", alt: "" },
+      rightText: {
+        heading: "",
+        paragraphs: [{ text: "" }],
+        link: { text: "", to: "" },
+      },
+    },
+  });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-useEffect(() => {
-  axiosClient.get('/api/author')
-    .then(res => {
-      setContent(res.data);
-      setLoading(false);
-    })
-    .catch(err => {
-      setError('Failed to load author content');
-      setLoading(false);
-    });
-}, []);
-
-
-  if (loading) return <p>Loading...</p>;
-  if (!content) return <p>No content found.</p>;
-
-  // Handle input change for nested fields
-  const handleChange = (path, value) => {
-    // Helper function to update nested state by path string, e.g., 'aboutAuthor.leftText.heading'
-    setContent(prev => {
-      const updated = { ...prev };
-      const keys = path.split(".");
-      let cur = updated;
-      for (let i = 0; i < keys.length - 1; i++) {
-        cur[keys[i]] = { ...cur[keys[i]] };
-        cur = cur[keys[i]];
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${baseUrl}/api/author`);
+        if (!res.ok) throw new Error("Failed to fetch author data");
+        const data = await res.json();
+        setAuthorData(data);
+        setForm(data);
+      } catch (err) {
+        Swal.fire("Error", err.message || "Failed to fetch author data", "error");
+      } finally {
+        setLoading(false);
       }
-      cur[keys[keys.length - 1]] = value;
-      return updated;
-    });
+    };
+
+    fetchAuthor();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // For nested properties, you may need a more complex handler or libraries like lodash set
+    // For simplicity, this example only updates shallow properties
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // Handle paragraph text change
-  const handleParagraphChange = (sectionPath, index, value) => {
-    setContent(prev => {
-      const updated = { ...prev };
-      const keys = sectionPath.split(".");
-      let cur = updated;
-      for (let i = 0; i < keys.length; i++) {
-        cur[keys[i]] = Array.isArray(cur[keys[i]]) ? [...cur[keys[i]]] : { ...cur[keys[i]] };
-        cur = cur[keys[i]];
-      }
-      cur[index] = { ...cur[index], text: value };
-      return updated;
-    });
+  // Example for nested fields update (you will need to extend this for your nested form)
+  const handleNestedChange = (section, key, value) => {
+    setForm((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key]: value,
+      },
+    }));
   };
 
-  // Save updated content to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    setError(null);
-    setSuccessMsg(null);
+    setLoading(true);
+
     try {
-      await axiosClient.put("/author", content);
-      setSuccessMsg("Content updated successfully!");
+      const res = await fetch(`${baseUrl}/api/author`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || "Failed to update author data");
+      }
+
+      const result = await res.json();
+      setAuthorData(result);
+      Swal.fire("Success", "Author content updated successfully", "success");
     } catch (err) {
-      setError("Failed to save content.");
+      Swal.fire("Error", err.message || "Failed to update author data", "error");
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 font-Figtree space-y-6">
-      <h1 className="text-3xl font-bold mb-6">Admin - Edit Author Content</h1>
+  if (loading && !authorData) return <div>Loading author content...</div>;
+  if (!authorData) return <div>No author content found.</div>;
 
-      {error && <p className="text-red-600">{error}</p>}
-      {successMsg && <p className="text-green-600">{successMsg}</p>}
+  return (
+    <div className="container mt-[100px] max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center mb-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded px-3 py-1 shadow transition transform hover:scale-105"
+      >
+        <ArrowBackIcon className="w-4 h-4 mr-1" />
+        Back
+      </button>
+
+      <h2 className="text-2xl font-bold mb-6 text-center">Edit Author Content</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-
         {/* Section Heading */}
-        <fieldset>
-          <legend className="font-semibold mb-2">Section Heading</legend>
+        <div>
+          <label className="block font-medium mb-1">Section Heading</label>
           <input
             type="text"
-            className="w-full p-2 border rounded"
-            value={content.sectionHeading?.text || ""}
-            onChange={(e) => handleChange("sectionHeading.text", e.target.value)}
-            placeholder="Heading Text"
+            name="sectionHeadingText"
+            value={form.sectionHeading.text || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                sectionHeading: { ...prev.sectionHeading, text: e.target.value },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
-          <input
-            type="text"
-            className="w-full p-2 border rounded mt-2"
-            value={content.sectionHeading?.motifImage?.src || ""}
-            onChange={(e) => handleChange("sectionHeading.motifImage.src", e.target.value)}
-            placeholder="Motif Image URL"
-          />
-          <input
-            type="text"
-            className="w-full p-2 border rounded mt-2"
-            value={content.sectionHeading?.motifImage?.alt || ""}
-            onChange={(e) => handleChange("sectionHeading.motifImage.alt", e.target.value)}
-            placeholder="Motif Image Alt Text"
-          />
-        </fieldset>
+        </div>
 
-        {/* About Author - Left Text */}
-        <fieldset>
-          <legend className="font-semibold mb-2">About Author - Left Text</legend>
+        {/* About Author - Left Text Heading */}
+        <div>
+          <label className="block font-medium mb-1">About Author - Left Text Heading</label>
           <input
             type="text"
-            className="w-full p-2 border rounded mb-2"
-            value={content.aboutAuthor?.leftText?.heading || ""}
-            onChange={(e) => handleChange("aboutAuthor.leftText.heading", e.target.value)}
-            placeholder="Left Text Heading"
+            value={form.aboutAuthor.leftText.heading || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                aboutAuthor: {
+                  ...prev.aboutAuthor,
+                  leftText: { ...prev.aboutAuthor.leftText, heading: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
-          {content.aboutAuthor?.leftText?.paragraphs?.map((para, idx) => (
-            <textarea
-              key={idx}
-              rows={3}
-              className="w-full p-2 border rounded mb-2"
-              value={para.text}
-              onChange={(e) => handleParagraphChange("aboutAuthor.leftText.paragraphs", idx, e.target.value)}
-              placeholder={`Paragraph ${idx + 1}`}
-            />
-          ))}
-        </fieldset>
+        </div>
 
-        {/* About Author - Right Image */}
-        <fieldset>
-          <legend className="font-semibold mb-2">About Author - Right Image</legend>
-          <input
-            type="text"
-            className="w-full p-2 border rounded"
-            value={content.aboutAuthor?.rightImage?.src || ""}
-            onChange={(e) => handleChange("aboutAuthor.rightImage.src", e.target.value)}
-            placeholder="Right Image URL"
+        {/* About Author - Left Text Paragraph (first one) */}
+        <div>
+          <label className="block font-medium mb-1">About Author - Paragraph</label>
+          <textarea
+            rows={4}
+            value={(form.aboutAuthor.leftText.paragraphs?.[0]?.text) || ""}
+            onChange={(e) => {
+              const newParagraphs = [...(form.aboutAuthor.leftText.paragraphs || [])];
+              newParagraphs[0] = { text: e.target.value };
+              setForm((prev) => ({
+                ...prev,
+                aboutAuthor: {
+                  ...prev.aboutAuthor,
+                  leftText: { ...prev.aboutAuthor.leftText, paragraphs: newParagraphs },
+                },
+              }));
+            }}
+            className="w-full border rounded px-3 py-2"
           />
-          <input
-            type="text"
-            className="w-full p-2 border rounded mt-2"
-            value={content.aboutAuthor?.rightImage?.alt || ""}
-            onChange={(e) => handleChange("aboutAuthor.rightImage.alt", e.target.value)}
-            placeholder="Right Image Alt Text"
-          />
-        </fieldset>
+        </div>
 
-        {/* Working Creed - Left Image */}
-        <fieldset>
-          <legend className="font-semibold mb-2">Working Creed - Left Image</legend>
+        {/* About Author - Right Image URL */}
+        <div>
+          <label className="block font-medium mb-1">About Author - Right Image URL</label>
           <input
             type="text"
-            className="w-full p-2 border rounded"
-            value={content.workingCreed?.leftImage?.src || ""}
-            onChange={(e) => handleChange("workingCreed.leftImage.src", e.target.value)}
-            placeholder="Left Image URL"
+            value={form.aboutAuthor.rightImage.src || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                aboutAuthor: {
+                  ...prev.aboutAuthor,
+                  rightImage: { ...prev.aboutAuthor.rightImage, src: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
-          <input
-            type="text"
-            className="w-full p-2 border rounded mt-2"
-            value={content.workingCreed?.leftImage?.alt || ""}
-            onChange={(e) => handleChange("workingCreed.leftImage.alt", e.target.value)}
-            placeholder="Left Image Alt Text"
-          />
-        </fieldset>
+        </div>
 
-        {/* Working Creed - Right Text */}
-        <fieldset>
-          <legend className="font-semibold mb-2">Working Creed - Right Text</legend>
+        {/* About Author - Right Image Alt */}
+        <div>
+          <label className="block font-medium mb-1">About Author - Right Image Alt</label>
           <input
             type="text"
-            className="w-full p-2 border rounded mb-2"
-            value={content.workingCreed?.rightText?.heading || ""}
-            onChange={(e) => handleChange("workingCreed.rightText.heading", e.target.value)}
-            placeholder="Right Text Heading"
+            value={form.aboutAuthor.rightImage.alt || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                aboutAuthor: {
+                  ...prev.aboutAuthor,
+                  rightImage: { ...prev.aboutAuthor.rightImage, alt: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
-          {content.workingCreed?.rightText?.paragraphs?.map((para, idx) => (
-            <textarea
-              key={idx}
-              rows={3}
-              className="w-full p-2 border rounded mb-2"
-              value={para.text}
-              onChange={(e) => handleParagraphChange("workingCreed.rightText.paragraphs", idx, e.target.value)}
-              placeholder={`Paragraph ${idx + 1}`}
-            />
-          ))}
+        </div>
 
-          {/* Link */}
+        {/* Working Creed - Left Image URL */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Left Image URL</label>
           <input
             type="text"
-            className="w-full p-2 border rounded mb-2"
-            value={content.workingCreed?.rightText?.link?.text || ""}
-            onChange={(e) => handleChange("workingCreed.rightText.link.text", e.target.value)}
-            placeholder="Link Text"
+            value={form.workingCreed.leftImage.src || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  leftImage: { ...prev.workingCreed.leftImage, src: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
+        </div>
+
+        {/* Working Creed - Left Image Alt */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Left Image Alt</label>
           <input
             type="text"
-            className="w-full p-2 border rounded"
-            value={content.workingCreed?.rightText?.link?.to || ""}
-            onChange={(e) => handleChange("workingCreed.rightText.link.to", e.target.value)}
-            placeholder="Link URL"
+            value={form.workingCreed.leftImage.alt || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  leftImage: { ...prev.workingCreed.leftImage, alt: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
           />
-        </fieldset>
+        </div>
+
+        {/* Working Creed - Right Text Heading */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Right Text Heading</label>
+          <input
+            type="text"
+            value={form.workingCreed.rightText.heading || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  rightText: { ...prev.workingCreed.rightText, heading: e.target.value },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        {/* Working Creed - Right Text Paragraph (first one) */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Paragraph</label>
+          <textarea
+            rows={4}
+            value={(form.workingCreed.rightText.paragraphs?.[0]?.text) || ""}
+            onChange={(e) => {
+              const newParagraphs = [...(form.workingCreed.rightText.paragraphs || [])];
+              newParagraphs[0] = { text: e.target.value };
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  rightText: { ...prev.workingCreed.rightText, paragraphs: newParagraphs },
+                },
+              }));
+            }}
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        {/* Working Creed - Right Text Link Text */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Link Text</label>
+          <input
+            type="text"
+            value={form.workingCreed.rightText.link?.text || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  rightText: {
+                    ...prev.workingCreed.rightText,
+                    link: { ...prev.workingCreed.rightText.link, text: e.target.value },
+                  },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        {/* Working Creed - Right Text Link To */}
+        <div>
+          <label className="block font-medium mb-1">Working Creed - Link To</label>
+          <input
+            type="text"
+            value={form.workingCreed.rightText.link?.to || ""}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                workingCreed: {
+                  ...prev.workingCreed,
+                  rightText: {
+                    ...prev.workingCreed.rightText,
+                    link: { ...prev.workingCreed.rightText.link, to: e.target.value },
+                  },
+                },
+              }))
+            }
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
 
         <button
           type="submit"
-          className="bg-[#8c2f24] text-white px-6 py-2 rounded hover:bg-[#7a281f] transition-colors"
-          disabled={saving}
+          disabled={loading}
+          className={`w-full py-3 mt-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          {saving ? "Saving..." : "Save Changes"}
+          {loading ? "Saving..." : "Update Author Content"}
         </button>
       </form>
     </div>
