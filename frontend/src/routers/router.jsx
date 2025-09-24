@@ -72,6 +72,8 @@ const router = createBrowserRouter([
       { path: "/letters", element: <LetterFromLangshott /> },
       { path: "/sufi-corner", element: <SufiCornerpage /> },
       { path: "/foundation", element: <Foundation />},
+      { path: "/admin-sufi-corner", element: <AdminSufiCorner />},
+
     ],
   },
   { path: "/admin", element: <AdminLogin /> },
