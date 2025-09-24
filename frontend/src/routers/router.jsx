@@ -31,6 +31,7 @@ import AdminReaderThoughts from "../pages/dashboard/CMS module/AdminReaderThough
 import AdminAuthorEdit from "../pages/dashboard/CMS module/AdminAuthorEdit";
 import InspirationBoard from "../pages/blogs/inspirationboard/inspirationboard";
 import AdminCorners from "../pages/dashboard/CMS module/AdminCorners";
+import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <BlogDetailPage /> },
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
+      { path: "/sufi-corner", element: <SufiCornerpage /> },
     ],
   },
   { path: "/admin", element: <AdminLogin /> },

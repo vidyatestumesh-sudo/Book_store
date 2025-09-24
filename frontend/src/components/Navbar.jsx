@@ -248,13 +248,13 @@ const Navbar = () => {
                         className="navbar-submenu-item">
                         Inspiration Board
                       </MenuItem>
-                      <MenuItem
+                      {/* <MenuItem
                         component={Link}
                         to="/positivity-corner"
                         onClick={handleHamburgerClose}
                         className="navbar-submenu-item">
                         Positivity Corner
-                      </MenuItem>
+                      </MenuItem> */}
                       <MenuItem
                         component={Link}
                         to="/sufi-corner"
@@ -262,13 +262,13 @@ const Navbar = () => {
                         className="navbar-submenu-item">
                         Sufi Corner
                       </MenuItem>
-                      <MenuItem
+                      {/* <MenuItem
                         component={Link}
                         to="/events"
                         onClick={handleHamburgerClose}
                         className="navbar-submenu-item">
                         Events
-                      </MenuItem>
+                      </MenuItem> */}
                     </>
                   )}
 
@@ -334,13 +334,13 @@ const Navbar = () => {
                       className="navbar-menu-item">
                       Inspiration Board
                     </MenuItem>
-                    <MenuItem
+                    {/* <MenuItem
                       component={Link}
                       to="/positivity-corner"
                       onClick={handleBlogsDesktopClose}
                       className="navbar-menu-item">
                       Positivity Corner
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem
                       component={Link}
                       to="/sufi-corner"
@@ -348,13 +348,13 @@ const Navbar = () => {
                       className="navbar-menu-item">
                       Sufi Corner
                     </MenuItem>
-                    <MenuItem
+                    {/* <MenuItem
                       component={Link}
                       to="/events"
                       onClick={handleBlogsDesktopClose}
                       className="navbar-menu-item">
                       Events
-                    </MenuItem>
+                    </MenuItem> */}
                   </Menu>
                 </li>
                 <li>
