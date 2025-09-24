@@ -415,11 +415,43 @@ const AdminSufiCorner = () => {
                 </div>
 
                 <button
-                  onClick={() => removeSlide(slideIndex)}
-                  className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1 mt-2"
-                >
-                  Remove Slide
-                </button>
+  onClick={async () => {
+    try {
+      const confirm = await Swal.fire({
+        title: "Are you sure?",
+        text: "This will delete the precept permanently.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (confirm.isConfirmed) {
+        const res = await fetch(
+          `http://localhost:5000/api/precepts/${precept._id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!res.ok) {
+          const error = await res.json();
+          throw new Error(error.message || "Delete failed");
+        }
+
+        setPrecepts((prev) => prev.filter((p) => p._id !== precept._id));
+
+        Swal.fire("Deleted!", "Precept has been deleted.", "success");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", err.message || "Failed to delete precept", "error");
+    }
+  }}
+  className="text-xs text-red-600 hover:underline mt-2 block text-center"
+>
+  Delete
+</button>
+
               </div>
             ))}
 

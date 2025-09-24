@@ -8,35 +8,54 @@ cloudinary.config({
 });
 
 /**
- * Uploads an image buffer to Cloudinary.
+ * Uploads an image buffer to Cloudinary using upload_stream.
  *
- * @param {Buffer} buffer - The image buffer (from multer memoryStorage).
- * @param {string} [folderName="uploads"] - The target folder in Cloudinary.
- * @returns {Promise<Object>} The upload result (contains secure_url, public_id, etc).
+ * @param {Buffer} buffer - The image buffer from multer's memoryStorage.
+ * @param {string} [folder="uploads"] - Folder name in Cloudinary (default: "uploads").
+ * @param {string} [publicId] - Optional custom public_id for the file.
+ * @returns {Promise<{
+ *   secure_url: string;
+ *   public_id: string;
+ *   resource_type: string;
+ *   format: string;
+ *   bytes: number;
+ *   created_at: string;
+ * }>} Cloudinary upload result
  */
-const uploadToCloudinary = (buffer, folderName = "uploads") => {
+const uploadToCloudinary = (buffer, folder = "uploads", publicId) => {
   return new Promise((resolve, reject) => {
     if (!buffer) {
-      return reject(new Error("No buffer provided to upload"));
+      return reject(new Error("No image buffer provided for upload."));
     }
 
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: folderName,
-        resource_type: "auto", // Auto-detects file type
-      },
-      (error, result) => {
-        if (error) {
-          console.error("Cloudinary upload error:", error);
-          return reject(error);
-        }
+    const options = {
+      folder,
+      resource_type: "auto",
+    };
 
-        resolve(result);
+    if (publicId) {
+      options.public_id = publicId;
+    }
+
+    const stream = cloudinary.uploader.upload_stream(options, (err, result) => {
+      if (err) {
+        console.error("❌ Cloudinary upload failed:", err);
+        return reject(new Error("Cloudinary upload error: " + err.message));
       }
-    );
 
-    uploadStream.end(buffer);
+      console.log("✅ Uploaded to Cloudinary:", {
+        url: result.secure_url,
+        id: result.public_id,
+      });
+
+      resolve(result);
+    });
+
+    stream.end(buffer);
   });
 };
 
-module.exports = { uploadToCloudinary };
+module.exports = {
+  cloudinary,
+  uploadToCloudinary,
+};

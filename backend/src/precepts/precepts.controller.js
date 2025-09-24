@@ -56,12 +56,27 @@ exports.uploadImage = async (req, res) => {
 exports.deletePrecept = async (req, res) => {
   try {
     const { id } = req.params;
-    const precept = await Precept.findById(id);
-    if (!precept) return res.status(404).json({ message: "Not found" });
+    console.log("DELETE request for precept ID:", id);
 
-    const { cloudinary } = require("../config/cloudinary");
-    await cloudinary.uploader.destroy(precept.cloudinaryId);
+    const precept = await Precept.findById(id);
+    if (!precept) {
+      console.log("Precept not found");
+      return res.status(404).json({ message: "Precept not found" });
+    }
+
+    // Cloudinary delete
+    if (precept.cloudinaryId) {
+      try {
+        const { cloudinary } = require("../config/cloudinary");
+        await cloudinary.uploader.destroy(precept.cloudinaryId);
+        console.log("Deleted from Cloudinary:", precept.cloudinaryId);
+      } catch (cloudErr) {
+        console.warn("Cloudinary delete failed:", cloudErr.message);
+      }
+    }
+
     await precept.deleteOne();
+    console.log("Precept deleted from DB");
 
     res.json({ success: true, message: "Precept deleted" });
   } catch (error) {
@@ -69,3 +84,4 @@ exports.deletePrecept = async (req, res) => {
     res.status(500).json({ message: "Failed to delete precept" });
   }
 };
+
