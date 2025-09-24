@@ -210,7 +210,7 @@ const AboutAuthorPage = () => {
           <div className="mt-8 xl:mb-4 flex justify-center">
             <Link
               to="/publications"
-              className="px-3 py-2 no-underline rounded-full bg-[#983120] text-white font-medium text-base shadow hover:bg-[#7a241b] hover:shadow-lg transition-all duration-300"
+              className="px-3 py-2 no-underline rounded-full bg-[#983120] text-white font-medium text-base hover:bg-[#7a241b] hover:shadow-lg transition-all duration-300"
             >
               Explore more Books
             </Link>
