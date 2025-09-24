@@ -1,93 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-const corners = [
-  {
-    id: 1,
-    title: "Positivity Corner",
-    slides: [
-      {
-        image: "/positivity-corner-1.webp",
-        text:
-          "The individual who, having confronted the depths of wickedness within, silently commits to its eradication at its very source, initiales an unstoppable ripple effect that dismantles the darkness in countless others.",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2025/02/2.png",
-        text:
-          "You Are A Microcosm Of The Universe.\nYou Will Live For As Long As The Universe Exists.",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2025/02/3.png",
-        text:
-          "It is human to have fear.\nBut have courage to stand atop your fear\nso cowards never see it.",
-        author: "Anil Kumar",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2025/02/4.png",
-        text:
-          "Who forces time is pushed back by time;\nwho yields to time finds time on his side.",
-        author: "The Talmud",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2025/02/5.png",
-        text:
-          "You know you love someone when you know\nyou want them to be happy,\neven if their happiness means\nthat you are not a part of it.",
-        author: "Anonymous",
-      },
-    ],
-    bgColor: "#bc6430",
-  },
-  {
-    id: 2,
-    title: "The Sufi Corner",
-    slides: [
-      {
-        image: "/the-sufi-corner-1.webp",
-        text:
-          "He that looks at a white wall and sees himself on it has reached the veil between form and formlessness, where the self dissolves into the divine mirror of existence.",
-        author: "Anil Kumar",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2024/09/Media.png",
-        text:
-          "One day you are the machine and I am the machinery, the next day I am the machine and you are the machinery.\nWe behave like conjoined twins.",
-        author: "Anil Kumar",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2024/08/Media-4.jpeg",
-        text: "Stop weaving and watch how the pattern improves.",
-        author: "Rumi",
-      },
-      {
-        image: "https://langshott.org/wp-content/uploads/2024/07/big-Add-a-subheading.png",
-        text: "In every religion there is love, and yet love has no religion.",
-        author: "Rumi",
-      },
-      {
-        image:
-          "https://langshott.org/wp-content/uploads/2024/01/161953452_1910493185772176_7479154913878273194_o.jpeg",
-        text:
-          "No matter what plans you make, no matter what you acquire, the thief will enter from the unguarded side. Be occupied then, with what you really value, and let the thief take something else.",
-        author: "Rumi",
-      },
-    ],
-    bgColor: "#8c2f24",
-    readMoreUrl: "/sufi-corner",
-  },
-];
-
 const Corners = () => {
-  const [slideIndexes, setSlideIndexes] = useState(corners.map(() => 0));
+  const [corners, setCorners] = useState([]);
+  const [slideIndexes, setSlideIndexes] = useState([]);
+
+  useEffect(() => {
+    const fetchCorners = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/home/corners");
+        if (!res.ok) throw new Error("Failed to fetch corners");
+        const data = await res.json();
+        setCorners(data);
+        setSlideIndexes(data.map(() => 0));
+      } catch (err) {
+        console.error("Error fetching corners:", err);
+      }
+    };
+    fetchCorners();
+  }, []);
 
   const handleSlideChange = (cornerIndex, direction) => {
     setSlideIndexes((prev) => {
-      const newIndexes = [...prev];
-      const totalSlides = corners[cornerIndex].slides.length;
-      newIndexes[cornerIndex] =
-        (newIndexes[cornerIndex] + direction + totalSlides) % totalSlides;
-      return newIndexes;
+      const newIdxs = [...prev];
+      const count = corners[cornerIndex]?.slides?.length || 1;
+      newIdxs[cornerIndex] =
+        (newIdxs[cornerIndex] + direction + count) % count;
+      return newIdxs;
     });
   };
 
@@ -95,11 +36,12 @@ const Corners = () => {
     <section className="bg-white py-12 px-0 font-figtree font-light">
       <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[50px]">
         {corners.map((corner, index) => {
-          const slide = corner.slides[slideIndexes[index]];
+          const slideIndex = slideIndexes[index] || 0;
+          const slide = corner.slides[slideIndex];
 
           return (
             <div key={corner.id} className="relative pt-14">
-              {/* Top Dot and Chevron */}
+              {/* Top Dot and Chevron motif */}
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center">
                 <div className="w-4 h-4 bg-[#d5a56f] rounded-full z-20"></div>
                 <svg
@@ -127,15 +69,15 @@ const Corners = () => {
                 </svg>
               </div>
 
-              {/* Card */}
-              <div className="px-4 sm:px-8 ">
+              {/* Card container */}
+              <div className="px-4 sm:px-8">
                 <div
                   className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[700px] sm:h-[750px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}
                 >
-                  {/* Card Content */}
+                  {/* Card content top part */}
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
-                    {/* Title */}
+                    {/* Title + motif overlay */}
                     <div className="relative text-center">
                       <h3 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-tight mt-3 mb-3">
                         {corner.title}
@@ -148,12 +90,12 @@ const Corners = () => {
                       />
                     </div>
 
-                    {/* Image with fixed + responsive size */}
+                    {/* Image with animate */}
                     <div className="w-full flex justify-center px-4">
                       <div className="w-[520px] h-[285px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
-                            key={`${corner.id}-${slideIndexes[index]}`}
+                            key={`${corner.id}-${slideIndex}`}
                             src={slide.image}
                             alt={`${corner.title} slide image`}
                             className="w-[520px] sm:h-[285px] sm:w-[550px] h-[240px] object-cover"
@@ -169,7 +111,7 @@ const Corners = () => {
 
                     {/* Text */}
                     <div>
-                      <p className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] leading-relaxed whitespace-pre-line text-center m-2 mx-4 ">
+                      <p className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3] leading-relaxed whitespace-pre-line text-center m-2 mx-4">
                         {slide.text}
                       </p>
                       {slide.author && (
@@ -180,7 +122,7 @@ const Corners = () => {
                     </div>
                   </div>
 
-                  {/* Bottom Controls */}
+                  {/* Bottom controls */}
                   <div className="px-5 pb-[20px] flex items-center justify-between mt-auto">
                     {corner.readMoreUrl ? (
                       <a
@@ -194,14 +136,14 @@ const Corners = () => {
                           <ArrowRight size={20} strokeWidth={2} />
                         </span>
                       </a>
-
                     ) : (
                       <span></span>
                     )}
 
                     <div
-                      className={`flex gap-3 ${corner.id === 1 ? "mx-auto" : ""
-                        }`}
+                      className={`flex gap-3 ${
+                        corner.id === 1 ? "mx-auto" : ""
+                      }`}
                     >
                       <button
                         aria-label={`Previous slide in ${corner.title}`}
