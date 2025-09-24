@@ -4,8 +4,7 @@ import "./InspirationBoard.css";
 import "../../books/SingleBook.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 import image1 from "./inspiration-images/from-good-to-great.webp";
 import image2 from "./inspiration-images/magic-of-gratitude.webp";
@@ -121,12 +120,12 @@ const InspirationBoard = () => {
             <button
               className="inspiration-board-nav-btn"
               onClick={() => topSliderRef.slickPrev()}>
-              <ArrowBackIcon className="inspiration-board-nav-btn-icon" />
+              <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
               onClick={() => topSliderRef.slickNext()}>
-              <ArrowForwardIcon className="inspiration-board-nav-btn-icon" />
+              <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
               {String(topSlide + 1).padStart(2, "0")} /{" "}
@@ -154,14 +153,14 @@ const InspirationBoard = () => {
           {/* Custom navigation below bottom carousel */}
           <div className="inspiration-board-custom-nav">
             <button
-              className="inspiration-board-nav-btn"
+              className="inspiration-board-nav-btn "
               onClick={() => bottomSliderRef.slickPrev()}>
-              <ArrowBackIcon className="inspiration-board-nav-btn-icon" />
+              <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
               onClick={() => bottomSliderRef.slickNext()}>
-              <ArrowForwardIcon className="inspiration-board-nav-btn-icon" />
+              <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
               {String(bottomSlide + 1).padStart(2, "0")} /{" "}
