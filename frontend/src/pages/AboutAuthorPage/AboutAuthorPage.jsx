@@ -47,7 +47,7 @@ const AboutAuthorPage = () => {
           </nav>
         </div>
 
-        <section className="flex flex-col lg:flex-row items-center">
+        <section className="flex flex-col gap-5 lg:flex-row items-center">
           {/* Left Image Section */}
           <div className="flex justify-center lg:justify-start flex-shrink-0 w-full lg:w-1/2 mt-5">
             <img
