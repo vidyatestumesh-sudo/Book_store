@@ -13,7 +13,7 @@ const AdminReaderThoughts = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [thoughts, setThoughts] = useState([{ title: "", text: "", _id: null }]);
+  const [thoughts, setThoughts] = useState([{ title: "", text: "", author: "", _id: null }]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,7 +29,12 @@ const AdminReaderThoughts = () => {
           }
           if (Array.isArray(data.thoughts) && data.thoughts.length > 0) {
             setThoughts(
-              data.thoughts.map((t) => ({ title: t.title, text: t.text, _id: t._id }))
+              data.thoughts.map((t) => ({
+                title: t.title,
+                text: t.text,
+                author: t.author || "",
+                _id: t._id,
+              }))
             );
           }
         }
@@ -50,6 +55,7 @@ const AdminReaderThoughts = () => {
       }
     };
   }, [imagePreview]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -103,8 +109,24 @@ const AdminReaderThoughts = () => {
     setThoughts(updated);
   };
 
-  const addThought = () => setThoughts([...thoughts, { title: "", text: "", _id: null }]);
-  const removeThought = (index) => setThoughts(thoughts.filter((_, i) => i !== index));
+  const addThought = () =>
+    setThoughts([...thoughts, { title: "", text: "", author: "", _id: null }]);
+
+  const removeThought = (index) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will delete the thought.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setThoughts(thoughts.filter((_, i) => i !== index));
+      }
+    });
+  };
 
   const getImageSrc = (url) => {
     if (!url) return "";
@@ -125,9 +147,10 @@ const AdminReaderThoughts = () => {
       setError("Please enter a title.");
       return;
     }
+
     for (const t of thoughts) {
-      if (!t.title.trim() || !t.text.trim()) {
-        setError("Please fill all thought titles and texts.");
+      if (!t.title.trim() || !t.text.trim() || !t.author.trim()) {
+        setError("Please fill all fields in each thought (title, text, author).");
         return;
       }
     }
@@ -145,8 +168,21 @@ const AdminReaderThoughts = () => {
 
       const data = res.data;
       setTitle(data.title);
-      setImagePreview(data.image?.url ? { url: data.image.url, mimeType: data.image.mimeType } : null);
-      setThoughts(Array.isArray(data.thoughts) ? data.thoughts.map((t) => ({ title: t.title, text: t.text, _id: t._id })) : [{ title: "", text: "", _id: null }]);
+      setImagePreview(
+        data.image?.url
+          ? { url: data.image.url, mimeType: data.image.mimeType }
+          : null
+      );
+      setThoughts(
+        Array.isArray(data.thoughts)
+          ? data.thoughts.map((t) => ({
+              title: t.title,
+              text: t.text,
+              author: t.author || "",
+              _id: t._id,
+            }))
+          : [{ title: "", text: "", author: "", _id: null }]
+      );
       Swal.fire("Success", "Reader Thoughts updated successfully!", "success");
       setSuccess(true);
     } catch (err) {
@@ -181,7 +217,7 @@ const AdminReaderThoughts = () => {
 
         {/* Image selection + preview */}
         <div className="flex flex-col md:flex-row gap-6 mb-6">
-          {/* Right: Image preview */}
+          {/* Image preview */}
           <div className="md:w-1/4 flex justify-center items-center border-gray-300 rounded-md p-2">
             {imagePreview?.url ? (
               <img
@@ -193,6 +229,8 @@ const AdminReaderThoughts = () => {
               <p className="text-gray-400">No image selected</p>
             )}
           </div>
+
+          {/* Image input */}
           <div className="md:w-1/2 flex flex-col gap-3">
             <label className="block font-medium">Select Image</label>
             <input
@@ -208,7 +246,7 @@ const AdminReaderThoughts = () => {
           </div>
         </div>
 
-        {/* Full width content below */}
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title */}
           <div>
@@ -230,25 +268,43 @@ const AdminReaderThoughts = () => {
                 key={thought._id || index}
                 className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm flex flex-col"
               >
-                {/* Thought inputs */}
+                {/* Title */}
                 <input
                   type="text"
                   placeholder="Thought Title"
                   value={thought.title}
-                  onChange={(e) => handleThoughtChange(index, "title", e.target.value)}
+                  onChange={(e) =>
+                    handleThoughtChange(index, "title", e.target.value)
+                  }
                   className="w-full border border-gray-300 px-3 py-2 rounded-md mb-2"
                   disabled={uploading}
                 />
+
+                {/* Text */}
                 <textarea
                   placeholder="Thought Text"
                   value={thought.text}
-                  onChange={(e) => handleThoughtChange(index, "text", e.target.value)}
+                  onChange={(e) =>
+                    handleThoughtChange(index, "text", e.target.value)
+                  }
                   className="w-full border border-gray-300 px-3 py-2 rounded-md mb-2"
                   rows={4}
                   disabled={uploading}
                 />
 
-                {/* Remove button below text, left-aligned */}
+                {/* Author */}
+                <input
+                  type="text"
+                  placeholder="Author Name"
+                  value={thought.author}
+                  onChange={(e) =>
+                    handleThoughtChange(index, "author", e.target.value)
+                  }
+                  className="w-full border border-gray-300 px-3 py-2 rounded-md mb-2"
+                  disabled={uploading}
+                />
+
+                {/* Remove Button */}
                 {thoughts.length > 1 && (
                   <button
                     type="button"
@@ -262,6 +318,7 @@ const AdminReaderThoughts = () => {
               </div>
             ))}
 
+            {/* Add Thought Button */}
             <button
               type="button"
               onClick={addThought}
@@ -271,7 +328,6 @@ const AdminReaderThoughts = () => {
               + Add Another Thought
             </button>
           </div>
-
 
           {/* Submit */}
           <button

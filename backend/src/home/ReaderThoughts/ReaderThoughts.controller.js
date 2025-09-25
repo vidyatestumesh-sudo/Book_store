@@ -2,7 +2,6 @@ const ReaderThoughts = require("./ReaderThoughts.model");
 const { uploadToCloudinary } = require("../../config/cloudinary");
 const fs = require("fs");
 
-// ✅ Get existing ReaderThoughts document
 exports.getReaderThoughts = async (req, res) => {
   try {
     const doc = await ReaderThoughts.findOne();
@@ -14,7 +13,6 @@ exports.getReaderThoughts = async (req, res) => {
   }
 };
 
-// ✅ Create or update ReaderThoughts
 exports.createOrUpdateReaderThoughts = async (req, res) => {
   try {
     const { title, thoughts } = req.body;
@@ -42,7 +40,6 @@ exports.createOrUpdateReaderThoughts = async (req, res) => {
       return res.status(201).json(doc);
     }
 
-    // Update
     if (title) doc.title = title;
     if (imageData) doc.image = imageData;
     if (Array.isArray(parsedThoughts)) doc.thoughts = parsedThoughts;
@@ -55,7 +52,6 @@ exports.createOrUpdateReaderThoughts = async (req, res) => {
   }
 };
 
-// ✅ Delete a specific thought
 exports.deleteThoughtById = async (req, res) => {
   try {
     const { thoughtId } = req.params;
@@ -71,11 +67,10 @@ exports.deleteThoughtById = async (req, res) => {
   }
 };
 
-// ✅ Update a specific thought
 exports.updateThoughtById = async (req, res) => {
   try {
     const { thoughtId } = req.params;
-    const { title, text } = req.body;
+    const { title, text, author } = req.body;
 
     const doc = await ReaderThoughts.findOne();
     if (!doc) return res.status(404).json({ message: "Document not found" });
@@ -85,6 +80,7 @@ exports.updateThoughtById = async (req, res) => {
 
     if (title) thought.title = title;
     if (text) thought.text = text;
+    if (author) thought.author = author;
 
     await doc.save();
     res.status(200).json(doc);
