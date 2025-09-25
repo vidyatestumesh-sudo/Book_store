@@ -14,20 +14,31 @@ const postReview = async (req, res) => {
     const book = await Book.findById(bookId);
     if (!book) return res.status(404).send({ message: "Book not found" });
 
-    const newReview = new Review({ bookId, userId, userName, rating, comment });
-    await newReview.save();
+    // Check if user already reviewed
+    let existingReview = await Review.findOne({ bookId, userId });
 
-    // Return updated review list directly
+    if (existingReview) {
+      // Update the existing review
+      existingReview.rating = rating;
+      existingReview.comment = comment;
+      existingReview.userName = userName;
+      await existingReview.save();
+    } else {
+      // Create new review
+      const newReview = new Review({ bookId, userId, userName, rating, comment });
+      await newReview.save();
+    }
+
+    // Return updated list of reviews
     const reviews = await Review.find({ bookId }).sort({ createdAt: -1 });
 
-    res.status(201).send({
+    res.status(200).send({
       message: "Review submitted successfully",
-      review: newReview,
-      reviews, // Send updated reviews
+      reviews,
     });
   } catch (error) {
     console.error("Error submitting review:", error);
-    res.status(500).send({ message: "Failed to submit review" });
+    res.status(500).send({ message: "Failed to submit or update review" });
   }
 };
 

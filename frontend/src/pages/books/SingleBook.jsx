@@ -22,9 +22,9 @@ const SingleBook = () => {
   const [showMore, setShowMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
-
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [isEditingReview, setIsEditingReview] = useState(false);
 
   const WORD_LIMIT = 100;
   const words = book?.description?.split(" ") || [];
@@ -42,14 +42,6 @@ const SingleBook = () => {
   }, [book]);
 
   useEffect(() => {
-  fetch(`/api/books/${id}/reviews`)
-    .then(res => res.json())
-    .then(data => setReviews(data))
-    .catch(console.error);
-}, [id]);
-
-
-  useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
     const filtered = stored.filter((b) => b._id !== book?._id);
     setRecentlyViewed(filtered.slice(0, 4));
@@ -61,6 +53,20 @@ const SingleBook = () => {
     }
   }, [book]);
 
+  // Preload current user's review data (if exists)
+  useEffect(() => {
+    if (book?.reviews && currentUser) {
+      const userReview = book.reviews.find((rev) => rev.userId === currentUser.uid);
+      if (userReview) {
+        setRating(userReview.rating);
+        setComment(userReview.comment);
+      } else {
+        setRating(0);
+        setComment("");
+      }
+    }
+  }, [book, currentUser]);
+
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
   };
@@ -71,7 +77,6 @@ const SingleBook = () => {
       alert("Please provide both rating and comment.");
       return;
     }
-
     if (!currentUser) {
       alert("You must be logged in to submit a review.");
       return;
@@ -79,7 +84,7 @@ const SingleBook = () => {
 
     try {
       const res = await fetch(`/api/books/${id}/review`, {
-        method: "POST",
+        method: "POST", // server handles create or update
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookId: id,
@@ -91,15 +96,16 @@ const SingleBook = () => {
       });
 
       if (res.ok) {
+        setIsEditingReview(false);
         setRating(0);
         setComment("");
         refetch();
       } else {
-        const errorData = await res.json();
-        console.error("Failed to submit review:", errorData);
+        const err = await res.json();
+        console.error("Failed to submit review:", err);
       }
-    } catch (error) {
-      console.error("Error submitting review", error);
+    } catch (err) {
+      console.error("Error submitting review:", err);
     }
   };
 
@@ -109,8 +115,15 @@ const SingleBook = () => {
       : 0;
 
   if (isLoading) return <div className="loading">Loading...</div>;
-  if (isError || !book)
-    return <div className="error">Failed to load book details.</div>;
+  if (isError || !book) return <div className="error">Failed to load book details.</div>;
+
+  const currentUserReview = book.reviews?.find(
+    (rev) => rev.userId === currentUser?.uid
+  );
+  const otherReviews = book.reviews
+    ?.filter((rev) => rev.userId !== currentUser?.uid)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 2);
 
   return (
     <div className="container">
@@ -118,16 +131,9 @@ const SingleBook = () => {
       <div className="breadcrumb-container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a>
-            </li>
-            <li className="breadcrumb-item">
-              <a href="/publications">Publications</a>
-            </li>
-            <li
-              className="breadcrumb-item active truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"
-              aria-current="page"
-            >
+            <li className="breadcrumb-item"><a href="/">Home</a></li>
+            <li className="breadcrumb-item"><a href="/publications">Publications</a></li>
+            <li className="breadcrumb-item active" aria-current="page">
               {book.title}
             </li>
           </ol>
@@ -162,17 +168,13 @@ const SingleBook = () => {
               </div>
             </div>
             <div className="book-buttons">
-              <button
-                className="add-to-cart"
-                onClick={() => handleAddToCart(book)}
-              >
+              <button className="add-to-cart" onClick={() => handleAddToCart(book)}>
                 ADD TO CART
               </button>
               <button className="buy-now">BUY NOW</button>
             </div>
           </div>
 
-          {/* About Section */}
           {book.aboutBook && (
             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
               <div className="about-book">
@@ -192,7 +194,6 @@ const SingleBook = () => {
         <div className="col-lg-8 col-md-12 col-sm-12 col-12 book-details ">
           <h2>{book.title}</h2>
 
-          {/* ⭐ Average Rating Display */}
           <div className="book-rating">
             {Array.from({ length: 5 }, (_, i) => {
               if (i < Math.floor(avgRating)) {
@@ -204,8 +205,7 @@ const SingleBook = () => {
               }
             })}
             <span className="rating-text">
-              ({avgRating.toFixed(1)} / 5 from {book?.reviews?.length || 0}{" "}
-              reviews)
+              ({avgRating.toFixed(1)} / 5 from {book?.reviews?.length || 0} reviews)
             </span>
           </div>
 
@@ -222,7 +222,6 @@ const SingleBook = () => {
             )}
           </div>
 
-          {/* Description with read more */}
           <p className="book-desc">
             {shortText}
             {showMore && <span className="extra-text"> {longText}</span>}
@@ -242,7 +241,6 @@ const SingleBook = () => {
             )}
           </p>
 
-          {/* Book Meta */}
           <div className="book-meta">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Author</div>
@@ -261,7 +259,6 @@ const SingleBook = () => {
             </div>
           </div>
 
-          {/* Share */}
           <div className="share">
             <a>
               <ShareOutlinedIcon className="share-icon" />
@@ -269,12 +266,29 @@ const SingleBook = () => {
             </a>
           </div>
 
-          {/* Review Section */}
           <div className="review-section">
             <h3>Leave a Review</h3>
 
-            {/* Show review form only if logged in */}
-            {currentUser ? (
+            {/* If user has a review and not editing, show it read-only with Edit button */}
+            {currentUser && currentUserReview && !isEditingReview && (
+              <div className="review user-review">
+                <div className="review-rating">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span
+                      key={i}
+                      className={i < currentUserReview.rating ? "star filled" : "star"}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <p className="review-comment">{currentUserReview.comment}</p>
+                <button onClick={() => setIsEditingReview(true)}>Edit Review</button>
+              </div>
+            )}
+
+            {/* Show form if editing or if user hasn't submitted */}            
+            {(isEditingReview || !currentUserReview) && currentUser && (
               <form onSubmit={handleReviewSubmit}>
                 <div className="rating-input">
                   {Array.from({ length: 5 }, (_, i) => (
@@ -292,48 +306,60 @@ const SingleBook = () => {
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Write your review..."
                 ></textarea>
-                <button type="submit">Submit Review</button>
+                <div className="review-buttons">
+                  <button type="submit" class="me-3">
+                    {currentUserReview ? "Update Review" : "Submit Review"}
+                  </button> 
+                  {isEditingReview && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Cancel edit mode
+                        setIsEditingReview(false);
+                        // Reset comment & rating to existing review if present
+                        if (currentUserReview) {
+                          setRating(currentUserReview.rating);
+                          setComment(currentUserReview.comment);
+                        } else {
+                          setRating(0);
+                          setComment("");
+                        }
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </form>
-            ) : (
-              <p className="login-message">
-                Please <Link to="/login">login</Link> to leave a review.
-              </p>
             )}
 
-            {/* Show Last 2 Reviews */}
-            {/* Show Last 2 Reviews */}
-<div className="recent-reviews">
-  <h4>Recent Reviews</h4>
-  {book?.reviews?.length > 0 ? (
-    [...book.reviews]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // ✅ SORT newest first
-      .slice(0, 2) // ✅ Show latest 2
-      .map((rev, idx) => (
-        <div key={idx} className="review">
-          <div className="review-rating">
-            {Array.from({ length: 5 }, (_, i) => (
-              <span
-                key={i}
-                className={i < rev.rating ? "star filled" : "star"}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-          <p className="review-comment">{rev.comment}</p>
-          <small>- {rev.userName}</small> {/* ✅ FIXED: use correct field */}
-        </div>
-      ))
-  ) : (
-    <p>No reviews yet.</p>
-  )}
-</div>
-
+            <div className="recent-reviews">
+              <h4>Recent Reviews</h4>
+              {otherReviews && otherReviews.length > 0 ? (
+                otherReviews.map((rev, idx) => (
+                  <div key={idx} className="review">
+                    <div className="review-rating">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <span
+                          key={i}
+                          className={i < rev.rating ? "star filled" : "star"}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="review-comment">{rev.comment}</p>
+                    <small>- {rev.userName}</small>
+                  </div>
+                ))
+              ) : (
+                <p>No reviews yet.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Recently Viewed (Dynamic) */}
       <div className="recently-viewed">
         <h3>Recently Viewed</h3>
         <div className="row">
