@@ -33,6 +33,8 @@ const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.ro
 const authorRoutes = require("./src/author/author.route");
 const cornerRoutes = require("./src/home/corners/corner.routes"); 
 const preceptsRoutes = require("./src/precepts/precepts.routes");
+const reviewRoutes = require("./src/review/review.routes");
+app.use("/api/books", reviewRoutes);
 
 app.use("/api/precepts", preceptsRoutes);
 // Use routes

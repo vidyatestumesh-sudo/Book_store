@@ -55,6 +55,17 @@ const AboutAuthor = () => {
               {para.text}
             </p>
           ))}
+          <Link
+            to={content.workingCreed.rightText.link.to}
+            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
+          >
+            <span className="text-black text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
+              Read Detailed Profile
+            </span>
+            <span className="text-[#8c2f24] ml-1 transform transition-transform duration-200 group-hover:translate-x-[5px]">
+              <ArrowRight size={20} strokeWidth={2} />
+            </span>
+          </Link>
         </div>
 
         {/* Right Side - Image */}

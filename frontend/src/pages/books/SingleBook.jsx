@@ -64,12 +64,19 @@ const SingleBook = () => {
       return;
     }
 
+    if (!currentUser) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
     try {
       const res = await fetch(`/api/books/${id}/review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user: "Anonymous User",
+          bookId: id,
+          userId: currentUser.uid,
+          userName: currentUser.displayName || currentUser.email || "Anonymous User",
           rating,
           comment,
         }),
@@ -80,7 +87,8 @@ const SingleBook = () => {
         setComment("");
         refetch();
       } else {
-        console.error("Failed to submit review");
+        const errorData = await res.json();
+        console.error("Failed to submit review:", errorData);
       }
     } catch (error) {
       console.error("Error submitting review", error);
@@ -108,7 +116,10 @@ const SingleBook = () => {
             <li className="breadcrumb-item">
               <a href="/publications">Publications</a>
             </li>
-            <li className="breadcrumb-item active truncate max-w-[120px] sm:max-w-[200px] md:max-w-full" aria-current="page">
+            <li
+              className="breadcrumb-item active truncate max-w-[120px] sm:max-w-[200px] md:max-w-full"
+              aria-current="page"
+            >
               {book.title}
             </li>
           </ol>
@@ -145,7 +156,8 @@ const SingleBook = () => {
             <div className="book-buttons">
               <button
                 className="add-to-cart"
-                onClick={() => handleAddToCart(book)}>
+                onClick={() => handleAddToCart(book)}
+              >
                 ADD TO CART
               </button>
               <button className="buy-now">BUY NOW</button>
@@ -208,9 +220,7 @@ const SingleBook = () => {
             {showMore && <span className="extra-text"> {longText}</span>}
             <br />
             {words.length > WORD_LIMIT && (
-              <span
-                className="read-more"
-                onClick={() => setShowMore(!showMore)}>
+              <span className="read-more" onClick={() => setShowMore(!showMore)}>
                 {showMore ? (
                   <>
                     <KeyboardArrowUpIcon /> Read less
@@ -227,17 +237,11 @@ const SingleBook = () => {
           {/* Book Meta */}
           <div className="book-meta">
             <div className="row">
-              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
-                Author
-              </div>
-              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
-                {book.author}
-              </div>
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Author</div>
+              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">{book.author}</div>
             </div>
             <div className="row">
-              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
-                Specifications
-              </div>
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Specifications</div>
               <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
                 <p>Language: {book.language}</p>
                 <p>Binding: {book.binding}</p>
@@ -269,7 +273,8 @@ const SingleBook = () => {
                     <span
                       key={i}
                       onClick={() => setRating(i + 1)}
-                      className={i < rating ? "star selected" : "star"}>
+                      className={i < rating ? "star selected" : "star"}
+                    >
                       ★
                     </span>
                   ))}
@@ -277,7 +282,8 @@ const SingleBook = () => {
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="Write your review..."></textarea>
+                  placeholder="Write your review..."
+                ></textarea>
                 <button type="submit">Submit Review</button>
               </form>
             ) : (
@@ -299,7 +305,8 @@ const SingleBook = () => {
                         {Array.from({ length: 5 }, (_, i) => (
                           <span
                             key={i}
-                            className={i < rev.rating ? "star filled" : "star"}>
+                            className={i < rev.rating ? "star filled" : "star"}
+                          >
                             ★
                           </span>
                         ))}
