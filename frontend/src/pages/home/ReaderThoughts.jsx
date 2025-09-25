@@ -81,10 +81,11 @@ const ReaderThoughts = () => {
           />
         </div>
 
-        {/* Right Content */}
-        <div className="relative bg-[#e6e8da] p-4 me-3 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px]">
+        {/* Right Content with vertical scroll */}
+        <div className="relative bg-[#e6e8da] p-4 me-3 sm:p-6 md:p-10 flex flex-col h-[700px] sm:h-[650px] md:h-[600px] lg:h-[600px] xl:h-[720px] 2xl:h-[700px] overflow-hidden">
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
+          {/* Title */}
           <div className="relative inline-block">
             <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-5 sm:mb-8 mt-4 sm:mt-8 text-left">
               <span className="relative inline-block">
@@ -98,24 +99,43 @@ const ReaderThoughts = () => {
             </h1>
           </div>
 
-          {/* Thoughts Grid */}
+          {/* Thoughts Grid with vertical scroll */}
           <div
-            className={`grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-              } gap-8 z-10 flex-grow overflow-y-auto ${fade}`}
+            className={`flex-grow overflow-y-auto overflow-x-hidden z-10 grid ${
+              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+            } gap-8 ${fade}`}
+            style={{ maxHeight: "100%" }}
           >
-            {visibleThoughts.map((thought, idx) => (
-              <div key={thought._id || idx} className="space-y-4">
-                <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
-                  <span className="block font-bold mb-2">{thought.title}</span>
-                  {thought.text}
-                </p>
-                {thought.author && (
-                  <p className="text-right text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular italic text-gray-700 font-medium pe-5">
-                    — {thought.author}
+            {visibleThoughts.map((thought, idx) => {
+              const actualIndex = currentIndex + idx + 1;
+              return (
+                <div key={thought._id || idx} className="space-y-3">
+                  {/* Number + Title inline */}
+                  <div className="flex items-baseline gap-2">
+                    <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
+                      <span className="text-[24px] sm:text-[26px] font-bold text-[#8c2f24] leading-tight font-Figtree">
+                        {actualIndex}.
+                      </span>
+                      <span className="font-bold mb-1 ms-2">
+                        {thought.title}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Thought Text */}
+                  <p className="whitespace-pre-line text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
+                    {thought.text}
                   </p>
-                )}
-              </div>
-            ))}
+
+                  {/* Author */}
+                  {thought.author && (
+                    <p className="text-right text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] pe-5 text-black-800 font-Figtree font-regular italic text-gray-700 font-medium">
+                      — {thought.author}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Navigation */}
