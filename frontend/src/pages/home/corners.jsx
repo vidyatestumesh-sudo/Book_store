@@ -179,6 +179,16 @@ const Corners = () => {
                   {/* Bottom Controls */}
                   <div className="px-5 pb-[20px] flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => handleShare(corner.id, index, slideIndex)}
+                        className="border border-white px-3 py-1 rounded hover:bg-white transition text-sm"
+                        aria-label={`Share slide ${slideIndex + 1} of ${corner.title}`}
+                        style={{ color: "white" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = corner.bgColor)}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
+                      >
+                        Share
+                      </button>
                       {corner.readMoreUrl && (
                         <a
                           href={corner.readMoreUrl}
@@ -190,16 +200,7 @@ const Corners = () => {
                           <ArrowRight size={20} />
                         </a>
                       )}
-                      <button
-                        onClick={() => handleShare(corner.id, index, slideIndex)}
-                        className="border border-white px-3 py-1 rounded hover:bg-white transition text-sm"
-                        aria-label={`Share slide ${slideIndex + 1} of ${corner.title}`}
-                        style={{ color: "white" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = corner.bgColor)}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
-                      >
-                        Share
-                      </button>
+                      
 
                     </div>
 
