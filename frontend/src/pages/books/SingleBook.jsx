@@ -42,6 +42,14 @@ const SingleBook = () => {
   }, [book]);
 
   useEffect(() => {
+  fetch(`/api/books/${id}/reviews`)
+    .then(res => res.json())
+    .then(data => setReviews(data))
+    .catch(console.error);
+}, [id]);
+
+
+  useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
     const filtered = stored.filter((b) => b._id !== book?._id);
     setRecentlyViewed(filtered.slice(0, 4));
@@ -293,32 +301,34 @@ const SingleBook = () => {
             )}
 
             {/* Show Last 2 Reviews */}
-            <div className="recent-reviews">
-              <h4>Recent Reviews</h4>
-              {book?.reviews?.length > 0 ? (
-                [...book.reviews]
-                  .slice(-2) // last 2 reviews
-                  .reverse()
-                  .map((rev, idx) => (
-                    <div key={idx} className="review">
-                      <div className="review-rating">
-                        {Array.from({ length: 5 }, (_, i) => (
-                          <span
-                            key={i}
-                            className={i < rev.rating ? "star filled" : "star"}
-                          >
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <p className="review-comment">{rev.comment}</p>
-                      <small>- {rev.user}</small>
-                    </div>
-                  ))
-              ) : (
-                <p>No reviews yet.</p>
-              )}
-            </div>
+            {/* Show Last 2 Reviews */}
+<div className="recent-reviews">
+  <h4>Recent Reviews</h4>
+  {book?.reviews?.length > 0 ? (
+    [...book.reviews]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // ✅ SORT newest first
+      .slice(0, 2) // ✅ Show latest 2
+      .map((rev, idx) => (
+        <div key={idx} className="review">
+          <div className="review-rating">
+            {Array.from({ length: 5 }, (_, i) => (
+              <span
+                key={i}
+                className={i < rev.rating ? "star filled" : "star"}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+          <p className="review-comment">{rev.comment}</p>
+          <small>- {rev.userName}</small> {/* ✅ FIXED: use correct field */}
+        </div>
+      ))
+  ) : (
+    <p>No reviews yet.</p>
+  )}
+</div>
+
           </div>
         </div>
       </div>

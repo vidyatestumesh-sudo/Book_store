@@ -1,4 +1,5 @@
 const Book = require("./book.model");
+const Review = require("../review/review.model"); // ✅ Add this line
 
 const postABook = async (req, res) => {
   try {
@@ -21,13 +22,30 @@ const getAllBooks = async (req, res) => {
   }
 };
 
+const getAllBooksForUsers = async (req, res) => {
+  try {
+    const books = await Book.find({ suspended: false }).sort({ createdAt: -1 });
+    res.status(200).send(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to fetch books" });
+  }
+};
+
 const getSingleBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const book = await Book.findById(id);
+
+    const book = await Book.findById(id).lean(); // ✅ Convert to plain object
     if (!book) {
       return res.status(404).send({ message: "Book not Found!" });
     }
+
+    // ✅ Fetch reviews related to the book
+    const reviews = await Review.find({ bookId: id }).sort({ createdAt: -1 }).lean();
+
+    book.reviews = reviews; // ✅ Attach reviews to the book object
+
     res.status(200).send(book);
   } catch (error) {
     console.error("Error fetching book", error);
@@ -77,6 +95,7 @@ const deleteABook = async (req, res) => {
     res.status(500).send({ message: "Failed to delete a book" });
   }
 };
+
 const suspendBook = async (req, res) => {
   try {
     const { id } = req.params;
@@ -109,22 +128,11 @@ const unsuspendBook = async (req, res) => {
   }
 };
 
-// Modify getAllBooks to show only non-suspended books to users
-const getAllBooksForUsers = async (req, res) => {
-  try {
-    const books = await Book.find({ suspended: false }).sort({ createdAt: -1 });
-    res.status(200).send(books);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: "Failed to fetch books" });
-  }
-};
-
 module.exports = {
   postABook,
   getAllBooks,
   getAllBooksForUsers,
-  getSingleBook,
+  getSingleBook,     // ✅ now includes reviews
   updateBook,
   deleteABook,
   suspendBook,
