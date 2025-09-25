@@ -4,23 +4,23 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
+import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
 
 const CheckoutPage = () => {
   const cartItems = useSelector(state => state.cart.cartItems);
-  const totalPrice = cartItems
-    .reduce((acc, item) => acc + item.newPrice * (item.quantity || 1), 0)
-    .toFixed(2);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const subtotal = cartItems.reduce((acc, item) => acc + item.newPrice * item.qty, 0);
+  const originalTotal = cartItems.reduce((acc, item) => acc + (item.oldPrice || item.newPrice) * item.qty, 0);
+  const discount = originalTotal - subtotal;
+  const finalAmount = subtotal;
 
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [createOrder, { isLoading }] = useCreateOrderMutation();
   const navigate = useNavigate();
 
   const [isChecked, setIsChecked] = useState(false);
+  const [isGift, setIsGift] = useState(false);
+  const [giftDetails, setGiftDetails] = useState({ from: "", to: "", message: "" });
 
   const onSubmit = async (data) => {
     const newOrder = {
@@ -34,15 +34,14 @@ const CheckoutPage = () => {
         street: data.street,
       },
       phone: data.phone,
-      productIds: cartItems.map(item => item?._id),
+      productIds: cartItems.map(item => item._id),
       products: cartItems.map(item => ({
         bookId: item._id,
         title: item.title,
         price: item.newPrice,
-        quantity: item.quantity || 1,
+        quantity: item.qty,
       })),
-
-      totalPrice,
+      totalPrice: finalAmount,
     };
 
     try {
@@ -51,7 +50,7 @@ const CheckoutPage = () => {
         title: "Confirmed Order",
         text: "Your order placed successfully!",
         icon: "success",
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#C76F3B",
         confirmButtonText: "Great!",
       });
       navigate("/orders");
@@ -62,150 +61,140 @@ const CheckoutPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center py-10 text-lg font-semibold">Loading....</div>
-    );
+    return <div className="text-center py-10 text-lg font-semibold">Loading....</div>;
   }
 
   return (
-    <section className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-['Poppins']">
-      <div className="container max-w-screen-md bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-4xl font-extrabold text-indigo-700 text-center mb-8">🛒 Checkout</h2>
-
-        <div className="text-center mb-8">
-          <h3 className="font-semibold text-xl text-gray-700 mb-2">Cash On Delivery</h3>
-          <p className="text-gray-600 mb-1">Total Price: <span className="font-semibold">₹ {totalPrice}</span></p>
-          <p className="text-gray-600">Items: <span className="font-semibold">{cartItems.length || 0}</span></p>
+    <div className="container">
+      <div className="max-w-9xl mx-auto py-0 text-center flex flex-col justify-center items-center px-0 mb-20">
+        {/* Title Section */}
+        <div className="relative inline-block">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-10">
+            Checkout
+          </h1>
+          <img
+            src="/motif.webp"
+            alt="feather"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-1"
+          />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <p className="font-semibold text-lg text-gray-700 mb-2">Personal Details</p>
-            <p className="text-gray-500 mb-4">Please fill out all the fields.</p>
+        <div className="max-w-8xl w-full rounded-md p-4 mx-auto mt-2 grid grid-cols-1 gap-6">
+          {/* Full width Form */}
+          <div className="bg-white rounded-lg p-6 shadow-md transition-all duration-300">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+              {/* Personal Details */}
+              <h2 className="text-[18px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-playfair font-regular mb-4 text-left">
+                Personal Details
+              </h2>
 
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-              <div className="flex flex-col">
-                <label htmlFor="name" className="mb-1 font-medium text-gray-600">Full Name</label>
-                <input
-                  {...register("name", { required: "Name is required" })}
-                  type="text"
-                  id="name"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                />
-                {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>}
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 text-left">
+                {[
+                  { label: "Full Name", id: "name", type: "text" },
+                  { label: "Email Address", id: "email", type: "email" },
+                  { label: "Phone Number", id: "phone", type: "tel" },
+                  { label: "Street / Address", id: "street", type: "text"},
+                  { label: "City", id: "city", type: "text" },
+                  { label: "Country / Region", id: "country", type: "text" },
+                  { label: "State / Province", id: "state", type: "text" },
+                  { label: "Pincode", id: "zipcode", type: "text" },
+                ].map(field => (
+                  <div key={field.id} className={`flex flex-col ${field.col === 2 ? 'md:col-span-2' : ''}`}>
+                    <label htmlFor={field.id} className="mb-1 font-Figtree font-regular text-gray-700">{field.label}</label>
+                    <input
+                      {...register(field.id, { required: `${field.label} is required` })}
+                      type={field.type}
+                      id={field.id}
+                      className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-[#C76F3B]"
+                    />
+                    {errors[field.id] && <p className="text-red-600 text-sm mt-1">{errors[field.id].message}</p>}
+                  </div>
+                ))}
               </div>
 
-              <div className="flex flex-col">
-                <label htmlFor="email" className="mb-1 font-medium text-gray-600">Email Address</label>
-                <input
-                  {...register("email", { required: "Email is required" })}
-                  type="email"
-                  id="email"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                />
-                {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
+              {/* Gift Option */}
+              <div className="mt-4 bg-white rounded-lg border p-4">
+                <label className="flex items-center gap-2 text-gray-700 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                  <input
+                    type="checkbox"
+                    checked={isGift}
+                    onChange={() => setIsGift(!isGift)}
+                    className="accent-[#C76F3B] w-4 h-4"
+                  />
+                  This is a gift <CardGiftcardOutlinedIcon className="text-gray-600" />
+                </label>
+
+                {isGift && (
+                  <div className="flex flex-col gap-3 mt-2">
+                    <input
+                      type="text"
+                      placeholder="Gift To"
+                      className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-[#C76F3B]"
+                      value={giftDetails.to}
+                      onChange={(e) => setGiftDetails({ ...giftDetails, to: e.target.value })}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Gift From"
+                      className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-[#C76F3B]"
+                      value={giftDetails.from}
+                      onChange={(e) => setGiftDetails({ ...giftDetails, from: e.target.value })}
+                    />
+                    <textarea
+                      placeholder="Message"
+                      className="h-24 border border-gray-300 rounded px-4 py-2 bg-gray-50 focus:outline-[#C76F3B]"
+                      value={giftDetails.message}
+                      onChange={(e) => setGiftDetails({ ...giftDetails, message: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => alert("Gift details saved & applied!")}
+                      className="mt-1 bg-[#C76F3B] hover:bg-[#A35427] text-white py-2 rounded-md font-medium transition-colors duration-300"
+                    >
+                      Save & Apply
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div className="flex flex-col md:col-span-2">
-                <label htmlFor="phone" className="mb-1 font-medium text-gray-600">Phone Number</label>
+              {/* Terms */}
+              <div className="flex items-center gap-2 mt-4">
                 <input
-                  {...register("phone", { required: "Phone number is required" })}
-                  type="tel"
-                  id="phone"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                  placeholder="Phone Number"
+                  type="checkbox"
+                  id="terms"
+                  checked={isChecked}
+                  onChange={(e) => setIsChecked(e.target.checked)}
+                  className="w-5 h-5 accent-[#C76F3B]"
                 />
-                {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>}
+                <label htmlFor="terms" className="text-gray-700 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                  I agree to the <Link to="#" className="underline text-[#C76F3B]">Terms & Conditions</Link> and <Link to="#" className="underline text-[#C76F3B]">Shopping Policy</Link>.
+                </label>
               </div>
 
-              <div className="flex flex-col md:col-span-2">
-                <label htmlFor="street" className="mb-1 font-medium text-gray-600">Address / Street</label>
-                <input
-                  {...register("street", { required: "Street is required" })}
-                  type="text"
-                  id="address"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                />
-                {errors.address && <p className="text-red-600 text-sm mt-1">{errors.address.message}</p>}
+              {/* Total and Place Order */}
+              <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-3 bg-gray-50 p-4 rounded-md">
+                <div className="flex flex-col items-start md:items-start">
+                  <span className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-Figtree font-semibold">
+                    Total: ₹ {finalAmount.toFixed(2)}
+                  </span>
+                  <span className="text-green-600 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                    You Save: ₹ {discount.toFixed(2)}
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  disabled={!isChecked}
+                  className={`bg-[#C76F3B] hover:bg-[#A35427] text-white px-6 py-2 rounded-md font-medium transition-colors duration-300 ${!isChecked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  Place Order
+                </button>
               </div>
 
-              <div className="flex flex-col">
-                <label htmlFor="city" className="mb-1 font-medium text-gray-600">City</label>
-                <input
-                  {...register("city", { required: "City is required" })}
-                  type="text"
-                  id="city"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                />
-                {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city.message}</p>}
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="country" className="mb-1 font-medium text-gray-600">Country / Region</label>
-                <input
-                  {...register("country", { required: "Country is required" })}
-                  id="country"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                  placeholder="Country"
-                />
-                {errors.country && <p className="text-red-600 text-sm mt-1">{errors.country.message}</p>}
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="state" className="mb-1 font-medium text-gray-600">State / Province</label>
-                <input
-                  {...register("state", { required: "State is required" })}
-                  id="state"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                  placeholder="State"
-                />
-                {errors.state && <p className="text-red-600 text-sm mt-1">{errors.state.message}</p>}
-              </div>
-
-              <div className="flex flex-col">
-                <label htmlFor="zipcode" className="mb-1 font-medium text-gray-600">Pincode</label>
-                <input
-                  {...register("zipcode", { required: "Pincode is required" })}
-                  type="text"
-                  id="zipcode"
-                  className="h-10 border border-gray-300 rounded px-4 bg-gray-50 focus:outline-indigo-500"
-                />
-                {errors.zipcode && <p className="text-red-600 text-sm mt-1">{errors.zipcode.message}</p>}
-              </div>
-            </div>
+            </form>
           </div>
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="billing_same"
-              onChange={(e) => setIsChecked(e.target.checked)}
-              className="form-checkbox h-5 w-5 text-indigo-600"
-            />
-            <label htmlFor="billing_same" className="text-gray-700">
-              I agree to the{' '}
-              <Link to="#" className="underline text-blue-600 hover:text-blue-800">
-                Terms & Conditions
-              </Link>{' '}
-              and{' '}
-              <Link to="#" className="underline text-blue-600 hover:text-blue-800">
-                Shopping Policy
-              </Link>.
-            </label>
-          </div>
-
-          <div className="text-right">
-            <button
-              type="submit"
-              disabled={!isChecked}
-              className="bg-indigo-600 text-white font-bold py-2 px-6 rounded hover:bg-indigo-700 transition disabled:bg-gray-400"
-            >
-              Place an Order
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
