@@ -11,34 +11,36 @@ const Corners = () => {
   const cardRefs = useRef({}); // Hold refs to each visible slide
   const bottomControlsRefs = useRef({}); // Hold refs to bottom controls for each slide
 
-  useEffect(() => {
-    const fetchCorners = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/home/corners");
-        if (!res.ok) throw new Error("Failed to fetch corners");
-        const data = await res.json();
+useEffect(() => {
+  const fetchCorners = async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/home/corners`);
+      if (!res.ok) throw new Error("Failed to fetch corners");
+      const data = await res.json();
 
-        const params = new URLSearchParams(window.location.search);
-        const cornerParam = parseInt(params.get("corner"));
-        const slideParam = parseInt(params.get("slide"));
+      const params = new URLSearchParams(window.location.search);
+      const cornerParam = parseInt(params.get("corner"));
+      const slideParam = parseInt(params.get("slide"));
 
-        const initialIndexes = data.map(() => 0);
-        if (
-          !isNaN(cornerParam) &&
-          !isNaN(slideParam) &&
-          data[cornerParam]?.slides?.[slideParam]
-        ) {
-          initialIndexes[cornerParam] = slideParam;
-        }
-
-        setCorners(data);
-        setSlideIndexes(initialIndexes);
-      } catch (err) {
-        console.error("Error fetching corners:", err);
+      const initialIndexes = data.map(() => 0);
+      if (
+        !isNaN(cornerParam) &&
+        !isNaN(slideParam) &&
+        data[cornerParam]?.slides?.[slideParam]
+      ) {
+        initialIndexes[cornerParam] = slideParam;
       }
-    };
-    fetchCorners();
-  }, []);
+
+      setCorners(data);
+      setSlideIndexes(initialIndexes);
+    } catch (err) {
+      console.error("Error fetching corners:", err);
+    }
+  };
+  fetchCorners();
+}, []);
+
 
   const handleSlideChange = (cornerIndex, direction) => {
     setSlideIndexes((prev) => {

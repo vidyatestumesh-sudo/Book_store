@@ -22,21 +22,23 @@ const AboutAuthor = () => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/author"); // Adjust your API endpoint here
-        if (!res.ok) throw new Error("Failed to fetch author content");
-        const data = await res.json();
-        setContent(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchContent();
-  }, []);
+useEffect(() => {
+  const fetchContent = async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/author`);
+      if (!res.ok) throw new Error("Failed to fetch author content");
+      const data = await res.json();
+      setContent(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchContent();
+}, []);
+
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!content) return <p className="text-center mt-10">No content available</p>;

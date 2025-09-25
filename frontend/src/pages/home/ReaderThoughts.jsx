@@ -10,21 +10,24 @@ const ReaderThoughts = () => {
   const [error, setError] = useState(null);
   const animationDuration = 300;
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/reader-thoughts")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch data");
-        return res.json();
-      })
-      .then((json) => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+useEffect(() => {
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+  fetch(`${baseUrl}/api/reader-thoughts`)
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch data");
+      return res.json();
+    })
+    .then((json) => {
+      setData(json);
+      setLoading(false);
+    })
+    .catch((err) => {
+      setError(err.message);
+      setLoading(false);
+    });
+}, []);
+
 
   useEffect(() => {
     const handleResize = () => {

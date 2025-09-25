@@ -23,39 +23,42 @@ const SufiCornerpage = () => {
 
   const width = useWindowWidth();
 
-  useEffect(() => {
-    const fetchCorners = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/home/corners");
-        if (!res.ok) throw new Error("Failed to fetch corners");
-        const data = await res.json();
+useEffect(() => {
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-        setCorners(data);
-        const sufiCorner = data.find(c => c.title === "The Sufi Corner");
-        if (sufiCorner && Array.isArray(sufiCorner.slides)) {
-          setSufiSlides(sufiCorner.slides);
-        } else {
-          setSufiSlides([]);
-        }
-      } catch (error) {
-        console.error("Fetch corners failed:", error);
+  const fetchCorners = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/api/home/corners`);
+      if (!res.ok) throw new Error("Failed to fetch corners");
+      const data = await res.json();
+
+      setCorners(data);
+      const sufiCorner = data.find(c => c.title === "The Sufi Corner");
+      if (sufiCorner && Array.isArray(sufiCorner.slides)) {
+        setSufiSlides(sufiCorner.slides);
+      } else {
+        setSufiSlides([]);
       }
-    };
+    } catch (error) {
+      console.error("Fetch corners failed:", error);
+    }
+  };
 
-    const fetchPrecepts = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/precepts");
-        if (!res.ok) throw new Error("Failed to fetch precepts");
-        const data = await res.json();
-        setPrecepts(data);
-      } catch (error) {
-        console.error("Fetch precepts failed:", error);
-      }
-    };
+  const fetchPrecepts = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/api/precepts`);
+      if (!res.ok) throw new Error("Failed to fetch precepts");
+      const data = await res.json();
+      setPrecepts(data);
+    } catch (error) {
+      console.error("Fetch precepts failed:", error);
+    }
+  };
 
-    fetchCorners();
-    fetchPrecepts();
-  }, []);
+  fetchCorners();
+  fetchPrecepts();
+}, []);
+
 
   // Sufi Corner carousel logic
   const sufiSlidesToShow = width < 1024 ? 1 : 2;
