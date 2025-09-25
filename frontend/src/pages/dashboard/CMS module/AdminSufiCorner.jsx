@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 const SUFI_ID = 2;
 const PRECEPTS_ID = 3;
 
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const AdminSufiCorner = () => {
   const [corners, setCorners] = useState([]);
   const [precepts, setPrecepts] = useState([]);
@@ -14,7 +16,7 @@ const AdminSufiCorner = () => {
   useEffect(() => {
     const fetchCorners = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/home/corners");
+        const res = await fetch(`${baseUrl}/api/home/corners`);
         if (!res.ok) throw new Error("Failed to fetch corners");
         const data = await res.json();
         const withFiles = data.map((corner) => ({
@@ -44,7 +46,7 @@ const AdminSufiCorner = () => {
 
     const fetchPrecepts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/precepts");
+        const res = await fetch(`${baseUrl}/api/precepts`);
         if (!res.ok) throw new Error("Failed to fetch precepts");
         const data = await res.json();
         setPrecepts(data);
@@ -148,7 +150,7 @@ const AdminSufiCorner = () => {
         });
       });
 
-      const res = await fetch("http://localhost:5000/api/home/corners", {
+      const res = await fetch(`${baseUrl}/api/home/corners`, {
         method: "POST",
         body: formData,
       });
@@ -209,70 +211,70 @@ const AdminSufiCorner = () => {
           </h2>
 
           {/* Upload input at the top */}
-          {/* Upload form with title + image */}
-<div className="mb-6 max-w-md mx-auto">
-  <label className="block font-medium mb-2">Upload New Precept Image</label>
+          <div className="mb-6 max-w-md mx-auto">
+            <label className="block font-medium mb-2">
+              Upload New Precept Image
+            </label>
 
-  <form
-    onSubmit={async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const file = form.image.files[0];
-      const title = form.title.value.trim();
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const file = form.image.files[0];
+                const title = form.title.value.trim();
 
-      if (!file) {
-        Swal.fire("Error", "Please select an image to upload", "error");
-        return;
-      }
+                if (!file) {
+                  Swal.fire("Error", "Please select an image to upload", "error");
+                  return;
+                }
 
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("title", title);
+                const formData = new FormData();
+                formData.append("image", file);
+                formData.append("title", title);
 
-      try {
-        setLoading(true);
-        const res = await fetch("http://localhost:5000/api/precepts/upload", {
-          method: "POST",
-          body: formData,
-        });
+                try {
+                  setLoading(true);
+                  const res = await fetch(`${baseUrl}/api/precepts/upload`, {
+                    method: "POST",
+                    body: formData,
+                  });
 
-        if (!res.ok) throw new Error("Upload failed");
+                  if (!res.ok) throw new Error("Upload failed");
 
-        const newPrecept = await res.json();
-        setPrecepts((prev) => [...prev, newPrecept]);
-        Swal.fire("Success", "Image uploaded successfully!", "success");
-        form.reset();
-      } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "Failed to upload image", "error");
-      } finally {
-        setLoading(false);
-      }
-    }}
-    className="space-y-4"
-  >
-    <input
-      type="text"
-      name="title"
-      placeholder="Enter title (optional)"
-      className="border px-3 py-2 rounded w-full"
-    />
-    <input
-      type="file"
-      name="image"
-      accept="image/*"
-      className="border px-3 py-2 rounded w-full"
-    />
-    <button
-      type="submit"
-      className="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 w-full font-semibold"
-      disabled={loading}
-    >
-      {loading ? "Uploading..." : "Upload"}
-    </button>
-  </form>
-</div>
-
+                  const newPrecept = await res.json();
+                  setPrecepts((prev) => [...prev, newPrecept]);
+                  Swal.fire("Success", "Image uploaded successfully!", "success");
+                  form.reset();
+                } catch (error) {
+                  console.error(error);
+                  Swal.fire("Error", "Failed to upload image", "error");
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="space-y-4"
+            >
+              <input
+                type="text"
+                name="title"
+                placeholder="Enter title (optional)"
+                className="border px-3 py-2 rounded w-full"
+              />
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="border px-3 py-2 rounded w-full"
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 w-full font-semibold"
+                disabled={loading}
+              >
+                {loading ? "Uploading..." : "Upload"}
+              </button>
+            </form>
+          </div>
 
           {/* Images grid: 3 per row */}
           <div className="grid grid-cols-3 gap-4">
@@ -282,199 +284,162 @@ const AdminSufiCorner = () => {
               </p>
             )}
             {precepts.map((precept) => (
-  <div
-    key={precept._id}
-    className="border rounded-lg p-2 overflow-hidden relative group"
-  >
-    <img
-      src={precept.imageUrl}
-      alt={precept.title || "Precept"}
-      className="w-full h-32 object-cover rounded"
-    />
-    {/* {precept.title && (
-      <p className="text-sm mt-2 text-center text-gray-700">{precept.title}</p>
-    )} */}
-
-    <button
-      onClick={async () => {
-        try {
-          const confirm = await Swal.fire({
-            title: "Are you sure?",
-            text: "This will delete the precept permanently.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-          });
-
-          if (confirm.isConfirmed) {
-            const res = await fetch(
-              `http://localhost:5000/api/precepts/${precept._id}`,
-              { method: "DELETE" }
-            );
-
-            if (!res.ok) throw new Error("Delete failed");
-
-            setPrecepts((prev) =>
-              prev.filter((p) => p._id !== precept._id)
-            );
-
-            Swal.fire("Deleted!", "Precept has been deleted.", "success");
-          }
-        } catch (err) {
-          console.error(err);
-          Swal.fire("Error", "Failed to delete precept", "error");
-        }
-      }}
-      className="text-xs text-red-600 hover:underline mt-2 block text-center"
-    >
-      Delete
-    </button>
-  </div>
-))}
-
-          </div>
-        </div>
-      ) : currentCorner ? (
-        <div className="bg-white shadow-md rounded-lg p-6 mb-12 border">
-          <h2 className="text-xl font-semibold mb-4">Editing: {currentCorner.title ?? ""}</h2>
-
-          {/* Title */}
-          <div className="mb-4">
-            <label className="block font-medium mb-1">Title</label>
-            <input
-              type="text"
-              value={currentCorner.title ?? ""}
-              onChange={(e) => updateCorner("title", e.target.value)}
-              className="border px-3 py-2 rounded w-full"
-            />
-          </div>
-
-          {/* Optional Read More URL */}
-          {currentCorner.readMoreUrl !== undefined && (
-            <div className="mb-4">
-              <label className="block font-medium mb-1">Read More URL</label>
-              <input
-                type="text"
-                value={currentCorner.readMoreUrl ?? ""}
-                onChange={(e) => updateCorner("readMoreUrl", e.target.value)}
-                className="border px-3 py-2 rounded w-full"
-                placeholder="Optional"
-              />
-            </div>
-          )}
-
-          {/* Slides */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Slides</h3>
-            {currentCorner.slides.length === 0 && (
-              <p className="text-gray-500 mb-4">No slides yet.</p>
-            )}
-            {currentCorner.slides.map((slide, slideIndex) => (
               <div
-                key={slide.id || slideIndex}
-                className="mb-6 p-4 border rounded"
+                key={precept._id}
+                className="border rounded-lg p-2 overflow-hidden relative group"
               >
-                <div className="mb-2">
-                  <label className="block font-medium mb-1">Image</label>
-                  {slide.image ? (
-                    <img
-                      src={slide.image}
-                      alt="Slide"
-                      className="w-40 h-24 object-cover rounded mb-2"
-                    />
-                  ) : (
-                    <p className="text-gray-500 mb-2">No image selected</p>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageChange(slideIndex, e.target.files[0])}
-                    className="border px-3 py-2 rounded w-full"
-                  />
-                </div>
-
-                <div className="mb-2">
-                  <label className="block font-medium mb-1">Text</label>
-                  <textarea
-                    value={slide.text ?? ""}
-                    onChange={(e) => updateSlide(slideIndex, "text", e.target.value)}
-                    className="border px-3 py-2 rounded w-full"
-                  />
-                </div>
-
-                <div className="mb-2">
-                  <label className="block font-medium mb-1">Author</label>
-                  <input
-                    type="text"
-                    value={slide.author ?? ""}
-                    onChange={(e) =>
-                      updateSlide(slideIndex, "author", e.target.value)
-                    }
-                    className="border px-3 py-2 rounded w-full"
-                  />
-                </div>
+                <img
+                  src={precept.imageUrl}
+                  alt={precept.title || "Precept"}
+                  className="w-full h-32 object-cover rounded"
+                />
 
                 <button
-  onClick={async () => {
-    try {
-      const confirm = await Swal.fire({
-        title: "Are you sure?",
-        text: "This will delete the precept permanently.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-      });
+                  onClick={async () => {
+                    try {
+                      const confirm = await Swal.fire({
+                        title: "Are you sure?",
+                        text: "This will delete the precept permanently.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                      });
 
-      if (confirm.isConfirmed) {
-        const res = await fetch(
-          `http://localhost:5000/api/precepts/${precept._id}`,
-          {
-            method: "DELETE",
-          }
-        );
+                      if (confirm.isConfirmed) {
+                        const res = await fetch(
+                          `${baseUrl}/api/precepts/${precept._id}`,
+                          { method: "DELETE" }
+                        );
 
-        if (!res.ok) {
-          const error = await res.json();
-          throw new Error(error.message || "Delete failed");
-        }
+                        if (!res.ok) throw new Error("Delete failed");
 
-        setPrecepts((prev) => prev.filter((p) => p._id !== precept._id));
+                        setPrecepts((prev) =>
+                          prev.filter((p) => p._id !== precept._id)
+                        );
 
-        Swal.fire("Deleted!", "Precept has been deleted.", "success");
-      }
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", err.message || "Failed to delete precept", "error");
-    }
-  }}
-  className="text-xs text-red-600 hover:underline mt-2 block text-center"
->
-  Delete
-</button>
-
+                        Swal.fire("Deleted!", "Precept has been deleted.", "success");
+                      }
+                    } catch (err) {
+                      console.error(err);
+                      Swal.fire("Error", "Failed to delete precept", "error");
+                    }
+                  }}
+                  className="text-xs text-red-600 hover:underline mt-2 block text-center"
+                >
+                  Delete
+                </button>
               </div>
             ))}
-
-            <button
-              onClick={addSlide}
-              className="bg-green-600 hover:bg-green-700 text-white rounded px-4 py-2"
-            >
-              Add Slide
-            </button>
-          </div>
-
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded px-6 py-3 font-semibold disabled:opacity-50"
-            >
-              {loading ? "Saving..." : "Save Changes"}
-            </button>
           </div>
         </div>
       ) : (
-        <p className="text-center text-gray-600">No corner selected</p>
+        // Sufi Corner tab
+        currentCorner && (
+          <div className="bg-white shadow-md rounded-lg p-6 mb-12 border">
+            <h2 className="text-xl font-semibold mb-6 text-center">
+              {currentCorner.title || "Sufi Corner"}
+            </h2>
+
+            {/* Title input */}
+            <div className="mb-4 max-w-md mx-auto">
+              <label className="block font-medium mb-2">Title</label>
+              <input
+                type="text"
+                value={currentCorner.title}
+                onChange={(e) => updateCorner("title", e.target.value)}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+
+            {/* Read More URL input */}
+            <div className="mb-4 max-w-md mx-auto">
+              <label className="block font-medium mb-2">Read More URL</label>
+              <input
+                type="text"
+                value={currentCorner.readMoreUrl}
+                onChange={(e) => updateCorner("readMoreUrl", e.target.value)}
+                className="border rounded px-3 py-2 w-full"
+              />
+            </div>
+
+            {/* Slides */}
+            <div className="space-y-6">
+              {currentCorner.slides.map((slide, index) => (
+                <div
+                  key={slide.id || index}
+                  className="border rounded p-4 max-w-md mx-auto"
+                >
+                  <div className="mb-2">
+                    <label className="block font-medium mb-1">Image</label>
+                    {slide.image && (
+                      <img
+                        src={slide.image}
+                        alt={`Slide ${index + 1}`}
+                        className="w-full max-h-48 object-contain rounded mb-2"
+                      />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        handleImageChange(index, e.target.files?.[0] || null)
+                      }
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="block font-medium mb-1">Text</label>
+                    <textarea
+                      value={slide.text}
+                      onChange={(e) => updateSlide(index, "text", e.target.value)}
+                      className="border rounded px-3 py-2 w-full"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="block font-medium mb-1">Author</label>
+                    <input
+                      type="text"
+                      value={slide.author}
+                      onChange={(e) => updateSlide(index, "author", e.target.value)}
+                      className="border rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => removeSlide(index)}
+                    className="text-red-600 hover:underline mt-2"
+                  >
+                    Remove Slide
+                  </button>
+                </div>
+              ))}
+
+              <div className="max-w-md mx-auto">
+                <button
+                  onClick={addSlide}
+                  className="bg-green-600 hover:bg-green-700 text-white rounded px-4 py-2 font-semibold"
+                >
+                  Add Slide
+                </button>
+              </div>
+            </div>
+
+            <div className="max-w-md mx-auto mt-8">
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className={`w-full px-4 py-3 font-semibold rounded text-white ${
+                  loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {loading ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        )
       )}
     </div>
   );

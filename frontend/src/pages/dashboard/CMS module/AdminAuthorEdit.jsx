@@ -14,33 +14,36 @@ const setNestedValue = (obj, path, value) => {
 
 const AdminAuthorEdit = () => {
   const [form, setForm] = useState(null);
-
   const [rightFile, setRightFile] = useState(null);
   const [rightPreview, setRightPreview] = useState(null);
-
   const [leftFile, setLeftFile] = useState(null);
   const [leftPreview, setLeftPreview] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/author");
-        if (!res.ok) return;
-        const data = await res.json();
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+    fetch(`${baseUrl}/api/author`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
+      .then((data) => {
         setForm(data);
 
-        if (data.aboutAuthor?.rightImage?.src)
-          setRightPreview(data.aboutAuthor.rightImage.src);
-        if (data.workingCreed?.leftImage?.src)
-          setLeftPreview(data.workingCreed.leftImage.src);
-      } catch (err) {
-        console.error("Failed to load author data", err);
-      }
-    };
-    fetchData();
+        if (data.aboutAuthor?.rightImage?.src) setRightPreview(data.aboutAuthor.rightImage.src);
+        if (data.workingCreed?.leftImage?.src) setLeftPreview(data.workingCreed.leftImage.src);
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError("Failed to load author data");
+        setLoading(false);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -101,13 +104,15 @@ const AdminAuthorEdit = () => {
     e.preventDefault();
     setLoading(true);
 
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(form));
       if (rightFile) formData.append("rightImage", rightFile);
       if (leftFile) formData.append("leftImage", leftFile);
 
-      const res = await fetch("http://localhost:5000/api/author", {
+      const res = await fetch(`${baseUrl}/api/author`, {
         method: "POST",
         body: formData,
       });
@@ -122,8 +127,9 @@ const AdminAuthorEdit = () => {
       setLoading(false);
     }
   };
-
-  if (!form) return <div className="text-center mt-10">Loading...</div>;
+  
+  if (loading) return <div className="text-center mt-10">Loading...</div>;
+  if (error) return <div className="text-center mt-10 text-red-600">{error}</div>;
 
   return (
     <div className="container mt-[100px]">

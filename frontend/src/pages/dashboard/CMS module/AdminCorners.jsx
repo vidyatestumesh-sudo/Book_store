@@ -5,50 +5,75 @@ import { v4 as uuidv4 } from "uuid";
 const AdminCorners = () => {
   const [corners, setCorners] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch corners from backend
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCorners = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/home/corners");
+        const res = await fetch(`${baseUrl}/api/home/corners`);
+        if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
         setCorners(data);
         if (data.length > 0) setActiveTab(data[0].id);
-      } catch (error) {
-        console.error("Failed to fetch corners:", error);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch corners:", err);
+        setError("Could not load corners from the server.");
+        setLoading(false);
         Swal.fire("Error", "Could not load corners from the server.", "error");
       }
     };
 
-    fetchData();
-  }, []);
+    fetchCorners();
+  }, [baseUrl]);
 
   const updateCorner = (field, value) => {
-    const updated = [...corners];
-    const index = updated.findIndex((c) => c.id === activeTab);
-    updated[index][field] = value;
-    setCorners(updated);
+    setCorners((prevCorners) => {
+      const updated = [...prevCorners];
+      const index = updated.findIndex((c) => c.id === activeTab);
+      if (index !== -1) {
+        updated[index] = { ...updated[index], [field]: value };
+      }
+      return updated;
+    });
   };
 
   const updateSlide = (slideIndex, field, value) => {
-    const updated = [...corners];
-    const cornerIndex = updated.findIndex((c) => c.id === activeTab);
-    updated[cornerIndex].slides[slideIndex][field] = value;
-    setCorners(updated);
+    setCorners((prevCorners) => {
+      const updated = [...prevCorners];
+      const cornerIndex = updated.findIndex((c) => c.id === activeTab);
+      if (cornerIndex !== -1) {
+        const slides = [...updated[cornerIndex].slides];
+        slides[slideIndex] = { ...slides[slideIndex], [field]: value };
+        updated[cornerIndex] = { ...updated[cornerIndex], slides };
+      }
+      return updated;
+    });
   };
 
-  // Store the File object for upload and also a preview URL (base64) for display
   const handleImageChange = (slideIndex, file) => {
+    if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      const updated = [...corners];
-      const cornerIndex = updated.findIndex((c) => c.id === activeTab);
-      updated[cornerIndex].slides[slideIndex].image = reader.result; // base64 preview
-      updated[cornerIndex].slides[slideIndex].imageFile = file;       // actual File for upload
-      setCorners(updated);
+      setCorners((prevCorners) => {
+        const updated = [...prevCorners];
+        const cornerIndex = updated.findIndex((c) => c.id === activeTab);
+        if (cornerIndex !== -1) {
+          const slides = [...updated[cornerIndex].slides];
+          slides[slideIndex] = {
+            ...slides[slideIndex],
+            image: reader.result,
+            imageFile: file,
+          };
+          updated[cornerIndex] = { ...updated[cornerIndex], slides };
+        }
+        return updated;
+      });
     };
-    if (file) reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
   };
 
   const addSlide = () => {
@@ -59,17 +84,30 @@ const AdminCorners = () => {
       author: "",
       imageFile: null,
     };
-    const updated = [...corners];
-    const index = updated.findIndex((c) => c.id === activeTab);
-    updated[index].slides.push(newSlide);
-    setCorners(updated);
+    setCorners((prevCorners) => {
+      const updated = [...prevCorners];
+      const index = updated.findIndex((c) => c.id === activeTab);
+      if (index !== -1) {
+        updated[index] = {
+          ...updated[index],
+          slides: [...updated[index].slides, newSlide],
+        };
+      }
+      return updated;
+    });
   };
 
   const removeSlide = (slideIndex) => {
-    const updated = [...corners];
-    const index = updated.findIndex((c) => c.id === activeTab);
-    updated[index].slides.splice(slideIndex, 1);
-    setCorners(updated);
+    setCorners((prevCorners) => {
+      const updated = [...prevCorners];
+      const index = updated.findIndex((c) => c.id === activeTab);
+      if (index !== -1) {
+        const slides = [...updated[index].slides];
+        slides.splice(slideIndex, 1);
+        updated[index] = { ...updated[index], slides };
+      }
+      return updated;
+    });
   };
 
   const handleSubmit = async () => {
@@ -87,7 +125,7 @@ const AdminCorners = () => {
         });
       });
 
-      const res = await fetch("http://localhost:5000/api/home/corners", {
+      const res = await fetch(`${baseUrl}/api/home/corners`, {
         method: "POST",
         body: formData,
       });
@@ -95,8 +133,8 @@ const AdminCorners = () => {
       if (!res.ok) throw new Error("Failed to update corners");
 
       Swal.fire("Success", "Corners updated successfully!", "success");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       Swal.fire("Error", "Failed to save changes", "error");
     } finally {
       setLoading(false);
@@ -104,6 +142,9 @@ const AdminCorners = () => {
   };
 
   const currentCorner = corners.find((corner) => corner.id === activeTab);
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
     <div className="container mx-auto px-4 py-10 font-Figtree">
