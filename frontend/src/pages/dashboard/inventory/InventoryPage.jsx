@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
 import getBaseUrl from "../../../utils/baseURL";
+import { updateCartStock } from "../../../redux/features/cart/cartSlice";
 
 const InventoryPage = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stockInputs, setStockInputs] = useState({});
+  const dispatch = useDispatch();
 
   const fetchBooks = async () => {
     try {
@@ -61,6 +64,9 @@ const InventoryPage = () => {
           },
         }
       );
+
+      // Update cart stock
+      dispatch(updateCartStock({ bookId, newStock }));
 
       Swal.fire("Success", "Stock updated successfully", "success");
       fetchBooks();
@@ -135,7 +141,7 @@ const InventoryPage = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-4">
-          {books && books.length > 0 ? (
+          {books.length > 0 ? (
             books.map((book, index) => (
               <div key={book._id} className="bg-gray-50 p-4 rounded-lg shadow flex flex-col space-y-2">
                 <div className="font-semibold text-sm">{index + 1}. {book.title}</div>
@@ -176,4 +182,3 @@ const InventoryPage = () => {
 };
 
 export default InventoryPage;
-  

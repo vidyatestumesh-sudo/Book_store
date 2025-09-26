@@ -13,6 +13,9 @@ import InputField from "../manageBooks/InputField";
 import getBaseUrl from "../../../utils/baseURL";
 import Loading from "../../../components/Loading";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { useDispatch } from "react-redux";
+import { updateCartProductDetails } from "../../../redux/features/cart/cartSlice";
+
 
 const toNum = (v) => {
     const n = parseFloat(v);
@@ -29,6 +32,7 @@ const ManageBooks = () => {
     const [addBook, { isLoading: adding }] = useAddBookMutation();
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [editingBookId, setEditingBookId] = useState(null);
 
@@ -166,6 +170,15 @@ const ManageBooks = () => {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 });
+                // ✅ Update cart items with new price/stock
+                dispatch(updateCartProductDetails({
+                    _id: editingBookId,
+                    oldPrice: payload.oldPrice,
+                    newPrice: payload.newPrice,
+                    discount: payload.discount,
+                    stock: payload.stock || 100, // add stock if available
+                }));
+
                 Swal.fire("Book Updated", "Book updated successfully!", "success");
             } else {
                 await addBook(payload).unwrap();
