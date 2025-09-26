@@ -11,6 +11,9 @@ const createAOrder = async (req, res) => {
       productIds,
       products,
       totalPrice,
+      giftTo,  // New field
+      giftFrom, // New field
+      giftMessage // New field
     } = req.body;
 
     if (!products || !Array.isArray(products)) {
@@ -40,6 +43,9 @@ const createAOrder = async (req, res) => {
       products,
       totalPrice,
       guestOrderCode,
+      giftTo, // Save gift information
+      giftFrom, // Save gift information
+      giftMessage // Save gift message
     });
 
     const savedOrder = await newOrder.save();
