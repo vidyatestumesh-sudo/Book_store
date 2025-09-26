@@ -320,16 +320,16 @@ const CartPage = () => {
           </div>
         ) : (
           // Single centered container when cart is empty
-          <div className="max-w-3xl w-full bg-white rounded-lg p-6 mx-auto mt-6 text-center">
-            <h2 className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-Figtree font-regular mb-2">
+          <div className="bg-white p-6 mt-20 text-center w-full md:w-2/3 lg:w-1/2">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
               Your cart is empty!
             </h2>
-            <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] mb-6 font-Figtree font-regular">
+            <p className="text-base sm:text-lg mb-4 text-gray-700">
               Looks like you haven’t added anything yet. Start exploring and add your favorite books to the cart!
             </p>
             <Link
               to="/publications"
-              className="inline-block bg-[#C76F3B] hover:bg-[#A35427] no-underline text-white px-6 py-2 rounded-md text-center font-medium transition-colors duration-300 text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+              className="inline-flex items-center gap-2 bg-[#C76F3B] hover:bg-[#A35427] no-underline text-white px-5 py-2 rounded-md text-center font-medium transition-colors duration-300 text-base sm:text-lg"
             >
               CONTINUE SHOPPING
             </Link>
