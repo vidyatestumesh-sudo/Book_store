@@ -1,4 +1,3 @@
-// controllers/review.controller.js
 const Review = require("./review.model");
 const Book = require("../books/book.model");
 
@@ -14,22 +13,20 @@ const postReview = async (req, res) => {
     const book = await Book.findById(bookId);
     if (!book) return res.status(404).send({ message: "Book not found" });
 
-    // Check if user already reviewed
+    // Check if user already reviewed this book
     let existingReview = await Review.findOne({ bookId, userId });
 
     if (existingReview) {
-      // Update the existing review
       existingReview.rating = rating;
       existingReview.comment = comment;
       existingReview.userName = userName;
       await existingReview.save();
     } else {
-      // Create new review
       const newReview = new Review({ bookId, userId, userName, rating, comment });
       await newReview.save();
     }
 
-    // Return updated list of reviews
+    // Return updated reviews for this book
     const reviews = await Review.find({ bookId }).sort({ createdAt: -1 });
 
     res.status(200).send({
@@ -53,7 +50,19 @@ const getReviewsByBook = async (req, res) => {
   }
 };
 
+// NEW: Get all reviews with rating > 3 regardless of book
+const getAllHighRatedReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({ rating: { $gt: 3 } }).sort({ createdAt: -1 }).lean();
+    res.status(200).send(reviews);
+  } catch (error) {
+    console.error("Error fetching all reviews:", error);
+    res.status(500).send({ message: "Failed to fetch all reviews" });
+  }
+};
+
 module.exports = {
   postReview,
   getReviewsByBook,
+  getAllHighRatedReviews,
 };
