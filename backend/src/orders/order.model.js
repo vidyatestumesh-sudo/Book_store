@@ -11,10 +11,7 @@ const orderSchema = new mongoose.Schema({
   },
   address: {
     street: { type: String, required: true },
-    city: {
-      type: String,
-      required: true,
-    },
+    city: { type: String, required: true },
     country: String,
     state: String,
     zipcode: String,
@@ -24,7 +21,6 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
 
-  // ✅ Keep product IDs for reference
   productIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -33,11 +29,15 @@ const orderSchema = new mongoose.Schema({
     }
   ],
 
-  // ✅ Add book titles and prices at the time of order
   products: [
     {
+      bookId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+      },
       title: String,
       price: Number,
+      quantity: Number,
     }
   ],
 

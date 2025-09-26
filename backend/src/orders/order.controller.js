@@ -19,17 +19,6 @@ const createAOrder = async (req, res) => {
 
     const guestOrderCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
-    const newOrder = new Order({
-      name,
-      email,
-      phone,
-      address,
-      productIds,
-      products,
-      totalPrice,
-      guestOrderCode,
-    });
-
     for (const item of products) {
       const book = await Book.findById(item.bookId);
       if (book) {
@@ -41,6 +30,17 @@ const createAOrder = async (req, res) => {
         await book.save();
       }
     }
+
+    const newOrder = new Order({
+      name,
+      email,
+      phone,
+      address,
+      productIds,
+      products,
+      totalPrice,
+      guestOrderCode,
+    });
 
     const savedOrder = await newOrder.save();
 
