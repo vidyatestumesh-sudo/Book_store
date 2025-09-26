@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
+import { clearCart } from "../../redux/features/cart/cartSlice";
 
 const CheckoutPage = () => {
+  const dispatch = useDispatch();
   const cartItems = useSelector(state => state.cart.cartItems);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.newPrice * item.qty, 0);
@@ -23,40 +25,87 @@ const CheckoutPage = () => {
   const [giftDetails, setGiftDetails] = useState({ from: "", to: "", message: "" });
 
   const onSubmit = async (data) => {
-    const newOrder = {
-      name: data.name,
-      email: data.email,
-      address: {
-        city: data.city,
-        country: data.country,
-        state: data.state,
-        zipcode: data.zipcode,
-        street: data.street,
-      },
-      phone: data.phone,
-      productIds: cartItems.map(item => item._id),
-      products: cartItems.map(item => ({
-        bookId: item._id,
-        title: item.title,
-        price: item.newPrice,
-        quantity: item.qty,
-      })),
-      totalPrice: finalAmount,
-    };
-
-    try {
-      await createOrder(newOrder).unwrap();
+    if (!isChecked) {
       Swal.fire({
-        title: "Confirmed Order",
-        text: "Your order placed successfully!",
-        icon: "success",
+        title: "Terms Not Agreed",
+        text: "You must agree to the Terms & Conditions before placing an order.",
+        icon: "warning",
         confirmButtonColor: "#C76F3B",
-        confirmButtonText: "Great!",
       });
-      navigate("/orders");
-    } catch (error) {
-      console.error("Error placing order", error);
-      alert("Failed to place an order");
+      return;
+    }
+
+    // Calculate total items
+    const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: "Confirm Order",
+      html: `
+        Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+        Total Items: <strong>${totalItems}</strong>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, place order",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      confirmButtonColor: "#C76F3B",
+      cancelButtonColor: "#888",
+    });
+
+    if (result.isConfirmed) {
+      const newOrder = {
+        name: data.name,
+        email: data.email,
+        address: {
+          city: data.city,
+          country: data.country,
+          state: data.state,
+          zipcode: data.zipcode,
+          street: data.street,
+        },
+        phone: data.phone,
+        productIds: cartItems.map(item => item._id),
+        products: cartItems.map(item => ({
+          bookId: item._id,
+          title: item.title,
+          price: item.newPrice,
+          quantity: item.qty,
+        })),
+        totalPrice: finalAmount,
+        gift: isGift ? giftDetails : null,
+      };
+
+      try {
+        await createOrder(newOrder).unwrap();
+
+        // Show success alert
+        await Swal.fire({
+          title: "Order Confirmed!",
+          html: `
+            Your order has been placed successfully.<br/>
+            Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+            Total Items: <strong>${totalItems}</strong>
+          `,
+          icon: "success",
+          confirmButtonColor: "#C76F3B",
+          confirmButtonText: "Great!",
+        });
+
+        // Clear cart after successful order
+        dispatch(clearCart());
+
+        navigate("/orders");
+      } catch (error) {
+        console.error("Error placing order", error);
+        await Swal.fire({
+          title: "Error",
+          text: "Failed to place an order. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#C76F3B",
+        });
+      }
     }
   };
 
@@ -80,11 +129,10 @@ const CheckoutPage = () => {
         </div>
 
         <div className="max-w-8xl w-full rounded-md p-4 mx-auto mt-2 grid grid-cols-1 gap-6">
-          {/* Full width Form */}
-          <div className="bg-white rounded-lg p-6 shadow-md transition-all duration-300">
+          <div className="bg-white rounded-lg p-6 border transition-all duration-300">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
               {/* Personal Details */}
-              <h2 className="text-[18px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-playfair font-regular mb-4 text-left">
+              <h2 className="text-[19px] sm:text-[21px] md:text-[23px] lg:text-[24px] xl:text-[24px] font-playfair font-regular mb-4 text-left">
                 Personal Details
               </h2>
 
@@ -93,13 +141,13 @@ const CheckoutPage = () => {
                   { label: "Full Name", id: "name", type: "text" },
                   { label: "Email Address", id: "email", type: "email" },
                   { label: "Phone Number", id: "phone", type: "tel" },
-                  { label: "Street / Address", id: "street", type: "text"},
+                  { label: "Street / Address", id: "street", type: "text" },
                   { label: "City", id: "city", type: "text" },
                   { label: "Country / Region", id: "country", type: "text" },
                   { label: "State / Province", id: "state", type: "text" },
                   { label: "Pincode", id: "zipcode", type: "text" },
                 ].map(field => (
-                  <div key={field.id} className={`flex flex-col ${field.col === 2 ? 'md:col-span-2' : ''}`}>
+                  <div key={field.id} className="flex flex-col">
                     <label htmlFor={field.id} className="mb-1 font-Figtree font-regular text-gray-700">{field.label}</label>
                     <input
                       {...register(field.id, { required: `${field.label} is required` })}
@@ -146,13 +194,15 @@ const CheckoutPage = () => {
                       value={giftDetails.message}
                       onChange={(e) => setGiftDetails({ ...giftDetails, message: e.target.value })}
                     />
-                    <button
-                      type="button"
-                      onClick={() => alert("Gift details saved & applied!")}
-                      className="mt-1 bg-[#C76F3B] hover:bg-[#A35427] text-white py-2 rounded-md font-medium transition-colors duration-300"
-                    >
-                      Save & Apply
-                    </button>
+                    <div className="flex justify-start"> {/* parent wrapper */}
+                      <button
+                        type="button"
+                        onClick={() => Swal.fire("Gift details saved!", "", "success")}
+                        className="inline-block bg-[#C76F3B] hover:bg-[#A35427] text-white py-2 px-4 rounded-md font-medium transition-colors duration-300"
+                      >
+                        Save & Apply
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -173,11 +223,12 @@ const CheckoutPage = () => {
 
               {/* Total and Place Order */}
               <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-3 bg-gray-50 p-4 rounded-md">
-                <div className="flex flex-col items-start md:items-start">
-                  <span className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-Figtree font-semibold">
+                <div className="flex flex-col items-center md:items-center">
+                  {/* <div className="flex-1 flex justify-center flex-col items-center> */}
+                  <span className="text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-Figtree font-semibold">
                     Total: ₹ {finalAmount.toFixed(2)}
                   </span>
-                  <span className="text-green-600 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                  <span className="text-green-600 text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px]">
                     You Save: ₹ {discount.toFixed(2)}
                   </span>
                 </div>
@@ -189,7 +240,6 @@ const CheckoutPage = () => {
                   Place Order
                 </button>
               </div>
-
             </form>
           </div>
         </div>

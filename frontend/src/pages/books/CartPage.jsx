@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -86,10 +85,11 @@ const CartPage = () => {
           />
         </div>
 
-        <div className="max-w-8xl rounded-md p-4 mx-auto grid grid-cols-1 mt-2 lg:grid-cols-3 gap-20">
-          {/* LEFT: Cart Items */}
-          <div className="lg:col-span-2 bg-white rounded-lg transition-all duration-300">
-            {cartItems.length > 0 ? (
+        {cartItems.length > 0 ? (
+          // Two-column layout when cart has items
+          <div className="max-w-8xl rounded-md p-4 mx-auto grid grid-cols-1 mt-2 lg:grid-cols-3 gap-20">
+            {/* LEFT: Cart Items */}
+            <div className="lg:col-span-2 bg-white rounded-lg transition-all duration-300">
               <ul className="space-y-6">
                 {cartItems.map((product) => (
                   <li
@@ -165,7 +165,6 @@ const CartPage = () => {
 
                       {/* Actions */}
                       <div className="flex items-center gap-4 mt-3">
-                        {/* Qty Control */}
                         <div className="flex items-center border rounded-md">
                           {product.qty > 1 ? (
                             <IconButton
@@ -185,7 +184,6 @@ const CartPage = () => {
                             </IconButton>
                           )}
 
-                          {/* Qty Number */}
                           <span className="px-2 w-8 text-center text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                             {product.qty}
                           </span>
@@ -200,7 +198,6 @@ const CartPage = () => {
                           </IconButton>
                         </div>
 
-                        {/* Share Button */}
                         <IconButton
                           size="small"
                           onClick={() => handleShare(product)}
@@ -231,28 +228,11 @@ const CartPage = () => {
                   </p>
                 </div>
               </ul>
-            ) : (
-              <div className="text-center py-20 text-gray-500">
-                <h2 className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-Figtree font-regular mb-2">
-                  🛍️ Your cart is empty!
-                </h2>
-                <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] mb-6 font-Figtree font-regular">
-                  Looks like you haven’t added anything yet. Start exploring and add your favorite books to the cart!
-                </p>
-                <Link
-                  to="/publications"
-                  className="mt-0 block w-full bg-[#C76F3B] hover:bg-[#A35427] text-white px-6 py-2 no-underline rounded-md text-center font-medium transition-colors duration-300 text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
-                >
-                  CONTINUE SHOPPING
-                </Link>
-              </div>
-            )}
-          </div>
+            </div>
 
-          {/* RIGHT: Two Sections */}
-          {cartItems.length > 0 && (
+            {/* RIGHT: Gift & Price Summary */}
             <div className="flex flex-col gap-3">
-              {/* Section 1: Gift */}
+              {/* Gift Section */}
               <div className="bg-white rounded-lg border p-6 flex flex-col gap-3">
                 <div className="flex justify-center">
                   <label className="flex items-center gap-2 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] font-Figtree font-regular">
@@ -295,10 +275,8 @@ const CartPage = () => {
                       fullWidth
                     />
 
-                    {/* Save & Apply button */}
                     <button
                       onClick={() => {
-                        // You can also dispatch to redux here if needed
                         console.log("Gift details saved:", giftDetails);
                         alert("Gift details saved & applied!");
                       }}
@@ -309,7 +287,8 @@ const CartPage = () => {
                   </div>
                 )}
               </div>
-              {/* Section 2: Price Summary */}
+
+              {/* Price Summary */}
               <div className="bg-white rounded-lg border p-4 flex flex-col gap-2">
                 <h3 className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-playfair font-regular mb-3 mt-0">
                   Price Details
@@ -338,8 +317,24 @@ const CartPage = () => {
                 </Link>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          // Single centered container when cart is empty
+          <div className="max-w-3xl w-full bg-white rounded-lg p-6 mx-auto mt-6 text-center">
+            <h2 className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-Figtree font-regular mb-2">
+              Your cart is empty!
+            </h2>
+            <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] mb-6 font-Figtree font-regular">
+              Looks like you haven’t added anything yet. Start exploring and add your favorite books to the cart!
+            </p>
+            <Link
+              to="/publications"
+              className="inline-block bg-[#C76F3B] hover:bg-[#A35427] no-underline text-white px-6 py-2 rounded-md text-center font-medium transition-colors duration-300 text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+            >
+              CONTINUE SHOPPING
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
