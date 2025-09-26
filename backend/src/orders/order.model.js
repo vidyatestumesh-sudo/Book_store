@@ -20,7 +20,6 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
   productIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +27,6 @@ const orderSchema = new mongoose.Schema({
       required: true,
     }
   ],
-
   products: [
     {
       bookId: {
@@ -40,28 +38,35 @@ const orderSchema = new mongoose.Schema({
       quantity: Number,
     }
   ],
-
   totalPrice: {
     type: Number,
     required: true,
   },
-
   trackingId: {
     type: String,
     default: null,
   },
-
   status: {
     type: String,
     enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
     default: 'Pending',
   },
-
   guestOrderCode: {
     type: String,
     default: null,
+  },
+  giftTo: {
+    type: String,
+    required: false,
+  },
+  giftFrom: {
+    type: String,
+    required: false,
+  },
+  giftMessage: {
+    type: String,
+    required: false,
   }
-
 }, {
   timestamps: true,
 });
