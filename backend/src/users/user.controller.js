@@ -1,38 +1,47 @@
 const User = require('./user.model');
 
-exports.registerUser = async (req, res) => {
+// Get profile or create if not exists
+exports.getOrCreateProfile = async (req, res) => {
+  const { uid, email } = req.firebaseUser;
+
   try {
-    const { username, name, email, phone, address, password } = req.body;
-    let { role } = req.body;
+    let user = await User.findOne({ uid });
 
-    if (!password) {
-      return res.status(400).json({ message: 'Password is required' });
+    // Create if doesn't exist
+    if (!user) {
+      user = new User({ uid, email });
+      await user.save();
     }
 
-    if (!role) {
-      role = 'user';  // default role if not provided
-    }
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+// Update profile (except uid/email)
+exports.updateProfile = async (req, res) => {
+  const { uid } = req.firebaseUser;
+  const updates = req.body;
 
-    const newUser = new User({
-      username,
-      name,
-      email,
-      phone,
-      address,
-      role,
-      password
+  // Don't allow email or UID changes
+  delete updates.email;
+  delete updates.uid;
+
+  try {
+    const user = await User.findOneAndUpdate({ uid }, updates, {
+      new: true,
+      runValidators: true
     });
 
-    await newUser.save();
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    return res.status(201).json({ message: 'User registered successfully' });
+    res.json(user);
   } catch (err) {
-    console.error('Error registering user:', err);
-    return res.status(500).json({ message: 'Server error' });
+    console.error('Update error:', err);
+    res.status(500).json({ message: 'Failed to update profile' });
   }
 };
