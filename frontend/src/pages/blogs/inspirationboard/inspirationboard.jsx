@@ -1,43 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import "./inspirationboard.css";
 import "../../books/SingleBook.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
-import image1 from "./inspiration-images/from-good-to-great.webp";
-import image2 from "./inspiration-images/magic-of-gratitude.webp";
-import image3 from "./inspiration-images/presence.webp";
-import inspirationAtm from "./inspiration-images/inspiration-atm.webp";
-import inspirationBridge from "./inspiration-images/inspiration-bridge.webp";
-import inspirationCandle from "./inspiration-images/inspiration-candle.webp";
-import inspirationDesire from "./inspiration-images/inspiration-desire.webp";
-import inspirationDoorofJoy from "./inspiration-images/inspiration-door-of-joy.webp";
-import inspirationEgo from "./inspiration-images/inspiration-ego.webp";
-
-// Top carousel data (image + text)
-const inspirationDataTop = [
-  { image: image1, title: "From Good To Great" },
-  { image: image2, title: "The Magic of Gratitude" },
-  { image: image3, title: "Presence" },
-];
-
-// Bottom carousel data (images only)
-const inspirationDataBottom = [
-  { image: inspirationAtm },
-  { image: inspirationBridge },
-  { image: inspirationCandle },
-  { image: inspirationDesire },
-  { image: inspirationDoorofJoy },
-  { image: inspirationEgo },
-];
+const BACKEND_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://bookstore-backend-hshq.onrender.com";
 
 const InspirationBoard = () => {
-  // Top carousel
+  // Top carousel (blogs)
   const [topSliderRef, setTopSliderRef] = useState(null);
   const [topSlide, setTopSlide] = useState(0);
+  const [inspirationBlogs, setInspirationBlogs] = useState([]);
 
+  // Bottom carousel (images)
+  const [bottomSliderRef, setBottomSliderRef] = useState(null);
+  const [bottomSlide, setBottomSlide] = useState(0);
+  const [inspirationImages, setInspirationImages] = useState([]);
+
+  // Top carousel settings
   const topSettings = {
     dots: false,
     infinite: true,
@@ -45,17 +31,14 @@ const InspirationBoard = () => {
     slidesToShow: 2,
     slidesToScroll: 1,
     arrows: false,
-    beforeChange: (oldIndex, newIndex) => setTopSlide(newIndex),
+    beforeChange: (_, next) => setTopSlide(next),
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
 
-  // Bottom carousel
-  const [bottomSliderRef, setBottomSliderRef] = useState(null);
-  const [bottomSlide, setBottomSlide] = useState(0);
-
+  // Bottom carousel settings
   const bottomSettings = {
     dots: false,
     infinite: true,
@@ -63,12 +46,43 @@ const InspirationBoard = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
-    beforeChange: (oldIndex, newIndex) => setBottomSlide(newIndex),
+    beforeChange: (_, next) => setBottomSlide(next),
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
+
+  // Fetch blogs of type "inspiration"
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
+        const data = await res.json();
+        const filtered = data
+          .filter((b) => b.type === "inspiration" && !b.suspended)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setInspirationBlogs(filtered);
+      } catch (error) {
+        console.error("Error fetching inspiration blogs:", error);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
+  // Fetch inspiration images
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await fetch(`${BACKEND_BASE_URL}/api/inspiration-images`);
+        const data = await res.json();
+        setInspirationImages(data);
+      } catch (error) {
+        console.error("Error fetching inspiration images:", error);
+      }
+    };
+    fetchImages();
+  }, []);
 
   return (
     <div className="inspiration-board">
@@ -99,72 +113,87 @@ const InspirationBoard = () => {
         {/* Top Carousel */}
         <div className="inspiration-board-top-carousel">
           <Slider ref={setTopSliderRef} {...topSettings}>
-            {inspirationDataTop.map((item, index) => (
+            {inspirationBlogs.map((item, index) => (
               <div
                 className="inspiration-board-carousel-item with-text"
-                key={index}>
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="inspiration-board-carousel-img inspiration-board-carousel-image1"
-                />
-                <div className="inspiration-board-carousel-text">
-                  <h3>{item.title}</h3>
-                </div>
+                key={item._id || index}
+              >
+                <Link to={`/blogs/${item._id}`} className="block group">
+                  <img
+                    src={
+                      item.image?.startsWith("http")
+                        ? item.image
+                        : `${BACKEND_BASE_URL}${item.image}`
+                    }
+                    alt={item.title}
+                    style={{ width: "100%", height: "380px", objectFit: "cover", borderRadius: "8px", transition: "transform 0.3s",}}
+                    className="group-hover:scale-[1.02]"
+                  />
+                </Link>
               </div>
             ))}
           </Slider>
 
           {/* Custom navigation below top carousel */}
-          <div className="inspiration-board-custom-nav">
+          <div className="inspiration-board-custom-nav ms-3">
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => topSliderRef.slickPrev()}>
+              onClick={() => topSliderRef?.slickPrev()}
+            >
               <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => topSliderRef.slickNext()}>
+              onClick={() => topSliderRef?.slickNext()}
+            >
               <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
               {String(topSlide + 1).padStart(2, "0")} /{" "}
-              {String(inspirationDataTop.length).padStart(2, "0")}
+              {String(inspirationBlogs.length).padStart(2, "0")}
             </span>
           </div>
         </div>
 
+
         {/* Bottom Carousel */}
         <div className="inspiration-board-bottom-carousel">
           <Slider ref={setBottomSliderRef} {...bottomSettings}>
-            {inspirationDataBottom.map((item, index) => (
+            {inspirationImages.map((item, index) => (
               <div
                 className="inspiration-board-carousel-item images-only"
-                key={index}>
+                key={item._id || index}
+              >
                 <img
-                  src={item.image}
+                  src={
+                    item.imageUrl?.startsWith("http")
+                      ? item.imageUrl
+                      : `${BACKEND_BASE_URL}${item.imageUrl}`
+                  }
                   alt={`Slide ${index + 1}`}
-                  className="inspiration-board-carousel-img inspiration-board-carousel-image2"
+                  className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover rounded-[8px]"
                 />
               </div>
             ))}
           </Slider>
 
           {/* Custom navigation below bottom carousel */}
-          <div className="inspiration-board-custom-nav">
+          <div className="inspiration-board-custom-nav ms-3">
             <button
-              className="inspiration-board-nav-btn "
-              onClick={() => bottomSliderRef.slickPrev()}>
+              className="inspiration-board-nav-btn"
+              onClick={() => bottomSliderRef?.slickPrev()}
+            >
               <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => bottomSliderRef.slickNext()}>
+              onClick={() => bottomSliderRef?.slickNext()}
+            >
               <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
               {String(bottomSlide + 1).padStart(2, "0")} /{" "}
-              {String(inspirationDataBottom.length).padStart(2, "0")}
+              {String(inspirationImages.length).padStart(2, "0")}
             </span>
           </div>
         </div>
