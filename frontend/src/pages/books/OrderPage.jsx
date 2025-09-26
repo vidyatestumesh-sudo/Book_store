@@ -55,29 +55,39 @@ const OrderPage = () => {
       </div>
     );
 
-  if (isError)
+  if (orders.length === 0)
     return (
-      <div className="min-h-screen flex justify-center items-center text-lg sm:text-xl font-semibold text-red-500">
-        Error fetching orders! {error?.data?.message || ""}
+      <div className="container">
+        <div className="max-w-8xl mx-auto flex flex-col items-center px-2">
+          {/* Title Section */}
+          <div className="relative inline-block text-center mt-5 mb-6 w-full">
+            <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug">
+              Your Orders
+            </h1>
+            <img
+              src="/motif.webp"
+              alt="feather"
+              className="absolute left-1/2 -bottom-4 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 mb-0"
+            />
+          </div>
+          <div className="bg-white p-6 mt-20 text-center w-full md:w-2/3 lg:w-1/2">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
+              You have no orders yet!
+            </h2>
+            <p className="text-base sm:text-lg mb-4 text-gray-700">
+              Once you place an order, it will appear here. Start exploring and shop your favorite books!
+            </p>
+            <Link
+              to="/publications"
+              className="inline-flex items-center gap-2 bg-[#C76F3B] hover:bg-[#A35427] no-underline text-white px-5 py-2 rounded-md text-center font-medium transition-colors duration-300 text-base sm:text-lg"
+            >
+              CONTINUE SHOPPING
+            </Link>
+          </div>
+        </div>
       </div>
     );
 
-  if (orders.length === 0)
-    return (
-      <div className="max-w-3xl w-full bg-white rounded-lg p-4 mx-auto mt-6 text-center">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-1">You have no orders yet!</h2>
-        <p className="text-base sm:text-lg mb-4 text-gray-700">
-          Once you place an order, it will appear here. Start exploring and shop your favorite books!
-        </p>
-        <Link
-          to="/publications"
-          className="inline-flex items-center gap-2 bg-[#C76F3B] hover:bg-[#A35427] no-underline text-white px-5 py-2 rounded-md text-center font-medium transition-colors duration-300 text-base sm:text-lg"
-        >
-          <ArrowBackOutlinedIcon fontSize="small" />
-          CONTINUE SHOPPING
-        </Link>
-      </div>
-    );
 
   return (
     <div className="container">
