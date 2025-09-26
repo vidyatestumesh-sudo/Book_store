@@ -35,7 +35,6 @@ import SufiCornerpage from "../pages/SufiCorner/SufiCornerpage";
 import Foundation from "../pages/Foundation/Foundation";
 import AdminSufiCorner from "../pages/dashboard/CMS module/AdminSufiCorner";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -71,9 +70,8 @@ const router = createBrowserRouter([
       { path: "/publications", element: <Publications /> },
       { path: "/letters", element: <LetterFromLangshott /> },
       { path: "/sufi-corner", element: <SufiCornerpage /> },
-      { path: "/foundation", element: <Foundation />},
-      { path: "/admin-sufi-corner", element: <AdminSufiCorner />},
-
+      { path: "/foundation", element: <Foundation /> },
+      { path: "/admin-sufi-corner", element: <AdminSufiCorner /> },
     ],
   },
   { path: "/admin", element: <AdminLogin /> },
@@ -85,112 +83,35 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
     children: [
-      {
-        path: "",
-        element: (
-          <AdminRoute>
-            <Dashboard />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "manage-books",
-        element: (
-          <AdminRoute>
-            <ManageBooks />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "manage-letters",
-        element: (
-          <AdminRoute>
-            <ManageLetters />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "add-blogs",
-        element: (
-          <AdminRoute>
-            <AddBlogs />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "orders",
-        element: (
-          <AdminRoute>
-            <AdminOrderPage />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "billing-download",
-        element: (
-          <AdminRoute>
-            <BillingDownload />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "inventory",
-        element: (
-          <AdminRoute>
-            <InventoryPage />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "cms",
-        element: (
-          <AdminRoute>
-            <CMSModule />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin-Banner",
-        element: (
-          <AdminRoute>
-            <AdminBanner />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "reader-thoughts",
-        element: (
-          <AdminRoute>
-            <AdminReaderThoughts />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "edit-author",
-        element: (
-          <AdminRoute>
-            <AdminAuthorEdit />
-          </AdminRoute>
-        ),
-      },
-      {
-        path: "admin-corners",
-        element: (
-          <AdminRoute>
-            <AdminCorners />
-          </AdminRoute>
-        ),
-      },{
-        path: "admin-sufi-corner",
-        element: (
-          <AdminRoute>
-            <AdminSufiCorner />
-          </AdminRoute>
-        ),
-      },
-      // { path: "*", element: <NotFoundPage /> }
+      { path: "", element: <AdminRoute><Dashboard /></AdminRoute> },
+      { path: "manage-books", element: <AdminRoute><ManageBooks /></AdminRoute> },
+      { path: "manage-letters", element: <AdminRoute><ManageLetters /></AdminRoute> },
+      { path: "add-blogs", element: <AdminRoute><AddBlogs /></AdminRoute> },
+      { path: "orders", element: <AdminRoute><AdminOrderPage /></AdminRoute> },
+      { path: "billing-download", element: <AdminRoute><BillingDownload /></AdminRoute> },
+      { path: "inventory", element: <AdminRoute><InventoryPage /></AdminRoute> },
+      { path: "cms", element: <AdminRoute><CMSModule /></AdminRoute> },
+      { path: "admin-Banner", element: <AdminRoute><AdminBanner /></AdminRoute> },
+      { path: "reader-thoughts", element: <AdminRoute><AdminReaderThoughts /></AdminRoute> },
+      { path: "edit-author", element: <AdminRoute><AdminAuthorEdit /></AdminRoute> },
+      { path: "admin-corners", element: <AdminRoute><AdminCorners /></AdminRoute> },
+      { path: "admin-sufi-corner", element: <AdminRoute><AdminSufiCorner /></AdminRoute> },
     ],
   },
 ]);
+
+// 🚨 Monkey patch: force hard reload on every navigation
+const originalNavigate = router.navigate;
+router.navigate = (...args) => {
+  const to = args[0];
+  if (typeof to === "string") {
+    window.location.replace(to); // faster, skips history push overhead
+  } else if (to && to.pathname) {
+    window.location.replace(to.pathname);
+  } else {
+    originalNavigate(...args);
+  }
+};
+
 
 export default router;

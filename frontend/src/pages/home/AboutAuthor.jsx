@@ -95,7 +95,7 @@ useEffect(() => {
 
         {/* Right Text */}
         <div className="w-full lg:w-1/2 text-left px-6 md:px-0 lg:py-10 [@media(min-width:2561px)]:py-0">
-          <SectionHeading showMotif={false}>
+           <SectionHeading motifImage={content.sectionHeading.motifImage}>
             {content.workingCreed.rightText.heading}
           </SectionHeading>
           {content.workingCreed.rightText.paragraphs.map((para, idx) => (
