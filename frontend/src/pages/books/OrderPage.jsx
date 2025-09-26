@@ -130,7 +130,7 @@ const OrderPage = () => {
                         className="w-12 h-16 object-cover rounded-sm"
                       />
                     )}
-                    <span className="flex-1">{item.title} - ₹{item.price} × {item.quantity || 1}</span>
+                    <span className="flex-1">{item.title} - ₹{item.price} × {item.quantity}</span>
                   </li>
                 ))}
               </ul>
