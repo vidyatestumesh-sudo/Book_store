@@ -82,15 +82,28 @@ const cartSlice = createSlice({
     },
 
     updateCartStock: (state, action) => {
-      const updatedStock = action.payload; // [{_id, stock}]
-      state.cartItems = state.cartItems.map(item => {
-        const updatedItem = updatedStock.find(u => u._id === item._id);
-        return updatedItem ? { ...item, stock: updatedItem.stock } : item;
-      });
+      const { bookId, newStock } = action.payload;
+      state.cartItems = state.cartItems.map(item =>
+        item._id === bookId ? { ...item, stock: newStock } : item
+      );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    },
+
+    updateCartProductDetails: (state, action) => {
+      const { _id, stock, newPrice, oldPrice } = action.payload;
+      const index = state.cartItems.findIndex((item) => item._id === _id);
+      if (index !== -1) {
+        state.cartItems[index].stock = stock;
+        state.cartItems[index].newPrice = newPrice;
+        state.cartItems[index].oldPrice = oldPrice;
+      }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart, updateCartQty, removeSoldOut, updateCartStock } = cartSlice.actions;
+export const { 
+  addToCart, removeFromCart, clearCart, updateCartQty, 
+  removeSoldOut, updateCartStock, updateCartProductDetails 
+} = cartSlice.actions;
 export default cartSlice.reducer;
