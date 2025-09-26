@@ -22,29 +22,32 @@ const cartSlice = createSlice({
         if (existingItem.qty < newItem.stock) {
           existingItem.qty += 1;
           Swal.fire({
-            position: "top-end",
+            position: "center",
             icon: "info",
             title: "Increased quantity in cart",
             showConfirmButton: false,
             timer: 1500,
+            toast: false,
           });
         } else {
           Swal.fire({
-            position: "top-end",
+            position: "center",
             icon: "warning",
             title: "Stock limit reached",
             showConfirmButton: false,
             timer: 1500,
+            toast: false,
           });
         }
       } else {
         state.cartItems.push(newItem);
         Swal.fire({
-          position: "top-end",
+          position: "center",
           icon: "success",
           title: "Product Added to the Cart",
           showConfirmButton: false,
           timer: 1500,
+          toast: false,
         });
       }
 
@@ -54,11 +57,27 @@ const cartSlice = createSlice({
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(item => item._id !== action.payload._id);
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Product Removed from Cart",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: false,
+      });
     },
 
     clearCart: (state) => {
       state.cartItems = [];
       localStorage.removeItem("cartItems");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Cart Cleared!",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: false,
+      });
     },
 
     updateCartQty: (state, action) => {
@@ -87,6 +106,14 @@ const cartSlice = createSlice({
         item._id === bookId ? { ...item, stock: newStock } : item
       );
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      Swal.fire({
+        position: "center",
+        icon: "info",
+        title: "Cart Stock Updated",
+        showConfirmButton: false,
+        timer: 1200,
+        toast: false,
+      });
     },
 
     updateCartProductDetails: (state, action) => {
@@ -98,6 +125,14 @@ const cartSlice = createSlice({
         state.cartItems[index].oldPrice = oldPrice;
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      Swal.fire({
+        position: "center",
+        icon: "info",
+        title: "Product Details Updated",
+        showConfirmButton: false,
+        timer: 1200,
+        toast: false,
+      });
     },
   },
 });
@@ -106,4 +141,5 @@ export const {
   addToCart, removeFromCart, clearCart, updateCartQty, 
   removeSoldOut, updateCartStock, updateCartProductDetails 
 } = cartSlice.actions;
+
 export default cartSlice.reducer;
