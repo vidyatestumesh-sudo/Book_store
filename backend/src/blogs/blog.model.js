@@ -5,6 +5,11 @@ const blogSchema = new mongoose.Schema({
     description: { type: String, required: true },
     image: { type: String }, // URL of Cloudinary image
     suspended: { type: Boolean, default: false }, // new field
+    type: { 
+        type: String, 
+        enum: ['blogs', 'inspiration'], 
+        default: 'blogs' 
+    }, // new field
     createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

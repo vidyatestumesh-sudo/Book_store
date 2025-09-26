@@ -1,28 +1,14 @@
 const Blog = require("./blog.model");
-const cloudinary = require("../config/cloudinary");
-
-// Helper: Upload file buffer to Cloudinary
-const uploadToCloudinary = (fileBuffer) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "blogs" }, // you can customize the folder
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }
-    );
-    stream.end(fileBuffer);
-  });
-};
+const { uploadToCloudinary } = require("../config/cloudinary");
 
 // Create blog
 const postABlog = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, type } = req.body;
     let imageUrl = null;
 
     if (req.file) {
-      const result = await uploadToCloudinary(req.file.buffer);
+      const result = await uploadToCloudinary(req.file.buffer, "blogs");
       imageUrl = result.secure_url;
     }
 
@@ -30,13 +16,14 @@ const postABlog = async (req, res) => {
       title,
       description,
       image: imageUrl,
+      type, // assuming you want to distinguish between "inspiration" or others
     });
 
     await newBlog.save();
     res.status(200).send({ message: "Blog created successfully", blog: newBlog });
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: "Failed to create blog" });
+    console.error("❌ Failed to create blog:", error);
+    res.status(500).send({ message: "Failed to create blog", error: error.message });
   }
 };
 
@@ -69,7 +56,7 @@ const updateBlog = async (req, res) => {
     const updateData = { ...req.body };
 
     if (req.file) {
-      const result = await uploadToCloudinary(req.file.buffer);
+      const result = await uploadToCloudinary(req.file.buffer, "blogs");
       updateData.image = result.secure_url;
     }
 
@@ -83,8 +70,8 @@ const updateBlog = async (req, res) => {
 
     res.status(200).send({ message: "Blog updated successfully", blog: updatedBlog });
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: "Failed to update blog" });
+    console.error("❌ Failed to update blog:", error);
+    res.status(500).send({ message: "Failed to update blog", error: error.message });
   }
 };
 
@@ -111,7 +98,10 @@ const suspendBlog = async (req, res) => {
     blog.suspended = !blog.suspended; // toggle
     await blog.save();
 
-    res.status(200).send({ message: `Blog ${blog.suspended ? "suspended" : "active"}`, blog });
+    res.status(200).send({
+      message: `Blog ${blog.suspended ? "suspended" : "active"}`,
+      blog,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Failed to update blog suspension" });
@@ -124,5 +114,5 @@ module.exports = {
   getSingleBlog,
   updateBlog,
   deleteBlog,
-  suspendBlog, // <- export it
+  suspendBlog,
 };

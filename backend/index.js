@@ -31,14 +31,12 @@ const authRoutes = require("./auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
 const authorRoutes = require("./src/author/author.route");
-const cornerRoutes = require("./src/home/corners/corner.routes"); 
+const cornerRoutes = require("./src/home/corners/corner.routes");
 const preceptsRoutes = require("./src/precepts/precepts.routes");
 const reviewRoutes = require("./src/review/review.routes");
-app.use("/api/books", reviewRoutes);
-app.use("/api/reviews", reviewRoutes);
+const inspirationRoutes = require("./src/inspiration/inspirationImages.routes");
 
-app.use("/api/precepts", preceptsRoutes);
-// Use routes
+// Mount routes
 app.use("/api/books", bookRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", userRoutes);
@@ -48,9 +46,19 @@ app.use("/api/letters", letterRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/reader-thoughts", readerThoughtRoutes);
 app.use("/api/home/banner", bannerRoutes);
-app.use("/api/home/corners", cornerRoutes); 
+app.use("/api/home/corners", cornerRoutes);
 app.use("/api/author", authorRoutes);
+app.use("/api/precepts", preceptsRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/inspiration-images", inspirationRoutes); // <-- Correct mounting here
+
+// Auth routes
 app.use("/", authRoutes);
+
+// Default root route
+app.get("/", (req, res) => {
+  res.send("Book Store Server is running!");
+});
 
 // Connect to MongoDB and start server
 async function main() {
@@ -70,8 +78,3 @@ async function main() {
 }
 
 main();
-
-// Default root route
-app.get("/", (req, res) => {
-  res.send("Book Store Server is running!");
-});
