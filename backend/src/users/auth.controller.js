@@ -24,6 +24,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+
 // Login: return JWT token
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;

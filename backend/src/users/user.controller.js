@@ -29,6 +29,7 @@ exports.updateProfile = async (req, res) => {
   delete updates.email;
   delete updates.uid;
 
+  
   try {
     const user = await User.findOneAndUpdate({ uid }, updates, {
       new: true,
