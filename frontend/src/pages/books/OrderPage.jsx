@@ -21,7 +21,6 @@ const OrderPage = () => {
     skip: !currentUser?.email,
   });
 
-  // Fetch all books to map images
   const { data: books = [] } = useFetchAllBooksQuery();
   const [ordersWithImages, setOrdersWithImages] = useState([]);
 
@@ -29,7 +28,7 @@ const OrderPage = () => {
     if (orders.length > 0 && books.length > 0) {
       const updatedOrders = orders.map((order) => {
         const productsWithImages = order.products.map((prod) => {
-          const book = books.find((b) => b._id === prod._id || order.productIds.includes(b._id));
+          const book = books.find((b) => b._id === prod.bookId || b._id === prod._id);
           return {
             ...prod,
             coverImage: book?.coverImage || "",
@@ -40,6 +39,7 @@ const OrderPage = () => {
       setOrdersWithImages(updatedOrders);
     }
   }, [orders, books]);
+
 
   if (!currentUser)
     return (
@@ -113,9 +113,8 @@ const OrderPage = () => {
             {/* LEFT: Products & Price */}
             <div className="flex-1 lg:border-r pt-1 lg:pt-0 lg:pr-4 flex flex-col gap-2">
               <p className="bg-[#C76F3B] text-white text-base sm:text-lg w-fit px-3 py-1 rounded-full font-semibold shadow-sm">
-                Order # {index + 1}
+                Order # {ordersWithImages.length - index}
               </p>
-
               <h4 className="flex items-center gap-2 font-semibold text-gray-800 text-base sm:text-lg md:text-xl mb-2">
                 <ShoppingBagOutlinedIcon fontSize="small" /> Products
               </h4>
@@ -130,16 +129,27 @@ const OrderPage = () => {
                         className="w-12 h-16 object-cover rounded-sm"
                       />
                     )}
-                    <span className="flex-1">{item.title} - ₹{item.price} × {item.quantity}</span>
+                    <span className="flex-1">
+                      {item.title} - <span className="font-semibold">₹{item.price} × {item.quantity}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
 
               {order.status && (
-                <p className="flex items-center gap-2 text-base sm:text-lg font-semibold text-[#C76F3B] mt-1">
-                  <AssignmentTurnedInOutlinedIcon fontSize="small" /> Status : {order.status}
+                <p
+                  className={`flex items-center gap-2 text-base sm:text-lg font-semibold mt-1 ${order.status.toLowerCase() === "delivered"
+                    ? "text-green-600"
+                    : order.status.toLowerCase() === "cancelled"
+                      ? "text-red-600"
+                      : "text-[#C76F3B]"
+                    }`}
+                >
+                  <AssignmentTurnedInOutlinedIcon fontSize="small" />
+                  Status: {order.status}
                 </p>
               )}
+
               {order.trackingId && (
                 <p className="text-base sm:text-lg text-gray-700 mt-0.5 break-words">
                   Tracking ID : <span className="font-medium">{order.trackingId}</span>
