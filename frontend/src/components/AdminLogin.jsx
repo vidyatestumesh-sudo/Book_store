@@ -11,12 +11,9 @@ const AdminLogin = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(`${getBaseUrl()}/api/auth/admin`, data, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
+      const response = await axios.post(`${getBaseUrl()}/api/admin-auth/admin`, data, {
+  headers: { 'Content-Type': 'application/json' },
+});
       const auth = response.data;
 
       if (auth.token) {

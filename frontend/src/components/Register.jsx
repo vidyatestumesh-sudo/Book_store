@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
+import { getAuth } from "firebase/auth";
+import axios from "axios";
 
 const Register = () => {
   const [message, setMessage] = useState("");
@@ -15,10 +17,20 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  // Register user
+  // Register user with email/password
   const onSubmit = async (data) => {
     try {
       await registerUser(data.email, data.password, data.username, data.phone);
+
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        const idToken = await user.getIdToken(true);
+        // Sync user data to backend
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/users/sync`, { idToken });
+      }
+
       alert("User registered successfully!");
       navigate("/dashboard");
     } catch (error) {
@@ -27,9 +39,19 @@ const Register = () => {
     }
   };
 
+  // Google sign-in
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
+
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        const idToken = await user.getIdToken(true);
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/users/sync`, { idToken });
+      }
+
       alert("Login successful!");
       navigate("/dashboard");
     } catch (error) {
@@ -46,9 +68,7 @@ const Register = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* username */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Username
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
             <input
               {...register("username", { required: true })}
               type="text"
@@ -59,9 +79,7 @@ const Register = () => {
 
           {/* phone */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Phone
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Phone</label>
             <input
               {...register("phone", { required: true })}
               type="text"
@@ -72,9 +90,7 @@ const Register = () => {
 
           {/* email */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Email
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
             <input
               {...register("email", { required: true })}
               type="email"
@@ -85,9 +101,7 @@ const Register = () => {
 
           {/* password */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Password
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
             <input
               {...register("password", { required: true })}
               type="password"
@@ -96,9 +110,7 @@ const Register = () => {
             />
           </div>
 
-          {message && (
-            <p className="text-red-500 text-xs italic mb-3">{message}</p>
-          )}
+          {message && <p className="text-red-500 text-xs italic mb-3">{message}</p>}
 
           <div>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none">
@@ -125,9 +137,7 @@ const Register = () => {
           </button>
         </div>
 
-        <p className="mt-5 text-center text-gray-500 text-xs">
-          ©2025 Book Store. All rights reserved.
-        </p>
+        <p className="mt-5 text-center text-gray-500 text-xs">©2025 Book Store. All rights reserved.</p>
       </div>
     </div>
   );

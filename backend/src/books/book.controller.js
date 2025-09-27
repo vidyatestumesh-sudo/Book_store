@@ -1,5 +1,5 @@
 const Book = require("./book.model");
-const Review = require("../review/review.model"); // ✅ Add this line
+const Review = require("../review/review.model"); // ✅ Needed for attaching reviews to a book
 
 const postABook = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ const getAllBooksForUsers = async (req, res) => {
     const books = await Book.find({ suspended: false }).sort({ createdAt: -1 });
     res.status(200).send(books);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching user books", error);
     res.status(500).send({ message: "Failed to fetch books" });
   }
 };
@@ -35,16 +35,14 @@ const getAllBooksForUsers = async (req, res) => {
 const getSingleBook = async (req, res) => {
   try {
     const { id } = req.params;
+    const book = await Book.findById(id).lean(); // .lean() returns a plain JS object
 
-    const book = await Book.findById(id).lean(); // ✅ Convert to plain object
     if (!book) {
-      return res.status(404).send({ message: "Book not Found!" });
+      return res.status(404).send({ message: "Book not found!" });
     }
 
-    // ✅ Fetch reviews related to the book
     const reviews = await Review.find({ bookId: id }).sort({ createdAt: -1 }).lean();
-
-    book.reviews = reviews; // ✅ Attach reviews to the book object
+    book.reviews = reviews;
 
     res.status(200).send(book);
   } catch (error) {
@@ -66,7 +64,7 @@ const updateBook = async (req, res) => {
 
     const updatedBook = await Book.findByIdAndUpdate(id, updateData, { new: true });
     if (!updatedBook) {
-      return res.status(404).send({ message: "Book not Found!" });
+      return res.status(404).send({ message: "Book not found!" });
     }
 
     res.status(200).send({
@@ -74,8 +72,8 @@ const updateBook = async (req, res) => {
       book: updatedBook,
     });
   } catch (error) {
-    console.error("Error updating a book", error);
-    res.status(500).send({ message: "Failed to update a book" });
+    console.error("Error updating book", error);
+    res.status(500).send({ message: "Failed to update book" });
   }
 };
 
@@ -84,15 +82,15 @@ const deleteABook = async (req, res) => {
     const { id } = req.params;
     const deletedBook = await Book.findByIdAndDelete(id);
     if (!deletedBook) {
-      return res.status(404).send({ message: "Book not Found!" });
+      return res.status(404).send({ message: "Book not found!" });
     }
     res.status(200).send({
       message: "Book deleted successfully",
       book: deletedBook,
     });
   } catch (error) {
-    console.error("Error deleting a book", error);
-    res.status(500).send({ message: "Failed to delete a book" });
+    console.error("Error deleting book", error);
+    res.status(500).send({ message: "Failed to delete book" });
   }
 };
 
@@ -107,7 +105,7 @@ const suspendBook = async (req, res) => {
     if (!book) return res.status(404).send({ message: "Book not found" });
     res.status(200).send({ message: "Book suspended successfully", book });
   } catch (error) {
-    console.error(error);
+    console.error("Error suspending book", error);
     res.status(500).send({ message: "Failed to suspend book" });
   }
 };
@@ -123,7 +121,7 @@ const unsuspendBook = async (req, res) => {
     if (!book) return res.status(404).send({ message: "Book not found" });
     res.status(200).send({ message: "Book unsuspended successfully", book });
   } catch (error) {
-    console.error(error);
+    console.error("Error unsuspending book", error);
     res.status(500).send({ message: "Failed to unsuspend book" });
   }
 };
@@ -132,7 +130,7 @@ module.exports = {
   postABook,
   getAllBooks,
   getAllBooksForUsers,
-  getSingleBook,     // ✅ now includes reviews
+  getSingleBook,     // ✅ includes reviews
   updateBook,
   deleteABook,
   suspendBook,

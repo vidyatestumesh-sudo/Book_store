@@ -26,9 +26,8 @@ const postReview = async (req, res) => {
       await newReview.save();
     }
 
-    // Return updated reviews for this book
+    // Return updated reviews
     const reviews = await Review.find({ bookId }).sort({ createdAt: -1 });
-
     res.status(200).send({
       message: "Review submitted successfully",
       reviews,

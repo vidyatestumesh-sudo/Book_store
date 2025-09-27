@@ -28,7 +28,7 @@ const adminRoutes = require("./src/stats/admin.stats");
 const blogRoutes = require("./src/blogs/blog.route");
 const letterRoutes = require("./src/letters/letter.route");
 const contactRoutes = require("./src/contact/contact.route");
-const authRoutes = require("./auth.routes");
+const authRoutes = require("./src/users/auth.routes");
 const bannerRoutes = require("./src/home/banner/banner.routes");
 const readerThoughtRoutes = require("./src/home/ReaderThoughts/ReaderThoughts.routes");
 const authorRoutes = require("./src/author/author.route");
@@ -53,8 +53,8 @@ app.use("/api/precepts", preceptsRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/inspiration-images", inspirationRoutes); // <-- Correct mounting here
 
-// Auth routes
-app.use("/", authRoutes);
+app.use("/api/admin-auth", authRoutes);   // for admin login
+
 
 // Default root route
 app.get("/", (req, res) => {
