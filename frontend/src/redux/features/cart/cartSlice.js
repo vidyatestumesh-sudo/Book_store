@@ -6,8 +6,13 @@ const savedCart = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
   : [];
 
+const savedGift = localStorage.getItem("giftDetails")
+  ? JSON.parse(localStorage.getItem("giftDetails"))
+  : { to: "", from: "", message: "" };
+
 const initialState = {
   cartItems: savedCart,
+  giftDetails: savedGift,
 };
 
 const cartSlice = createSlice({
@@ -134,12 +139,22 @@ const cartSlice = createSlice({
         toast: false,
       });
     },
+    saveGiftDetails: (state, action) => {
+      state.giftDetails = action.payload;
+      localStorage.setItem("giftDetails", JSON.stringify(state.giftDetails));
+    },
+
+    clearGiftDetails: (state) => {
+      state.giftDetails = { to: "", from: "", message: "" };
+      localStorage.removeItem("giftDetails");
+    }
   },
 });
 
-export const { 
-  addToCart, removeFromCart, clearCart, updateCartQty, 
-  removeSoldOut, updateCartStock, updateCartProductDetails 
+export const {
+  addToCart, removeFromCart, clearCart, updateCartQty,
+  removeSoldOut, updateCartStock, updateCartProductDetails, saveGiftDetails,
+  clearGiftDetails,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

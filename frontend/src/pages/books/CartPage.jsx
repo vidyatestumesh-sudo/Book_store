@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { getImgUrl } from "../../utils/getImgUrl";
-import { removeFromCart, updateCartQty, removeSoldOut } from "../../redux/features/cart/cartSlice";
+import {
+  removeFromCart,
+  updateCartQty,
+  removeSoldOut,
+  saveGiftDetails,
+  clearGiftDetails,
+} from "../../redux/features/cart/cartSlice";
 import IconButton from "@mui/material/IconButton";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -17,16 +24,25 @@ import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const giftDetails = useSelector((state) => state.cart.giftDetails);
   const dispatch = useDispatch();
-  const [isGift, setIsGift] = useState(false);
-  const [giftDetails, setGiftDetails] = useState({ from: "", to: "", message: "" });
+  const [isGift, setIsGift] = useState(
+    Boolean(giftDetails?.to || giftDetails?.from || giftDetails?.message)
+  );
+
+  useEffect(() => {
+    setIsGift(Boolean(giftDetails?.to || giftDetails?.from || giftDetails?.message));
+  }, [giftDetails]);
 
   useEffect(() => {
     dispatch(removeSoldOut());
   }, [dispatch]);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.newPrice * item.qty, 0);
-  const originalTotal = cartItems.reduce((acc, item) => acc + (item.oldPrice || item.newPrice) * item.qty, 0);
+  const originalTotal = cartItems.reduce(
+    (acc, item) => acc + (item.oldPrice || item.newPrice) * item.qty,
+    0
+  );
   const discount = originalTotal - subtotal;
   const finalAmount = subtotal;
 
@@ -70,6 +86,13 @@ const CartPage = () => {
     }
   };
 
+  const safeGift = (overrides = {}) => ({
+    to: giftDetails?.to || "",
+    from: giftDetails?.from || "",
+    message: giftDetails?.message || "",
+    ...overrides,
+  });
+
   return (
     <div className="container">
       <div className="max-w-9xl mx-auto py-0 text-center flex flex-col justify-center items-center px-0 mb-20">
@@ -86,7 +109,6 @@ const CartPage = () => {
         </div>
 
         {cartItems.length > 0 ? (
-          // Two-column layout when cart has items
           <div className="max-w-8xl rounded-md p-4 mx-auto grid grid-cols-1 mt-2 lg:grid-cols-3 gap-20">
             {/* LEFT: Cart Items */}
             <div className="lg:col-span-2 bg-white rounded-lg transition-all duration-300">
@@ -96,14 +118,12 @@ const CartPage = () => {
                     key={product._id}
                     className="flex flex-col sm:flex-row gap-6 border-b pb-6 transition hover:border p-2 rounded-lg"
                   >
-                    {/* Image */}
                     <img
                       src={getImgUrl(product.coverImage)}
                       alt={product.title}
                       className="w-38 h-44 object-cover rounded-md border shadow-sm transition-transform duration-300 hover:scale-105"
                     />
 
-                    {/* Details */}
                     <div className="flex-1">
                       <h3 className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[21px] font-playfair font-regular leading-snug text-left text-gray-800">
                         {product.title}
@@ -113,7 +133,6 @@ const CartPage = () => {
                         by {product.author || "Unknown Author"}
                       </p>
 
-                      {/* Info Section */}
                       <div className="text-left mt-0 px-0 mb-0">
                         <div className="inline-flex justify-start items-center gap-2 w-full flex-wrap md:flex-nowrap">
                           <span className="text-gray-500 line-through text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] font-Figtree font-regular">
@@ -156,14 +175,10 @@ const CartPage = () => {
                         </div>
                       </div>
 
-                      {/* Stock */}
                       <p className={`text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] mt-1 font-Figtree font-regular text-left ${product.stock <= 10 ? "text-[#993333]" : "text-green-600"}`}>
-                        {product.stock <= 10
-                          ? `In Stock - Only ${product.stock} left`
-                          : "In Stock"}
+                        {product.stock <= 10 ? `In Stock - Only ${product.stock} left` : "In Stock"}
                       </p>
 
-                      {/* Actions */}
                       <div className="flex items-center gap-4 mt-3">
                         <div className="flex items-center border rounded-md">
                           {product.qty > 1 ? (
@@ -239,7 +254,18 @@ const CartPage = () => {
                     <input
                       type="checkbox"
                       checked={isGift}
-                      onChange={() => setIsGift(!isGift)}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setIsGift(checked);
+
+                        if (!checked) {
+                          dispatch(clearGiftDetails());
+                        } else {                  
+                          if (!giftDetails) {
+                            dispatch(saveGiftDetails({ to: "", from: "", message: "" }));
+                          }
+                        }
+                      }}
                       className="accent-[#C76F3B] w-4 h-4"
                     />
                     This will be a gift <CardGiftcardOutlinedIcon className="text-gray-600" />
@@ -252,38 +278,36 @@ const CartPage = () => {
                       label="Gift To"
                       variant="outlined"
                       size="small"
-                      value={giftDetails.to}
-                      onChange={(e) => setGiftDetails({ ...giftDetails, to: e.target.value })}
+                      value={giftDetails?.to || ""}
+                      onChange={(e) =>
+                        dispatch(saveGiftDetails(safeGift({ to: e.target.value })))
+                      }
                       fullWidth
                     />
+
                     <TextField
                       label="Gift From"
                       variant="outlined"
                       size="small"
-                      value={giftDetails.from}
-                      onChange={(e) => setGiftDetails({ ...giftDetails, from: e.target.value })}
+                      value={giftDetails?.from || ""}
+                      onChange={(e) =>
+                        dispatch(saveGiftDetails(safeGift({ from: e.target.value })))
+                      }
                       fullWidth
                     />
+
                     <TextField
                       label="Message"
                       variant="outlined"
                       size="small"
                       multiline
                       rows={3}
-                      value={giftDetails.message}
-                      onChange={(e) => setGiftDetails({ ...giftDetails, message: e.target.value })}
+                      value={giftDetails?.message || ""}
+                      onChange={(e) =>
+                        dispatch(saveGiftDetails(safeGift({ message: e.target.value })))
+                      }
                       fullWidth
                     />
-
-                    <button
-                      onClick={() => {
-                        console.log("Gift details saved:", giftDetails);
-                        alert("Gift details saved & applied!");
-                      }}
-                      className="mt-1 bg-[#C76F3B] hover:bg-[#A35427] text-white py-2 rounded-md font-medium transition-colors duration-300 text-[14px] sm:text-[16px] lg:text-[18px]"
-                    >
-                      Save & Apply
-                    </button>
                   </div>
                 )}
               </div>
@@ -319,7 +343,6 @@ const CartPage = () => {
             </div>
           </div>
         ) : (
-          // Single centered container when cart is empty
           <div className="bg-white p-6 mt-20 text-center w-full md:w-2/3 lg:w-1/2">
             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
               Your cart is empty!
