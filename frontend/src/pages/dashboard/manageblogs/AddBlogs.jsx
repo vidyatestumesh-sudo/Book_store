@@ -31,7 +31,11 @@ const AddBlogs = () => {
     try {
       const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
       const data = await res.json();
-      setBlogs(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+
+      // ✅ Filter to include only blogs with type === 'blogs'
+      const filtered = data.filter((blog) => blog.type === "blogs");
+
+      setBlogs(filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (err) {
       console.error("Failed to fetch blogs", err);
     }
@@ -53,6 +57,7 @@ const AddBlogs = () => {
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("description", description);
+      formData.append("type", "blogs"); // ✅ Ensure this is saved as type: blogs
 
       if (data.image && data.image.length > 0) {
         formData.append("image", data.image[0]);
@@ -145,7 +150,6 @@ const AddBlogs = () => {
     if (!result.isConfirmed) return;
 
     try {
-      // Use same endpoint, backend should toggle based on current status
       const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/suspend/${blog._id}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
@@ -155,7 +159,7 @@ const AddBlogs = () => {
 
       if (res.ok) {
         Swal.fire("Success", `Blog ${action}ed successfully`, "success");
-        fetchBlogs(); // refresh the blog list
+        fetchBlogs();
       } else {
         Swal.fire("Error", data.message || `Failed to ${action} blog`, "error");
       }
@@ -171,7 +175,7 @@ const AddBlogs = () => {
     const [maxHeight, setMaxHeight] = useState(0);
 
     const toggleExpand = () => setExpanded(!expanded);
-    // Helper: truncate HTML while keeping tags intact
+
     const truncateHTML = (html, wordLimit = 40) => {
       const div = document.createElement("div");
       div.innerHTML = html;
@@ -300,27 +304,22 @@ const AddBlogs = () => {
     <div className="container mt-[100px]">
       <div className="container mt-20 mx-auto">
         <div className="max-w-8xl mx-auto p-0 rounded-lg">
+
           {/* Toggle Buttons */}
           <div className="relative flex justify-center mb-8 bg-gray-200 rounded-full p-1 max-w-md mx-auto shadow-inner">
-            {/* Animated sliding background */}
             <div
-              className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""
-                }`}
+              className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""}`}
             ></div>
 
             <button
-              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
-                ? "text-white"
-                : "text-gray-700 hover:text-gray-900 hover:scale-105"
-                }`}
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"}`}
               onClick={() => setViewMode("list")}
             >
               <LibraryBooksIcon fontSize="medium" /> View Blogs
             </button>
 
             <button
-              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"
-                }`}
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form" ? "text-white" : "text-gray-700 hover:text-gray-900 hover:scale-105"}`}
               onClick={() => {
                 setViewMode("form");
                 reset();
@@ -370,30 +369,14 @@ const AddBlogs = () => {
 
                   <button
                     type="submit"
-                    disabled={isLoading} // disables while adding/updating
+                    disabled={isLoading}
                     className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     {isLoading ? (
                       <>
-                        <svg
-                          className="animate-spin h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8v8H4z"
-                          ></path>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
                         {editingId ? "Updating..." : "Adding..."}
                       </>
@@ -401,7 +384,6 @@ const AddBlogs = () => {
                       editingId ? "Update Blog" : "Add Blog"
                     )}
                   </button>
-
                 </form>
               </div>
             </div>
