@@ -12,12 +12,15 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
+import { clearCart } from "../../redux/features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const SingleBook = () => {
   const { id } = useParams();
   const { data: book, isLoading, isError, refetch } = useFetchBookByIdQuery(id);
   const dispatch = useDispatch();
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const [showMore, setShowMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -69,6 +72,12 @@ const SingleBook = () => {
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
+  };
+
+  const handleBuyNow = (product) => {
+    dispatch(clearCart());
+    dispatch(addToCart(product));
+    navigate("/checkout");
   };
 
   const handleReviewSubmit = async (e) => {
@@ -171,7 +180,9 @@ const SingleBook = () => {
               <button className="add-to-cart" onClick={() => handleAddToCart(book)}>
                 ADD TO CART
               </button>
-              <button className="buy-now">BUY NOW</button>
+              <button className="buy-now" onClick={() => handleBuyNow(book)}>
+                BUY NOW
+              </button>
             </div>
           </div>
 
@@ -287,7 +298,7 @@ const SingleBook = () => {
               </div>
             )}
 
-            {/* Show form if editing or if user hasn't submitted */}            
+            {/* Show form if editing or if user hasn't submitted */}
             {(isEditingReview || !currentUserReview) && currentUser && (
               <form onSubmit={handleReviewSubmit}>
                 <div className="rating-input">
@@ -309,7 +320,7 @@ const SingleBook = () => {
                 <div className="review-buttons">
                   <button type="submit" class="me-3">
                     {currentUserReview ? "Update Review" : "Submit Review"}
-                  </button> 
+                  </button>
                   {isEditingReview && (
                     <button
                       type="button"
