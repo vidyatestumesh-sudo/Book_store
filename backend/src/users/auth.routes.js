@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { adminLogin } = require('./auth.controller');
+const { login } = require('./auth.controller');  // Ensure you're importing the right controller function
 
-router.post('/admin', adminLogin); // now it's POST /api/admin-auth/admin
+// Admin login route
+router.post('/admin', login);  // POST request for admin login
 
 module.exports = router;

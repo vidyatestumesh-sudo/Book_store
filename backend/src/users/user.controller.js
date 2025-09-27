@@ -54,6 +54,7 @@ exports.syncUser = async (req, res) => {
   }
 };
 
+// Get user profile by ID
 exports.getUserProfile = async (req, res) => {
   const { uid } = req.params;
 
@@ -65,13 +66,12 @@ exports.getUserProfile = async (req, res) => {
     const user = await User.findOne({ uid });
 
     if (!user) {
-      console.warn(`⚠️ User not found for UID: ${uid}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
     res.status(200).json(user);
   } catch (err) {
-    console.error('❌ getUserProfile error:', err.message);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error fetching user profile:', err.message);
+    res.status(500).json({ message: 'Server error' });
   }
 };

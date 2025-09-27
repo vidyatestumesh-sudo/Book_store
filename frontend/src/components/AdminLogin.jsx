@@ -2,36 +2,39 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import getBaseUrl from '../utils/baseURL';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const AdminLogin = () => {
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [message, setMessage] = useState("");
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(`${getBaseUrl()}/api/admin-auth/admin`, data, {
-  headers: { 'Content-Type': 'application/json' },
-});
-      const auth = response.data;
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin-auth/admin`, data, {
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-      if (auth.token) {
-        localStorage.setItem('token', auth.token);
-        setTimeout(() => {
-          localStorage.removeItem('token');
-          alert('Token has expired! Please login again.');
-          navigate("/");
-        }, 3600 * 1000);  // 1 hour token expiry
+      if (response.data.token) {
+        // Store the token in local storage (you can also use cookies or session storage)
+        localStorage.setItem('token', response.data.token);
+
+        // Redirect to the dashboard
+        navigate("/dashboard");
+      } else {
+        setMessage("Invalid username or password");
       }
-
-      alert("Admin Login successful!");
-      navigate("/dashboard");
     } catch (error) {
       setMessage("Invalid username or password");
       console.error(error);
     }
   };
+
+  // If authenticated, redirect to the dashboard
+  if (isAuthenticated) {
+    navigate("/dashboard");
+  }
 
   return (
     <div className='h-screen flex justify-center items-center'>

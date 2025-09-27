@@ -2,23 +2,38 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const { auth } = require("express-openid-connect");
+const jwt = require('jsonwebtoken');
+const User = require('./src/users/user.model'); // User model for admin login
 
+// Initialize app
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
+// Middleware setup
 app.use(express.json());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://book-app-frontend-tau.vercel.app",
-      "https://bookstore-frontend-9tii.onrender.com",
+      "http://localhost:5173", // Your frontend URL (local dev)
+      "https://book-app-frontend-tau.vercel.app", // Vercel frontend URL
+      "https://bookstore-frontend-9tii.onrender.com", // Render frontend URL
     ],
-    credentials: true,
+    credentials: true, // Allow cookies and credentials
   })
 );
 
+// Auth0 Middleware for regular user authentication
+const authConfig = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.AUTH0_SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+};
+
+app.use(auth(authConfig));
 
 // Route imports
 const bookRoutes = require("./src/books/book.route");
@@ -51,17 +66,60 @@ app.use("/api/home/corners", cornerRoutes);
 app.use("/api/author", authorRoutes);
 app.use("/api/precepts", preceptsRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/inspiration-images", inspirationRoutes); // <-- Correct mounting here
+app.use("/api/inspiration-images", inspirationRoutes);
 
-app.use("/api/admin-auth", authRoutes);   // for admin login
-
+// Admin Auth routes (Custom Admin login via username/password)
+app.use("/api/auth", authRoutes); // Admin login via Auth0
 
 // Default root route
 app.get("/", (req, res) => {
   res.send("Book Store Server is running!");
 });
 
-// Connect to MongoDB and start server
+// Admin login logic (username/password)
+app.post("/api/admin-auth/admin", async (req, res) => {
+  const { username, password } = req.body;
+
+  // Validate input
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required' });
+  }
+
+  try {
+    // Find the admin user in the database
+    const adminUser = await User.findOne({ username, role: 'admin' });
+
+    if (!adminUser) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Compare the password (using bcrypt)
+    const isMatch = await adminUser.comparePassword(password);  // comparePassword method on the User model
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: adminUser._id, role: adminUser.role },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '1h' }  // Token expires in 1 hour
+    );
+
+    // Send the token and user details back to the frontend
+    res.status(200).json({
+      message: 'Authentication successful',
+      token,
+      user: { username: adminUser.username, role: adminUser.role },
+    });
+
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// MongoDB Connection and Server Start
 async function main() {
   try {
     await mongoose.connect(process.env.DB_URL, {
@@ -69,7 +127,6 @@ async function main() {
       useUnifiedTopology: true,
     });
     console.log("MongoDB connected successfully!");
-
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
