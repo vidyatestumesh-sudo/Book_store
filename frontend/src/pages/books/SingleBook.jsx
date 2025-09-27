@@ -92,24 +92,25 @@ const SingleBook = () => {
     }
 
     try {
-      const res = await fetch(`/api/books/${id}/review`, {
-        method: "POST", // server handles create or update
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookId: id,
-          userId: currentUser.uid,
-          userName: currentUser.displayName || currentUser.email || "Anonymous User",
-          rating,
-          comment,
-        }),
-      });
+      const res = await fetch(`/api/reviews/${id}/review`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    bookId: id,
+    userId: currentUser.uid,
+    userName: currentUser.displayName || currentUser.email || "Anonymous User",
+    rating,
+    comment,
+  }),
+});
 
       if (res.ok) {
-        setIsEditingReview(false);
-        setRating(0);
-        setComment("");
-        refetch();
-      } else {
+  const data = await res.json();
+  setIsEditingReview(false);
+  setRating(0);
+  setComment("");
+  refetch?.();
+} else {
         const err = await res.json();
         console.error("Failed to submit review:", err);
       }
@@ -318,7 +319,7 @@ const SingleBook = () => {
                   placeholder="Write your review..."
                 ></textarea>
                 <div className="review-buttons">
-                  <button type="submit" class="me-3">
+                  <button type="submit" className="me-3">
                     {currentUserReview ? "Update Review" : "Submit Review"}
                   </button>
                   {isEditingReview && (
