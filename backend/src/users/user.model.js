@@ -2,16 +2,35 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-  uid: { type: String, required: true, unique: true }, // Firebase UID
-  email: { type: String, required: true, unique: true },
-  username: { type: String },
-  name: { type: String },
-  phone: { type: String },
-  address: { type: String },
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],
-    default: 'user'
+    required: true,
+    default: 'user'  // Default role added
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  phone: {
+    type: String
+  },
+  address: {
+    type: String
   }
 });
 
@@ -24,5 +43,3 @@ userSchema.pre('save', async function(next) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
-
-

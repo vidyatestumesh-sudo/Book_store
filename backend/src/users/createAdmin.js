@@ -24,10 +24,8 @@ async function createAdmin() {
       email: 'admin@example.com',
     });
 
-    
     await admin.save();
     console.log('Admin user created successfully with hashed password');
-
     process.exit(0);
   } catch (error) {
     console.error('Error creating admin user:', error);
