@@ -10,15 +10,16 @@ const ReadersFeedback = () => {
 
   const itemsPerPage = 2;
 
+  // Fetch feedbacks
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Fetch only approved reviews with rating > 3
         const response = await axios.get("/api/reviews/all?approved=true");
-        setFeedbacks(response.data);
+        // Ensure response.data is always an array
+        setFeedbacks(Array.isArray(response.data) ? response.data : []);
         setCurrentIndex(0);
       } catch (err) {
         setError("Failed to load feedback.");
@@ -31,26 +32,12 @@ const ReadersFeedback = () => {
     fetchReviews();
   }, []);
 
-
-  const getAllHighRatedReviews = async (req, res) => {
-    try {
-      const reviews = await Review.find({ rating: { $gt: 3 }, approved: true })
-        .sort({ createdAt: -1 })
-        .lean();
-
-      res.status(200).send(reviews);
-    } catch (error) {
-      console.error("Error fetching all reviews:", error);
-      res.status(500).send({ message: "Failed to fetch all reviews" });
-    }
-  };
-
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex - itemsPerPage;
-      return newIndex < 0 ? (totalPages - 1) * itemsPerPage : newIndex;
+      return newIndex < 0 ? Math.max(totalPages - 1, 0) * itemsPerPage : newIndex;
     });
   };
 
@@ -68,7 +55,7 @@ const ReadersFeedback = () => {
       <div className="w-full max-w-8xl mx-auto pb-5 px-14 xl:px-14">
         {/* Heading */}
         <div className="relative mb-12 inline-block text-left">
-          <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-2 mt-0">
+          <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-light text-black leading-tight mb-2 mt-0">
             Readers Feedback
           </h2>
           <img
@@ -78,83 +65,73 @@ const ReadersFeedback = () => {
           />
         </div>
 
-        {/* Loading or Error */}
-        {loading && (
-          <p className="text-center text-black text-lg font-figtree">Loading feedback...</p>
-        )}
-        {error && (
-          <p className="text-center text-red-600 text-lg font-figtree">{error}</p>
+        {/* Loading / Error */}
+        {loading && <p className="text-center text-black text-lg">Loading feedback...</p>}
+        {error && <p className="text-center text-red-600 text-lg">{error}</p>}
+
+        {/* No feedback */}
+        {!loading && !error && feedbacks.length === 0 && (
+          <p className="text-center text-black text-lg">No feedback available.</p>
         )}
 
         {/* Feedback Cards */}
-        {!loading && !error && feedbacks.length === 0 && (
-          <p className="text-center text-black text-lg font-figtree">No feedback available.</p>
-        )}
-
         {!loading && !error && feedbacks.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-[450px] sm:h-[280px] md:h-[240px] lg:h-[220px] xl:h-[220px] 2xl:h-[250px]">
-            {feedbacks
+            {(Array.isArray(feedbacks) ? feedbacks : [])
               .slice(currentIndex, currentIndex + itemsPerPage)
-              .map((fb) => (
-                <div key={fb._id || fb.id} className="space-y-4">
-                  {/* Avatar + Name */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center ">
-                      <img
-                        src="/readers.webp"
-                        alt={fb.userName || fb.name}
-                        className="w-full h-full object-cover"
-                      />
+              .map((fb) => {
+                const rating = Number(fb.rating) || 0;
+                return (
+                  <div key={fb._id || fb.id} className="space-y-4">
+                    {/* Avatar + Name */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center">
+                        <img
+                          src="/readers.webp"
+                          alt={fb.userName || fb.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="italic text-[18px] sm:text-[20px] md:text-[22px] font-figtree break-words">
+                        {fb.userName || fb.name || "Anonymous"}
+                      </span>
+                      <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-1">
+                        {Array.from({ length: rating }).map((_, i) => (
+                          <span key={i} className="text-yellow-500">★</span>
+                        ))}
+                        {Array.from({ length: 5 - rating }).map((_, i) => (
+                          <span key={i} className="text-gray-300">★</span>
+                        ))}
+                      </div>
                     </div>
-                    <span className="italic text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] font-Figtree font-regular leading-snug leading-tight text-black-900 font-figtree break-words">
-                      {fb.userName || fb.name}
-                    </span>
-                    <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-1">
-                      {Array.from({ length: fb.rating }).map((_, i) => (
-                        <span key={i} className="text-yellow-500">★</span>
-                      ))}
-                      {Array.from({ length: 5 - fb.rating }).map((_, i) => (
-                        <span key={i} className="text-gray-300">★</span>
-                      ))}
-                    </div>
-                  </div>
 
-                  {/* Feedback Text */}
-                  <p className="text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
-                    {fb.comment || fb.text}
-                  </p>
-
-                  {/* Right Side: Book Name */}
-                  {fb.bookName && (
-                    <p className="text-right text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] text-gray-600 italic font-Figtree mt-2 md:mt-0">
-                      - {fb.bookName}
+                    {/* Feedback Text */}
+                    <p className="text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black font-figtree leading-snug">
+                      {fb.comment || fb.text || "No comment provided."}
                     </p>
-                  )}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
           </div>
         )}
 
         {/* Controls */}
         {!loading && !error && feedbacks.length > 0 && (
-          <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 font-figtree text-black-800 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] leading-snug lg:leading-normal">
+          <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-black text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px]">
             <button
               onClick={handlePrev}
               className="w-8 h-8 flex items-center justify-center rounded-full border border-black hover:bg-[#8c2f24] hover:text-white transition"
             >
               <FiChevronLeft size={20} />
             </button>
-
             <button
               onClick={handleNext}
               className="w-8 h-8 flex items-center justify-center rounded-full border border-black hover:bg-[#8c2f24] hover:text-white transition"
             >
               <FiChevronRight size={20} />
             </button>
-
-            <span className="text-gray-700 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[22px] font-Figtree font-regular leading-snug leading-tigh font-figtree">
-              {String(currentPage).padStart(2, "0")} /{" "}
-              {String(totalPages).padStart(2, "0")}
+            <span className="text-gray-700">
+              {String(currentPage).padStart(2, "0")} / {String(totalPages).padStart(2, "0")}
             </span>
           </div>
         )}
