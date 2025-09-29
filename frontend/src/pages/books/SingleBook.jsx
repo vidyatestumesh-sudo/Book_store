@@ -15,6 +15,7 @@ import StarHalfIcon from "@mui/icons-material/StarHalf";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
+import Swal from "sweetalert2";
 
 const SingleBook = () => {
   const { id } = useParams();
@@ -110,44 +111,79 @@ const SingleBook = () => {
       ? "https://bookstore-backend-hshq.onrender.com"
       : "http://localhost:5000";
 
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    if (!rating || !comment) {
-      alert("Please provide both rating and comment.");
-      return;
-    }
-    if (!currentUser) {
-      alert("You must be logged in to submit a review.");
-      return;
-    }
+ const handleReviewSubmit = async (e) => {
+  e.preventDefault();
+  if (!rating || !comment) {
+    Swal.fire({
+      icon: "warning",
+      title: "Incomplete!",
+      text: "Please provide both rating and comment.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    return;
+  }
+  if (!currentUser) {
+    Swal.fire({
+      icon: "error",
+      title: "Not logged in",
+      text: "You must be logged in to submit a review.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    return;
+  }
 
-    try {
-      const res = await fetch(`${BASE_URL}/api/reviews/${id}/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookId: id,
-          userId: currentUser.uid,
-          userName:
-            currentUser.displayName || currentUser.email || "Anonymous User",
-          rating,
-          comment,
-        }),
+  try {
+    const res = await fetch(`${BASE_URL}/api/reviews/${id}/review`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        bookId: id,
+        userId: currentUser.uid,
+        userName: currentUser.displayName || currentUser.email || "Anonymous User",
+        rating,
+        comment,
+      }),
+    });
+
+    if (res.ok) {
+      setIsEditingReview(false);
+      setRating(0);
+      setComment("");
+      refetch?.();
+
+      // ✅ Popup for success
+      Swal.fire({
+        icon: "success",
+        title: "Thank you!",
+        text: "Your review has been submitted successfully.",
+        timer: 2000,
+        showConfirmButton: false,
       });
-
-      if (res.ok) {
-        setIsEditingReview(false);
-        setRating(0);
-        setComment("");
-        refetch?.();
-      } else {
-        const err = await res.json();
-        console.error("Failed to submit review:", err);
-      }
-    } catch (err) {
-      console.error("Error submitting review:", err);
+    } else {
+      const err = await res.json();
+      console.error("Failed to submit review:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to submit your review. Try again later.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
-  };
+  } catch (err) {
+    console.error("Error submitting review:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Something went wrong. Try again later.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  }
+};
+
 
   const avgRating =
     book?.reviews?.length > 0
