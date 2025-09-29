@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+
 import { useParams, Link } from "react-router-dom";
 import { CalendarDays, ArrowRight, ArrowLeft } from "lucide-react";
-import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
-import { getImgUrl } from "../../utils/getImgUrl";
+import { useFetchAllBooksQuery } from "../../../redux/features/books/booksApi";
+import { getImgUrl } from "../../../utils/getImgUrl";
 
 const BACKEND_BASE_URL =
   window.location.hostname === "localhost"
@@ -15,16 +16,16 @@ const sanitizeDescription = (html) => {
     .replace(/style="[^"]*"/g, "");
 };
 
-const BlogDetailPage = () => {
+const InspirationDetailPage = () => {
   const { id } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [latestBlogs, setLatestBlogs] = useState([]);
+  const [inspiration, setInspiration] = useState(null);
+  const [latestInspirations, setLatestInspirations] = useState([]);
   const { data: books = [] } = useFetchAllBooksQuery();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const blogsPerPage = 3; // Blogs per page in Latest Blogs
+  const itemsPerPage = 3;
 
   // Only active books
   const activeBooks = books.filter((book) => !book.suspended);
@@ -52,51 +53,49 @@ const BlogDetailPage = () => {
   };
 
   useEffect(() => {
-    const fetchBlog = async () => {
+    const fetchInspiration = async () => {
       try {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`);
         const data = await res.json();
 
-        // ✅ Make sure it's a blog and not suspended
-        if (data.suspended || data.type !== "blogs") {
-          setBlog(null);
+        if (data.suspended || data.type !== "inspiration") {
+          setInspiration(null);
         } else {
-          setBlog(data);
+          setInspiration(data);
         }
       } catch (err) {
-        console.error("Failed to fetch blog", err);
+        console.error("Failed to fetch inspiration", err);
       }
     };
 
-    const fetchLatestBlogs = async () => {
+    const fetchLatestInspirations = async () => {
       try {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
         const data = await res.json();
 
-        // ✅ Filter only blogs and exclude suspended ones
         const sorted = data
           .filter(
-            (b) => b._id !== id && !b.suspended && b.type === "blogs"
+            (b) => b._id !== id && !b.suspended && b.type === "inspiration"
           )
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        setLatestBlogs(sorted);
+        setLatestInspirations(sorted);
       } catch (err) {
-        console.error("Failed to fetch latest blogs", err);
+        console.error("Failed to fetch inspirations", err);
       }
     };
 
-    fetchBlog();
-    fetchLatestBlogs();
+    fetchInspiration();
+    fetchLatestInspirations();
   }, [id]);
 
-  if (!blog) return <p className="text-center mt-10">Blog not found.</p>;
+  if (!inspiration) return <p className="text-center mt-10">Inspiration not found.</p>;
 
-  // Pagination for Latest Blogs
-  const totalPages = Math.ceil(latestBlogs.length / blogsPerPage);
-  const indexOfLast = currentPage * blogsPerPage;
-  const indexOfFirst = indexOfLast - blogsPerPage;
-  const currentBlogs = latestBlogs.slice(indexOfFirst, indexOfLast);
+  // Pagination for latest inspirations
+  const totalPages = Math.ceil(latestInspirations.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = latestInspirations.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="container">
@@ -105,8 +104,12 @@ const BlogDetailPage = () => {
         {/* Banner */}
         <div className="relative w-full h-[350px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-[10px] z-0">
           <img
-            src={blog.image?.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
-            alt={blog.title}
+            src={
+              inspiration.image?.startsWith("http")
+                ? inspiration.image
+                : `${BACKEND_BASE_URL}${inspiration.image}`
+            }
+            alt={inspiration.title}
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
           <div className="absolute inset-0 bg-black/40 z-0" />
@@ -117,15 +120,15 @@ const BlogDetailPage = () => {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb m-0 p-0 flex gap-0 text-[14px]">
                   <li className="breadcrumb-item"><a href="/" className="text-gray-300 hover:underline">Home</a></li>
-                  <li className="breadcrumb-item"><a href="/blogs" className="text-gray-300 hover:underline">Blogs</a></li>
-                  <li className="breadcrumb-item text-gray-200 truncate max-w-[120px]" title={blog.title}>{blog.title}</li>
+                  <li className="breadcrumb-item"><a href="/inspiration" className="text-gray-300 hover:underline">Inspiration</a></li>
+                  <li className="breadcrumb-item text-gray-200 truncate max-w-[120px]" title={inspiration.title}>{inspiration.title}</li>
                 </ol>
               </nav>
             </div>
 
             <div className="relative w-full max-w-[900px] mx-auto text-center px-3 sm:px-6 md:px-8 lg:px-0">
               <h1 className="relative text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-snug inline-block">
-                {blog.title}
+                {inspiration.title}
                 <img
                   src="/motif.webp"
                   alt="feather"
@@ -137,19 +140,19 @@ const BlogDetailPage = () => {
           </div>
         </div>
 
-        {/* Blog Content */}
+        {/* Inspiration Content */}
         <div className="max-w-8xl mx-auto px-0 py-6 grid gap-10 lg:grid-cols-1 xl:grid-cols-4">
           <div className="col-span-1 xl:col-span-3">
             <p className="flex items-center gap-2 text-gray-400 text-md font-regular mt-0 mb-2">
               <CalendarDays className="w-5 h-5" />
-              {new Date(blog.createdAt).toLocaleDateString(undefined, {
+              {new Date(inspiration.createdAt).toLocaleDateString(undefined, {
                 year: "numeric", month: "long", day: "numeric",
               })}
             </p>
 
             <div
               className="text-left max-w-none text-gray-800 text-[15px] sm:text-[17px] md:text-[17px] lg:text-[18px] xl:text-[18px] font-Figtree leading-snug whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: sanitizeDescription(blog.description) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeDescription(inspiration.description) }}
             />
           </div>
 
@@ -193,11 +196,11 @@ const BlogDetailPage = () => {
           )}
         </div>
 
-        {/* Latest Blogs */}
+        {/* Latest Inspirations */}
         <div className="max-w-8xl mx-auto py-0">
           <div className="relative inline-block">
             <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
-              Latest Blogs
+              Latest Inspirations
             </h1>
             <img
               src="/motif.webp"
@@ -206,16 +209,16 @@ const BlogDetailPage = () => {
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10 gap-10">
-            {currentBlogs.map((blog) => (
+            {currentItems.map((item) => (
               <div
-                key={blog._id}
+                key={item._id}
                 className="group bg-white rounded-[10px] border-[2px] hover:shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition duration-500 overflow-hidden hover:-translate-y-2 flex flex-col"
               >
-                {blog.image && (
+                {item.image && (
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={blog.image.startsWith("http") ? blog.image : `${BACKEND_BASE_URL}${blog.image}`}
-                      alt={blog.title}
+                      src={item.image.startsWith("http") ? item.image : `${BACKEND_BASE_URL}${item.image}`}
+                      alt={item.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -224,11 +227,11 @@ const BlogDetailPage = () => {
 
                 <div className="p-4 text-left flex flex-col flex-grow">
                   <p className="text-[18px] sm:text-[20px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-Figtree font-medium leading-snug">
-                    {blog.title}
+                    {item.title}
                   </p>
                   <p className="flex items-center gap-2 text-gray-400 text-lg mt-3 mb-2">
                     <CalendarDays className="w-5 h-5" />
-                    {new Date(blog.createdAt).toLocaleDateString(undefined, {
+                    {new Date(item.createdAt).toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -238,15 +241,15 @@ const BlogDetailPage = () => {
                     className="text-[15px] sm:text-[17px] md:text-[17px] lg:text-[18px] xl:text-[18px] text-black-800 font-Figtree font-regular leading-snug mt-0 mb-2 px-1 sm:px-1"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeDescription(
-                        blog.description.length > 160
-                          ? blog.description.slice(0, 160) + "..."
-                          : blog.description
+                        item.description.length > 160
+                          ? item.description.slice(0, 160) + "..."
+                          : item.description
                       ),
                     }}
                   />
                   <div className="mt-auto">
                     <Link
-                      to={`/blogs/${blog._id}`}
+                      to={`/inspiration/${item._id}`}
                       className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
                     >
                       <span className="inline-flex text-[#993333] items-center gap-1 text-[16px] sm:text-[18px] font-regular no-underline">
@@ -299,4 +302,4 @@ const BlogDetailPage = () => {
   );
 };
 
-export default BlogDetailPage;
+export default InspirationDetailPage;

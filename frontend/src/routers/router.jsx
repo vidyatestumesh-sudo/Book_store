@@ -36,6 +36,7 @@ import Foundation from "../pages/Foundation/Foundation";
 import AdminSufiCorner from "../pages/dashboard/CMS module/AdminSufiCorner";
 import AdminInspirationBoard from "../pages/dashboard/manageInspiration/InspirationBoard";
 import ManageReviews from "../pages/dashboard/CMS module/ManageReviews";
+import InspirationDetailPage from "../pages/blogs/inspirationboard/InspirationDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
       { path: "/sufi-corner", element: <SufiCornerpage /> },
       { path: "/foundation", element: <Foundation /> },
       { path: "/admin-sufi-corner", element: <AdminSufiCorner /> },
+      { path: "/inspiration/:id", element: <InspirationDetailPage />},
     ],
   },
   { path: "/admin", element: <AdminLogin /> },

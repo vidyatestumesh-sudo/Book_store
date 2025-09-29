@@ -163,8 +163,8 @@ const BlogsPage = () => {
                     key={num}
                     onClick={() => setCurrentPage(num)}
                     className={`w-8 h-8 flex items-center justify-center rounded-full ${currentPage === num
-                        ? "bg-[#993333] text-white"
-                        : "border-transparent text-black hover:border-black"
+                      ? "bg-[#993333] text-white"
+                      : "border-transparent text-black hover:border-black"
                       }`}
                   >
                     {num}

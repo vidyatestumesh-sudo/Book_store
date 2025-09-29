@@ -19,7 +19,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
 
 const CartPage = () => {
@@ -50,16 +50,16 @@ const CartPage = () => {
     <Tooltip {...props} classes={{ popper: className }} />
   ))(() => ({
     [`& .MuiTooltip-tooltip`]: {
-      backgroundColor: '#fff',
-      color: '#333',
+      backgroundColor: "#fff",
+      color: "#333",
       fontSize: 12,
-      padding: '8px 14px',
+      padding: "8px 14px",
       borderRadius: 8,
-      border: '1px solid #ddd',
+      border: "1px solid #ddd",
       maxWidth: 320,
-      whiteSpace: 'normal',
+      whiteSpace: "normal",
       lineHeight: 2,
-      textAlign: 'left',
+      textAlign: "left",
     },
   }));
 
@@ -98,7 +98,7 @@ const CartPage = () => {
       <div className="max-w-9xl mx-auto py-0 text-center flex flex-col justify-center items-center px-0 mb-20">
         {/* Title Section */}
         <div className="relative inline-block">
-          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-10">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 md:mt-10">
             Shopping Cart
           </h1>
           <img
@@ -109,32 +109,31 @@ const CartPage = () => {
         </div>
 
         {cartItems.length > 0 ? (
-          <div className="max-w-8xl rounded-md p-4 mx-auto grid grid-cols-1 mt-2 lg:grid-cols-3 gap-20">
+          <div className="max-w-8xl rounded-md p-4 mx-auto grid grid-cols-1 md:mt-2 gap-6 md:gap-8 lg:grid-cols-3 lg:gap-20">
             {/* LEFT: Cart Items */}
-            <div className="lg:col-span-2 bg-white rounded-lg transition-all duration-300">
+            <div className="lg:col-span-2 bg-white rounded-lg transition-all duration-300 text-center md:text-left">
               <ul className="space-y-6">
                 {cartItems.map((product) => (
                   <li
                     key={product._id}
-                    className="flex flex-col sm:flex-row gap-6 border-b pb-6 transition hover:border p-2 rounded-lg"
+                    className="flex flex-col md:flex-row gap-6 border-b pb-6 transition hover:border p-2 rounded-lg items-center md:items-start text-center md:text-left"
                   >
                     <img
                       src={getImgUrl(product.coverImage)}
                       alt={product.title}
-                      className="w-38 h-44 object-cover rounded-md border shadow-sm transition-transform duration-300 hover:scale-105"
+                      className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px] h-auto object-cover rounded-md border shadow-sm transition-transform duration-300 hover:scale-105"
                     />
-
                     <div className="flex-1">
-                      <h3 className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[21px] font-playfair font-regular leading-snug text-left text-gray-800">
+                      <h3 className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] xl:text-[21px] font-playfair font-regular leading-snug text-center md:text-left text-gray-800">
                         {product.title}
                       </h3>
 
-                      <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] text-gray-800 font-Figtree font-regular leading-tight text-left mt-0">
+                      <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] text-gray-800 font-Figtree font-regular leading-tight mt-0 text-center md:text-left">
                         by {product.author || "Unknown Author"}
                       </p>
 
-                      <div className="text-left mt-0 px-0 mb-0">
-                        <div className="inline-flex justify-start items-center gap-2 w-full flex-wrap md:flex-nowrap">
+                      <div className="text-center md:text-left mt-0 px-0 mb-0">
+                        <div className="inline-flex justify-center md:justify-start items-center gap-2 w-full flex-wrap md:flex-nowrap">
                           <span className="text-gray-500 line-through text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] font-Figtree font-regular">
                             ₹{product?.oldPrice}
                           </span>
@@ -143,7 +142,10 @@ const CartPage = () => {
                           </span>
                           {product?.oldPrice > product?.newPrice && (
                             <span className="text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] text-green-600 px-0 py-0 font-Figtree font-bold ">
-                              {Math.round(((product.oldPrice - product.newPrice) / product.oldPrice) * 100)}% off
+                              {Math.round(
+                                ((product.oldPrice - product.newPrice) / product.oldPrice) * 100
+                              )}
+                              % off
                             </span>
                           )}
                           <PriceTooltip
@@ -175,11 +177,14 @@ const CartPage = () => {
                         </div>
                       </div>
 
-                      <p className={`text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] mt-1 font-Figtree font-regular text-left ${product.stock <= 10 ? "text-[#993333]" : "text-green-600"}`}>
+                      <p
+                        className={`text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px] mt-1 font-Figtree font-regular text-center md:text-left ${product.stock <= 10 ? "text-[#993333]" : "text-green-600"
+                          }`}
+                      >
                         {product.stock <= 10 ? `In Stock - Only ${product.stock} left` : "In Stock"}
                       </p>
 
-                      <div className="flex items-center gap-4 mt-3">
+                      <div className="flex justify-center md:justify-start items-center gap-4 mt-3">
                         <div className="flex items-center border rounded-md">
                           {product.qty > 1 ? (
                             <IconButton
@@ -207,7 +212,8 @@ const CartPage = () => {
                             size="small"
                             onClick={() => handleQtyChange(product, "increase")}
                             disabled={product.qty >= product.stock}
-                            className={`text-gray-700 transition p-1 ${product.qty >= product.stock ? "opacity-50" : "hover:bg-gray-200"}`}
+                            className={`text-gray-700 transition p-1 ${product.qty >= product.stock ? "opacity-50" : "hover:bg-gray-200"
+                              }`}
                           >
                             <AddOutlinedIcon fontSize="small" />
                           </IconButton>
@@ -224,7 +230,7 @@ const CartPage = () => {
                     </div>
                   </li>
                 ))}
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6 gap-4">
                   <Link
                     to="/publications"
                     className="mt-0 flex items-center gap-2 bg-[#C76F3B] hover:bg-[#A35427] text-white px-6 py-2 no-underline rounded-md font-medium transition-colors duration-300 text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
@@ -246,10 +252,10 @@ const CartPage = () => {
             </div>
 
             {/* RIGHT: Gift & Price Summary */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 items-center md:items-stretch text-center md:text-left">
               {/* Gift Section */}
-              <div className="bg-white rounded-lg border p-6 flex flex-col gap-3">
-                <div className="flex justify-center">
+              <div className="bg-white rounded-lg border p-6 flex flex-col gap-3 w-full md:w-auto">
+                <div className="flex justify-center md:justify-start">
                   <label className="flex items-center gap-2 text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] font-Figtree font-regular">
                     <input
                       type="checkbox"
@@ -260,7 +266,7 @@ const CartPage = () => {
 
                         if (!checked) {
                           dispatch(clearGiftDetails());
-                        } else {                  
+                        } else {
                           if (!giftDetails) {
                             dispatch(saveGiftDetails({ to: "", from: "", message: "" }));
                           }
@@ -313,7 +319,7 @@ const CartPage = () => {
               </div>
 
               {/* Price Summary */}
-              <div className="bg-white rounded-lg border p-4 flex flex-col gap-2">
+              <div className="bg-white rounded-lg border p-4 flex flex-col gap-2 w-full md:w-auto">
                 <h3 className="text-[16px] sm:text-[20px] md:text-[22px] lg:text-[23px] xl:text-[23px] font-playfair font-regular mb-3 mt-0">
                   Price Details
                 </h3>
@@ -343,7 +349,7 @@ const CartPage = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white p-6 mt-20 text-center w-full md:w-2/3 lg:w-1/2">
+          <div className="bg-white p-6 mt-20 text-center w-full md:w-2/3 lg:w-1/2 mx-auto">
             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
               Your cart is empty!
             </h2>

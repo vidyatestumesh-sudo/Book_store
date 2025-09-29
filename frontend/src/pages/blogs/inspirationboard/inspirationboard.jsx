@@ -118,7 +118,7 @@ const InspirationBoard = () => {
                 className="inspiration-board-carousel-item with-text"
                 key={item._id || index}
               >
-                <Link to={`/blogs/${item._id}`} className="block group">
+                <Link to={`/inspiration/${item._id}`} className="block group">
                   <img
                     src={
                       item.image?.startsWith("http")
@@ -126,7 +126,7 @@ const InspirationBoard = () => {
                         : `${BACKEND_BASE_URL}${item.image}`
                     }
                     alt={item.title}
-                    style={{ width: "100%", height: "380px", objectFit: "cover", borderRadius: "8px", transition: "transform 0.3s",}}
+                    style={{ width: "100%", height: "380px", objectFit: "cover", borderRadius: "8px", transition: "transform 0.3s", }}
                     className="group-hover:scale-[1.02]"
                   />
                 </Link>

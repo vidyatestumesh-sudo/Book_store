@@ -39,8 +39,10 @@ const Footer = () => {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
         const data = await res.json();
 
-        // Filter only active blogs
-        const activeBlogs = data.filter((blog) => !blog.suspended);
+        // ✅ Only blogs, exclude suspended + inspirations
+        const activeBlogs = data.filter(
+          (blog) => !blog.suspended && blog.type === "blogs"
+        );
 
         // Sort by creation date descending (most recent first)
         const sortedBlogs = activeBlogs.sort(
@@ -58,6 +60,7 @@ const Footer = () => {
 
     fetchBlogs();
   }, []);
+
 
   return (
     <footer className="footer">
