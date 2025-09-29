@@ -18,18 +18,20 @@ const AboutAuthorPage = () => {
 
   // Fetch Blogs
   const [blogs, setBlogs] = useState([]);
-  useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/api/blogs`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBlogs(
-          data
-            .filter((b) => !b.suspended)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        );
-      })
-      .catch(console.error);
-  }, [BACKEND_BASE_URL]);
+  
+useEffect(() => {
+  fetch(`${BACKEND_BASE_URL}/api/blogs`)
+    .then((res) => res.json())
+    .then((data) => {
+      // Filter: only active blogs with type 'blogs'
+      const filtered = data
+        .filter((b) => !b.suspended && b.type === "blogs")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setBlogs(filtered);
+    })
+    .catch(console.error);
+}, [BACKEND_BASE_URL]);
 
   return (
     <div className="container">

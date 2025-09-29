@@ -23,6 +23,7 @@ const SingleBook = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
+
   // ✅ Cart from Redux (auto re-renders)
   const cartItems = useSelector((state) => state.cart.cartItems);
 
@@ -104,6 +105,11 @@ const SingleBook = () => {
     navigate("/checkout");
   };
 
+  const BASE_URL =
+    process.env.NODE_ENV === "production"
+      ? "https://bookstore-backend-hshq.onrender.com"
+      : "http://localhost:5000";
+
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!rating || !comment) {
@@ -116,7 +122,7 @@ const SingleBook = () => {
     }
 
     try {
-      const res = await fetch(`/api/reviews/${id}/review`, {
+      const res = await fetch(`${BASE_URL}/api/reviews/${id}/review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -152,14 +158,14 @@ const SingleBook = () => {
   if (isError || !book)
     return <div className="error">Failed to load book details.</div>;
 
-const safeReviews = Array.isArray(book.reviews) ? book.reviews : [];
-const currentUserReview = safeReviews.find(
-  (rev) => rev.userId === currentUser?.uid
-);
-const otherReviews = safeReviews
-  .filter((rev) => rev.userId !== currentUser?.uid)
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-  .slice(0, 2);
+  const safeReviews = Array.isArray(book.reviews) ? book.reviews : [];
+  const currentUserReview = safeReviews.find(
+    (rev) => rev.userId === currentUser?.uid
+  );
+  const otherReviews = safeReviews
+    .filter((rev) => rev.userId !== currentUser?.uid)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 2);
 
 
   const inCart = cartItems.find((item) => item._id === book._id);
