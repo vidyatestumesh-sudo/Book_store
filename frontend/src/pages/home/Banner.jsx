@@ -46,13 +46,13 @@ useEffect(() => {
           <img
             src={data.logoUrl}
             alt={data.title}
-            className="h-26 sm:h-30 max-h-34 w-auto block select-none mx-auto mt-0"
+            className="h-24 sm:h-32 max-h-32 w-auto block select-none mx-auto mt-0 mb-0"
           />
         </div>
 
         {/* Title Section */}
         <div className="relative inline-block text-center">
-          <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mt-4 mb-4 sm:mb-6">
+          <h1 className="text-[30px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mt-3 mb-4 sm:mb-6">
             {data.title}
           </h1>
           <img

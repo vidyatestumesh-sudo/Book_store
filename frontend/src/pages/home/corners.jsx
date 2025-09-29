@@ -149,7 +149,7 @@ const Corners = () => {
               <div className="px-4 sm:px-8">
                 <div
                   ref={(el) => (cardRefs.current[cardKey] = el)}
-                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[700px] sm:h-[750px] mx-auto flex flex-col justify-between"
+                  className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[720px] sm:h-[750px] mx-auto flex flex-col justify-between"
                   style={{ backgroundColor: corner.bgColor }}>
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     <div className="relative text-center">
@@ -165,7 +165,7 @@ const Corners = () => {
                     </div>
 
                     <div className="w-full flex justify-center px-4">
-                      <div className="w-[520px] h-[285px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
+                      <div className="w-[520px] h-[275px] max-w-full sm:w-[550px] sm:h-[285px] h-[240px] flex items-center justify-center overflow-hidden">
                         <AnimatePresence mode="wait">
                           <motion.img
                             key={cardKey}
@@ -183,7 +183,7 @@ const Corners = () => {
                     </div>
 
                     <div>
-                      <p className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] text-black-800 font-Figtree font-regular text-center leading-relaxed mx-4">
+                      <p className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] text-black-800 font-Figtree font-regular text-center leading-relaxed mx-2">
                         {slide.text}
                       </p>
                       {slide.author && (
@@ -196,7 +196,7 @@ const Corners = () => {
 
                   {/* Bottom Controls */}
                   <div
-                    className="px-5 pb-[20px] flex items-center justify-between mt-auto"
+                    className="px-4 pb-[20px] flex items-center justify-between mt-auto"
                     ref={(el) => (bottomControlsRefs.current[cardKey] = el)}>
                     <div className="flex items-center gap-4">
                       <div className="share">

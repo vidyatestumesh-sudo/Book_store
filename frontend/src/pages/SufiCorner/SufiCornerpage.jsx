@@ -225,7 +225,7 @@ useEffect(() => {
                 <div
                   key={idx}
                   className="rounded-lg shadow-md overflow-hidden relative w-full h-[220px] sm:h-[260px] md:h-[320px] lg:h-[360px] flex-shrink-0"
-                  style={{ width: `${93 / slidesToShow}%` }}
+                  style={{ width: `${94 / slidesToShow}%` }}
                 >
                   <img
                     src={slide.imageUrl}

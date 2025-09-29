@@ -115,7 +115,7 @@ const ReadersFeedback = () => {
                     <span className="italic text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] font-Figtree font-regular leading-snug leading-tight text-black-900 font-figtree break-words">
                       {fb.userName || fb.name}
                     </span>
-                    <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-1">
+                    <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-0 mb-0">
                       {Array.from({ length: fb.rating }).map((_, i) => (
                         <span key={i} className="text-yellow-500">
                           ★
