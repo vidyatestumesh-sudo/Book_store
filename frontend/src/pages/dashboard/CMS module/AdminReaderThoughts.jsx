@@ -13,29 +13,36 @@ const AdminReaderThoughts = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [thoughts, setThoughts] = useState([{ title: "", text: "", author: "", _id: null }]);
+  const [thoughts, setThoughts] = useState([]); // default empty array
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axiosClient.get("/api/reader-thoughts");
         const data = res.data;
+
         if (data) {
           setTitle(data.title || "");
+
           if (data.image?.url) {
             setImagePreview({ url: data.image.url, mimeType: data.image.mimeType });
           }
+
+          // Ensure thoughts is always an array
           if (Array.isArray(data.thoughts) && data.thoughts.length > 0) {
             setThoughts(
               data.thoughts.map((t) => ({
-                title: t.title,
-                text: t.text,
+                title: t.title || "",
+                text: t.text || "",
                 author: t.author || "",
-                _id: t._id,
+                _id: t._id || null,
               }))
             );
+          } else {
+            setThoughts([]); // fallback empty array
           }
         }
       } catch (err) {
@@ -48,6 +55,7 @@ const AdminReaderThoughts = () => {
     fetchData();
   }, []);
 
+  // Revoke object URL on cleanup
   useEffect(() => {
     return () => {
       if (imagePreview?.url?.startsWith("blob:")) {
@@ -56,8 +64,9 @@ const AdminReaderThoughts = () => {
     };
   }, [imagePreview]);
 
+  // Image change handler
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     const img = new Image();
@@ -72,7 +81,7 @@ const AdminReaderThoughts = () => {
         Math.abs(img.height - requiredHeight) <= 25;
 
       if (withinRange) {
-        saveFile(file, img);
+        saveFile(file);
         return;
       }
 
@@ -88,13 +97,13 @@ const AdminReaderThoughts = () => {
         confirmButtonText: "Yes, use it",
         cancelButtonText: "No, re-upload",
       }).then((result) => {
-        if (result.isConfirmed) saveFile(file, img);
+        if (result.isConfirmed) saveFile(file);
         else e.target.value = "";
       });
     };
   };
 
-  const saveFile = (file, img) => {
+  const saveFile = (file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview({ url: reader.result, mimeType: file.type });
@@ -103,6 +112,7 @@ const AdminReaderThoughts = () => {
     setImageFile(file);
   };
 
+  // Thought handlers
   const handleThoughtChange = (index, field, value) => {
     const updated = [...thoughts];
     updated[index][field] = value;
@@ -138,6 +148,7 @@ const AdminReaderThoughts = () => {
     return url;
   };
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -167,7 +178,7 @@ const AdminReaderThoughts = () => {
       });
 
       const data = res.data;
-      setTitle(data.title);
+      setTitle(data.title || "");
       setImagePreview(
         data.image?.url
           ? { url: data.image.url, mimeType: data.image.mimeType }
@@ -176,13 +187,14 @@ const AdminReaderThoughts = () => {
       setThoughts(
         Array.isArray(data.thoughts)
           ? data.thoughts.map((t) => ({
-            title: t.title,
-            text: t.text,
-            author: t.author || "",
-            _id: t._id,
-          }))
-          : [{ title: "", text: "", author: "", _id: null }]
+              title: t.title || "",
+              text: t.text || "",
+              author: t.author || "",
+              _id: t._id || null,
+            }))
+          : []
       );
+
       Swal.fire("Success", "Reader Thoughts updated successfully!", "success");
       setSuccess(true);
     } catch (err) {
@@ -199,16 +211,15 @@ const AdminReaderThoughts = () => {
     <div className="container mt-[100px]">
       <div className="max-w-8xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
         {/* Back + Title */}
-        <div className="mb-6">
+        <div className="mb-6 flex flex-col items-center">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105"
+            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105 mb-4"
           >
-            <ArrowBackIcon className="w-3 h-3" />
+            <ArrowBackIcon className="w-3 h-3 mr-1" />
             Back
           </button>
-
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 text-center">
             Edit Reader Thoughts
           </h2>
         </div>
@@ -218,7 +229,7 @@ const AdminReaderThoughts = () => {
         {/* Image selection + preview */}
         <div className="flex flex-col md:flex-row gap-6 mb-6">
           {/* Image preview */}
-          <div className="md:w-1/4 flex justify-center items-center border-gray-300 rounded-md p-2">
+          <div className="md:w-1/4 flex justify-center items-center border border-gray-300 rounded-md p-2">
             {imagePreview?.url ? (
               <img
                 src={getImageSrc(imagePreview.url)}
@@ -263,12 +274,11 @@ const AdminReaderThoughts = () => {
           {/* Thoughts */}
           <div>
             <label className="block mb-2 font-medium">Thoughts</label>
-            {thoughts.map((thought, index) => (
+            {Array.isArray(thoughts) && thoughts.map((thought, index) => (
               <div
                 key={thought._id || index}
                 className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm flex flex-col"
               >
-                {/* Title */}
                 <input
                   type="text"
                   placeholder="Thought Title"
@@ -279,8 +289,6 @@ const AdminReaderThoughts = () => {
                   className="w-full border border-gray-300 px-3 py-2 rounded-md mb-2"
                   disabled={uploading}
                 />
-
-                {/* Text */}
                 <textarea
                   placeholder="Thought Text"
                   value={thought.text}
@@ -291,8 +299,6 @@ const AdminReaderThoughts = () => {
                   rows={4}
                   disabled={uploading}
                 />
-
-                {/* Author */}
                 <input
                   type="text"
                   placeholder="Author Name"
@@ -303,8 +309,6 @@ const AdminReaderThoughts = () => {
                   className="w-full border border-gray-300 px-3 py-2 rounded-md mb-2"
                   disabled={uploading}
                 />
-
-                {/* Remove Button */}
                 {thoughts.length > 1 && (
                   <button
                     type="button"
@@ -322,7 +326,7 @@ const AdminReaderThoughts = () => {
             <button
               type="button"
               onClick={addThought}
-              className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700  transition-transform transform hover:scale-105"
+              className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700 transition-transform transform hover:scale-105"
               disabled={uploading}
             >
               + Add Another Thought
@@ -360,12 +364,9 @@ const AdminReaderThoughts = () => {
                 Saving...
               </>
             ) : (
-              <>
-                Save Changes
-              </>
+              <>Save Changes</>
             )}
           </button>
-
         </form>
       </div>
     </div>
