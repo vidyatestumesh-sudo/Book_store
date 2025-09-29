@@ -45,7 +45,7 @@ p {
   flex-wrap: wrap;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
   content: ">";
   color: #c6c6c6;
 }
@@ -124,12 +124,18 @@ p {
   width: 100%;
   align-items: center;
   justify-content: center;
-  gap: 4px; /* gap-1 */
-  padding: 6px 12px; /* px-3 py-1.5 */
-  font-size: 14px; /* text-sm */
-  background-color: #9ca3af; /* Tailwind bg-gray-400 */
-  color: #fff; /* text-white */
-  border-radius: 6px; /* rounded */
+  gap: 4px;
+  /* gap-1 */
+  padding: 6px 12px;
+  /* px-3 py-1.5 */
+  font-size: 14px;
+  /* text-sm */
+  background-color: #9ca3af;
+  /* Tailwind bg-gray-400 */
+  color: #fff;
+  /* text-white */
+  border-radius: 6px;
+  /* rounded */
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -370,8 +376,7 @@ p {
 }
 
 .rating-share-row .share {
-  margin-top: 0; /* remove extra margin */
-  font-size: 18px;
+  margin-top: 0;
 }
 
 .book-rating {
@@ -409,12 +414,12 @@ p {
 .share {
   font-family: "Figtree-Light";
   margin-top: 10px;
-  font-size: 18px;
 }
 
 .share a {
   color: #555555 !important;
   text-decoration: none;
+  font-size: 18px;
 }
 
 .share-icon {
@@ -481,7 +486,6 @@ p {
 
 .review-section button {
   padding: 8px 10px;
-
   color: #fff;
   background-color: #c86836;
   border: none;
@@ -665,6 +669,10 @@ p {
   .book-rating .rating-text {
     font-size: 16px;
   }
+
+  .share a {
+    font-size: 17px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -697,6 +705,14 @@ p {
 
   .recently-viewed {
     margin: 10px 0px 30px 0px;
+  }
+
+  .share a {
+    font-size: 16px;
+  }
+
+  .share-icon {
+    font-size: 16px !important;
   }
 }
 
@@ -804,9 +820,35 @@ p {
   .review-rating .star {
     font-size: 18px;
   }
+
+  .rating-share-row {
+    gap: 30px;
+  }
+
+  .share a {
+    font-size: 15px;
+  }
+
+  .share-icon {
+    margin-right: 5px;
+    margin-top: -5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rating-share-row {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .rating-share-row {
+    gap: 5px;
+  }
 }
 
 @media (max-width: 360px) {
+
   .about-book p,
   .book-details p,
   .book-meta p,
@@ -821,5 +863,9 @@ p {
 
   .book-rating .rating-text {
     font-size: 12px;
+  }
+
+  .share a {
+    font-size: 14px;
   }
 }
