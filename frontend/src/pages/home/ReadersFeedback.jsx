@@ -16,13 +16,13 @@ const ReadersFeedback = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch all reviews with rating > 3
-        const response = await axios.get("/api/reviews/all");
+        // Fetch only approved reviews with rating > 3
+        const response = await axios.get("/api/reviews/all?approved=true");
         setFeedbacks(response.data);
-        setCurrentIndex(0); // Reset pagination on data load
+        setCurrentIndex(0);
       } catch (err) {
         setError("Failed to load feedback.");
-        console.error("Error fetching all reviews:", err);
+        console.error("Error fetching reviews:", err);
       } finally {
         setLoading(false);
       }
@@ -30,6 +30,20 @@ const ReadersFeedback = () => {
 
     fetchReviews();
   }, []);
+
+
+  const getAllHighRatedReviews = async (req, res) => {
+    try {
+      const reviews = await Review.find({ rating: { $gt: 3 }, approved: true })
+        .sort({ createdAt: -1 })
+        .lean();
+
+      res.status(200).send(reviews);
+    } catch (error) {
+      console.error("Error fetching all reviews:", error);
+      res.status(500).send({ message: "Failed to fetch all reviews" });
+    }
+  };
 
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
 
@@ -95,6 +109,14 @@ const ReadersFeedback = () => {
                     <span className="italic text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] font-Figtree font-regular leading-snug leading-tight text-black-900 font-figtree break-words">
                       {fb.userName || fb.name}
                     </span>
+                    <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-1">
+                      {Array.from({ length: fb.rating }).map((_, i) => (
+                        <span key={i} className="text-yellow-500">★</span>
+                      ))}
+                      {Array.from({ length: 5 - fb.rating }).map((_, i) => (
+                        <span key={i} className="text-gray-300">★</span>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Feedback Text */}

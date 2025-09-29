@@ -1,6 +1,7 @@
 const Review = require("./review.model");
 const Book = require("../books/book.model");
 
+// POST a review for a book
 const postReview = async (req, res) => {
   try {
     const { id: bookId } = req.params;
@@ -38,6 +39,7 @@ const postReview = async (req, res) => {
   }
 };
 
+// GET reviews for a book
 const getReviewsByBook = async (req, res) => {
   try {
     const { id: bookId } = req.params;
@@ -49,14 +51,50 @@ const getReviewsByBook = async (req, res) => {
   }
 };
 
-// NEW: Get all reviews with rating > 3 regardless of book
+// GET approved reviews with rating > 3 (for homepage)
 const getAllHighRatedReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({ rating: { $gt: 3 } }).sort({ createdAt: -1 }).lean();
+    const reviews = await Review.find({ rating: { $gt: 3 }, approved: true })
+      .sort({ createdAt: -1 })
+      .lean();
     res.status(200).send(reviews);
   } catch (error) {
-    console.error("Error fetching all reviews:", error);
-    res.status(500).send({ message: "Failed to fetch all reviews" });
+    console.error("Error fetching high-rated reviews:", error);
+    res.status(500).send({ message: "Failed to fetch reviews" });
+  }
+};
+
+// NEW: GET all reviews for admin (approved + unapproved)
+const getAllReviewsForAdmin = async (req, res) => {
+  try {
+    const reviews = await Review.find().sort({ createdAt: -1 }).lean();
+    res.status(200).send(reviews);
+  } catch (error) {
+    console.error("Error fetching all reviews for admin:", error);
+    res.status(500).send({ message: "Failed to fetch reviews" });
+  }
+};
+
+// PATCH approve/unapprove review
+const toggleReviewApproval = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { approved } = req.body;
+
+    const review = await Review.findByIdAndUpdate(
+      id,
+      { approved },
+      { new: true }
+    );
+
+    if (!review) {
+      return res.status(404).send({ message: "Review not found" });
+    }
+
+    res.status(200).send({ message: "Review updated successfully", review });
+  } catch (error) {
+    console.error("Error updating review:", error);
+    res.status(500).send({ message: "Failed to update review" });
   }
 };
 
@@ -64,4 +102,6 @@ module.exports = {
   postReview,
   getReviewsByBook,
   getAllHighRatedReviews,
+  toggleReviewApproval,
+  getAllReviewsForAdmin, // <-- make sure this is exported
 };

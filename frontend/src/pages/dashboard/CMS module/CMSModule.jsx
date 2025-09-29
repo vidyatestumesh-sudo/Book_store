@@ -15,11 +15,11 @@ const CMSModule = () => {
     { name: "Home - Banner", icon: <ImageIcon className="w-10 h-10 text-purple-600" />, route: "/dashboard/admin-banner" },
     { name: "Home - Reader Thoughts", icon: <DescriptionIcon className="w-10 h-10 text-green-600" />, route: "/dashboard/reader-thoughts" },
     { name: "Home - corners", icon: <BookIcon className="w-10 h-10 text-pink-600" />, route: "/dashboard/admin-corners" },
+      { name: "Home - Reviews", icon: <DescriptionIcon className="w-10 h-10 text-indigo-600" />, route: "/dashboard/manage-reviews" },
 
     { name: "Manage Blogs", icon: <LibraryBooksIcon className="w-10 h-10 text-blue-600" />, route: "/dashboard/add-blogs" },
     { name: "Manage Books", icon: <MenuBookIcon className="w-10 h-10 text-yellow-600" />, route: "/dashboard/manage-books" },
     { name: "Manage Letters", icon: <MailOutlineIcon className="w-10 h-10 text-red-600" />, route: "/dashboard/manage-letters" },
-    
     { name: "Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
     { name: "Sufi corners", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/admin-sufi-corner" },
     { name: "manage-inspiration", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/manage-inspiration" },
@@ -41,10 +41,9 @@ const CMSModule = () => {
               key={index}
               className={`relative p-6 rounded-xl flex flex-col items-center justify-center gap-4 text-center transition-transform duration-300 transform 
                 shadow-lg bg-white hover:scale-105 hover:shadow-2xl no-underline
-                ${
-                  isCardActive(module.route)
-                    ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-2xl"
-                    : "text-gray-800"
+                ${isCardActive(module.route)
+                  ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-2xl"
+                  : "text-gray-800"
                 }
               `}
             >

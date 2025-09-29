@@ -4,7 +4,12 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const { auth } = require("express-openid-connect");
 const jwt = require('jsonwebtoken');
+const http = require("http");
+const { Server } = require("socket.io");
+
 const User = require('./src/users/user.model'); // User model for admin login
+const Review = require("./src/review/review.model"); // Review model
+const Book = require("./src/books/book.model"); // Book model
 
 // Initialize app
 const app = express();
@@ -15,11 +20,11 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Your frontend URL (local dev)
-      "https://book-app-frontend-tau.vercel.app", // Vercel frontend URL
-      "https://bookstore-frontend-9tii.onrender.com", // Render frontend URL
+      "http://localhost:5173",
+      "https://book-app-frontend-tau.vercel.app",
+      "https://bookstore-frontend-9tii.onrender.com",
     ],
-    credentials: true, // Allow cookies and credentials
+    credentials: true,
   })
 );
 
@@ -32,8 +37,22 @@ const authConfig = {
   clientID: process.env.AUTH0_CLIENT_ID,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
 };
-
 app.use(auth(authConfig));
+
+// Create HTTP server and Socket.IO instance
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" },
+});
+
+// --- Socket.IO connection ---
+io.on("connection", (socket) => {
+  console.log("Admin connected via socket:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected:", socket.id);
+  });
+});
 
 // Route imports
 const bookRoutes = require("./src/books/book.route");
@@ -67,59 +86,100 @@ app.use("/api/author", authorRoutes);
 app.use("/api/precepts", preceptsRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/inspiration-images", inspirationRoutes);
-
-// Admin Auth routes (Custom Admin login via username/password)
-app.use("/api/auth", authRoutes); // Admin login via Auth0
+app.use("/api/auth", authRoutes);
 
 // Default root route
-app.get("/", (req, res) => {
-  res.send("Book Store Server is running!");
-});
+app.get("/", (req, res) => res.send("Book Store Server is running!"));
 
-// Admin login logic (username/password)
+// --- Admin login logic ---
 app.post("/api/admin-auth/admin", async (req, res) => {
   const { username, password } = req.body;
-
-  // Validate input
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
-  }
+  if (!username || !password) return res.status(400).json({ message: 'Username and password required' });
 
   try {
-    // Find the admin user in the database
     const adminUser = await User.findOne({ username, role: 'admin' });
+    if (!adminUser) return res.status(401).json({ message: 'Invalid username or password' });
 
-    if (!adminUser) {
-      return res.status(401).json({ message: 'Invalid username or password' });
-    }
+    const isMatch = await adminUser.comparePassword(password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
 
-    // Compare the password (using bcrypt)
-    const isMatch = await adminUser.comparePassword(password);  // comparePassword method on the User model
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid username or password' });
-    }
-
-    // Generate JWT token
     const token = jwt.sign(
       { id: adminUser._id, role: adminUser.role },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: '1h' }  // Token expires in 1 hour
+      { expiresIn: '1h' }
     );
 
-    // Send the token and user details back to the frontend
     res.status(200).json({
       message: 'Authentication successful',
       token,
       user: { username: adminUser.username, role: adminUser.role },
     });
-
   } catch (error) {
     console.error('Admin login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// MongoDB Connection and Server Start
+// --- POST a review with real-time admin notification ---
+app.post("/api/reviews/:id/review", async (req, res) => {
+  try {
+    const { id: bookId } = req.params;
+    const { userId, userName, rating, comment } = req.body;
+    if (!userId || !userName || !rating || !comment) return res.status(400).send({ message: "All fields required" });
+
+    const book = await Book.findById(bookId);
+    if (!book) return res.status(404).send({ message: "Book not found" });
+
+    let existingReview = await Review.findOne({ bookId, userId });
+    let review;
+    if (existingReview) {
+      existingReview.rating = rating;
+      existingReview.comment = comment;
+      existingReview.userName = userName;
+      review = await existingReview.save();
+    } else {
+      const newReview = new Review({ bookId, userId, userName, rating, comment });
+      review = await newReview.save();
+    }
+
+    // Emit event to admin via Socket.IO
+    io.emit("newReview", review);
+
+    res.status(200).send({ message: "Review submitted successfully", review });
+  } catch (error) {
+    console.error("Error submitting review:", error);
+    res.status(500).send({ message: "Failed to submit review" });
+  }
+});
+
+// --- PATCH approve/unapprove review ---
+app.patch("/api/reviews/:id/approve", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { approved } = req.body;
+
+    const review = await Review.findByIdAndUpdate(id, { approved }, { new: true });
+    if (!review) return res.status(404).send({ message: "Review not found" });
+
+    res.status(200).send({ message: "Review updated", review });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to update review" });
+  }
+});
+
+// --- GET all reviews for admin ---
+app.get("/api/reviews/admin", async (req, res) => {
+  try {
+    const reviews = await Review.find().sort({ createdAt: -1 });
+    res.status(200).send(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to fetch reviews" });
+  }
+});
+
+// --- MongoDB Connection and Server Start ---
 async function main() {
   try {
     await mongoose.connect(process.env.DB_URL, {
@@ -127,9 +187,7 @@ async function main() {
       useUnifiedTopology: true,
     });
     console.log("MongoDB connected successfully!");
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
+    server.listen(port, () => console.log(`Server running on port ${port}`));
   } catch (error) {
     console.error("MongoDB connection error:", error);
   }
