@@ -16,13 +16,12 @@ const InspirationBoard = () => {
         const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
         const data = await res.json();
 
-        const filtered = data.filter(
-          (item) => item.type === "inspiration" && !item.suspended
-        );
+        const filtered = data
+          .filter((item) => item.type === "inspiration" && !item.suspended)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by recent
+          .slice(0, 3); // Only take 3 most recent
 
-        setInspirations(
-          filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        );
+        setInspirations(filtered);
       } catch (error) {
         console.error("Error fetching inspiration blogs:", error);
       }
@@ -73,7 +72,7 @@ const InspirationBoard = () => {
                     alt={item.title}
                     className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover rounded-[8px]"
                   />
-                  <div className="absolute bottom-0 text-[16px] py-1 sm:text-[21px] md:text-[18px] lg:text-[18px] xl:text-[18px] text-gray-500 font-regular leading-tight lg:leading-[1.3] left-1/2 transform -translate-x-1/2 bg-[#e9e0d4] px-3  font-figtree rounded-t-lg">
+                  <div className="absolute bottom-0 text-[16px] py-1 sm:text-[21px] md:text-[18px] lg:text-[18px] xl:text-[18px] text-gray-500 font-regular leading-tight lg:leading-[1.3] left-1/2 transform -translate-x-1/2 bg-[#e9e0d4] px-3 font-figtree rounded-t-lg">
                     {formatDate(item.createdAt)}
                   </div>
                 </div>
@@ -84,9 +83,9 @@ const InspirationBoard = () => {
                 </h3>
 
                 {/* Read More */}
-                <div className="mt-auto ms-3">
+                <div className="mt-3 flex justify-center items-center">
                   <Link
-                    to={`/blogs/${item._id}`}
+                    to="/inspiration-board"
                     className="flex items-center gap-2 mx-auto font-figtree text-[16px] sm:text-[18px] transition group no-underline"
                   >
                     <span className="inline-flex font-regular items-center gap-1 text-black text-[16px] sm:text-[18px] no-underline">
