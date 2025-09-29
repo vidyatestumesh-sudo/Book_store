@@ -176,11 +176,11 @@ const AdminReaderThoughts = () => {
       setThoughts(
         Array.isArray(data.thoughts)
           ? data.thoughts.map((t) => ({
-              title: t.title,
-              text: t.text,
-              author: t.author || "",
-              _id: t._id,
-            }))
+            title: t.title,
+            text: t.text,
+            author: t.author || "",
+            _id: t._id,
+          }))
           : [{ title: "", text: "", author: "", _id: null }]
       );
       Swal.fire("Success", "Reader Thoughts updated successfully!", "success");
@@ -322,7 +322,7 @@ const AdminReaderThoughts = () => {
             <button
               type="button"
               onClick={addThought}
-              className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-transform transform hover:scale-105"
+              className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700  transition-transform transform hover:scale-105"
               disabled={uploading}
             >
               + Add Another Thought
@@ -332,11 +332,40 @@ const AdminReaderThoughts = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
             disabled={uploading}
           >
-            {uploading ? "Saving..." : "Save Changes"}
+            {uploading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Saving...
+              </>
+            ) : (
+              <>
+                Save Changes
+              </>
+            )}
           </button>
+
         </form>
       </div>
     </div>

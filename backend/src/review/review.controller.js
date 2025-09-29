@@ -54,21 +54,38 @@ const getReviewsByBook = async (req, res) => {
 // GET approved reviews with rating > 3 (for homepage)
 const getAllHighRatedReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({ rating: { $gt: 3 }, approved: true })
+    const reviews = await Review.find({ rating: { $gt: 2 }, approved: true })
       .sort({ createdAt: -1 })
+      .populate("bookId", "title") // <-- populate the book title only
       .lean();
-    res.status(200).send(reviews);
+
+    // Map to include bookName
+    const formattedReviews = reviews.map((r) => ({
+      ...r,
+      bookName: r.bookId?.title || "Unknown Book",
+    }));
+
+    res.status(200).send(formattedReviews);
   } catch (error) {
     console.error("Error fetching high-rated reviews:", error);
     res.status(500).send({ message: "Failed to fetch reviews" });
   }
 };
 
-// NEW: GET all reviews for admin (approved + unapproved)
+// Admin route: GET all reviews (approved + unapproved)
 const getAllReviewsForAdmin = async (req, res) => {
   try {
-    const reviews = await Review.find().sort({ createdAt: -1 }).lean();
-    res.status(200).send(reviews);
+    const reviews = await Review.find()
+      .sort({ createdAt: -1 })
+      .populate("bookId", "title")
+      .lean();
+
+    const formattedReviews = reviews.map((r) => ({
+      ...r,
+      bookName: r.bookId?.title || "Unknown Book",
+    }));
+
+    res.status(200).send(formattedReviews);
   } catch (error) {
     console.error("Error fetching all reviews for admin:", error);
     res.status(500).send({ message: "Failed to fetch reviews" });
@@ -85,18 +102,25 @@ const toggleReviewApproval = async (req, res) => {
       id,
       { approved },
       { new: true }
-    );
+    ).populate("bookId", "title"); // <-- populate book title
 
     if (!review) {
       return res.status(404).send({ message: "Review not found" });
     }
 
-    res.status(200).send({ message: "Review updated successfully", review });
+    // Add bookName for frontend
+    const formattedReview = {
+      ...review.toObject(),
+      bookName: review.bookId?.title || "Unknown",
+    };
+
+    res.status(200).send({ message: "Review updated successfully", review: formattedReview });
   } catch (error) {
     console.error("Error updating review:", error);
     res.status(500).send({ message: "Failed to update review" });
   }
 };
+
 
 module.exports = {
   postReview,

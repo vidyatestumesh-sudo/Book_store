@@ -138,7 +138,7 @@ const AdminAuthorEdit = () => {
         <div className="mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-3 py-1 transition-transform transform hover:scale-105 mb-4 md:mb-0"
+            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 transition-transform transform hover:scale-105 mb-4 md:mb-0"
           >
             <ArrowBackIcon className="w-4 h-4 mr-1" />
             Back

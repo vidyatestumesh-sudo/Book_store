@@ -104,18 +104,17 @@ const router = createBrowserRouter([
   },
 ]);
 
-// 🚨 Monkey patch: force hard reload on every navigation
+// 🚨 Updated navigation patch to allow back button
 const originalNavigate = router.navigate;
 router.navigate = (...args) => {
   const to = args[0];
   if (typeof to === "string") {
-    window.location.replace(to); // faster, skips history push overhead
+    window.location.assign(to); // ✅ keeps history for back button
   } else if (to && to.pathname) {
-    window.location.replace(to.pathname);
+    window.location.assign(to.pathname); // ✅ keeps history for back button
   } else {
     originalNavigate(...args);
   }
 };
-
 
 export default router;

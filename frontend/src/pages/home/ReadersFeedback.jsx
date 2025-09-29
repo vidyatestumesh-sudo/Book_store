@@ -123,6 +123,13 @@ const ReadersFeedback = () => {
                   <p className="text-left text-[16px] sm:text-[18px] md:text-[18px] lg:text-[20px] xl:text-[20px] text-black-800 font-Figtree font-regular leading-tight lg:leading-[1.3]">
                     {fb.comment || fb.text}
                   </p>
+
+                  {/* Right Side: Book Name */}
+                  {fb.bookName && (
+                    <p className="text-right text-[14px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px] text-gray-600 italic font-Figtree mt-2 md:mt-0">
+                      - {fb.bookName}
+                    </p>
+                  )}
                 </div>
               ))}
           </div>

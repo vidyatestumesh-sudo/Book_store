@@ -25,11 +25,21 @@ const ManageReviews = () => {
     socket.on("newReview", (review) => {
       Swal.fire({
         title: "New Review Submitted!",
-        html: `<b>${review.userName}</b> rated ${review.rating} stars<br>${review.comment}`,
+        html: `<b>${review.userName}</b> rated ${review.rating} stars<br>${review.comment}<br>Book: ${review.bookName || "Unknown"}`,
         icon: "info",
       });
-      setReviews((prev) => [review, ...prev]);
+
+      // Add isNew flag for highlighting
+      setReviews((prev) => [{ ...review, isNew: true }, ...prev]);
+
+      // Remove highlight after 5 seconds
+      setTimeout(() => {
+        setReviews((prev) =>
+          prev.map((r) => (r._id === review._id ? { ...r, isNew: false } : r))
+        );
+      }, 5000);
     });
+
 
     return () => socket.off("newReview");
   }, []);
@@ -60,7 +70,7 @@ const ManageReviews = () => {
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-3 py-1 shadow-md transition-transform transform hover:scale-105"
+            className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[6px] px-2 py-1 shadow-md transition-transform transform hover:scale-105"
           >
             <ArrowBackIcon className="w-4 h-4" />
             Back
@@ -73,25 +83,39 @@ const ManageReviews = () => {
         {reviews.length === 0 ? (
           <p className="text-gray-600">No reviews found.</p>
         ) : (
-          reviews.map((review) => (
-            <div key={review._id} className="p-4 border rounded-lg flex justify-between items-center hover:shadow-md transition">
-              <div>
-                <p className="font-semibold">{review.userName}</p>
-                <p className="text-gray-700 italic">{review.comment}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {Array.from({ length: review.rating }).map((_, i) => <span key={i} className="text-yellow-500">★</span>)}
-                  {Array.from({ length: 5 - review.rating }).map((_, i) => <span key={i} className="text-gray-300">★</span>)}
-                </div>
-                <p className="text-sm text-gray-500 mt-1">{review.approved ? "Approved" : "Not Approved"}</p>
-              </div>
-              <button
-                onClick={() => toggleApproval(review._id, review.approved)}
-                className={`px-4 py-2 rounded text-white font-medium shadow-md transition-transform transform hover:scale-105 ${review.approved ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+          <div className="flex flex-col space-y-6">
+            {reviews.map((review) => (
+              <div
+                key={review._id}
+                className={`p-4 border rounded-lg flex justify-between items-center hover:shadow-md transition
+        ${review.isNew ? "border-yellow-500 bg-yellow-50" : ""}`}
               >
-                {review.approved ? "Unapprove" : "Approve"}
-              </button>
-            </div>
-          ))
+                <div>
+                  <p className="font-semibold">{review.userName}</p>
+                  <p className="text-gray-700 italic">{review.comment}</p>
+                  <p className="text-sm text-gray-500 italic mt-1">
+                    Book: {review.bookName || "Unknown"}
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    {Array.from({ length: review.rating }).map((_, i) => (
+                      <span key={i} className="text-yellow-500">★</span>
+                    ))}
+                    {Array.from({ length: 5 - review.rating }).map((_, i) => (
+                      <span key={i} className="text-gray-300">★</span>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">{review.approved ? "Approved" : "Not Approved"}</p>
+                </div>
+                <button
+                  onClick={() => toggleApproval(review._id, review.approved)}
+                  className={`px-4 py-2 rounded text-white font-medium shadow-md transition-transform transform hover:scale-105 ${review.approved ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                    }`}
+                >
+                  {review.approved ? "Unapprove" : "Approve"}
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

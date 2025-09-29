@@ -32,6 +32,7 @@ const AdminInspirationBoard = () => {
   const [editingId, setEditingId] = useState(null);
   const [viewMode, setViewMode] = useState("list"); // "list" or "form"
   const [description, setDescription] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   const token = localStorage.getItem("adminToken");
 
@@ -343,11 +344,10 @@ const AdminInspirationBoard = () => {
 
               <button
                 onClick={() => handleSuspend(item)}
-                className={`flex items-center gap-1 ${
-                  item.suspended
-                    ? "bg-indigo-500 hover:bg-indigo-600"
-                    : "bg-yellow-500 hover:bg-yellow-600"
-                } text-white px-3 py-1 rounded-md transition`}
+                className={`flex items-center gap-1 ${item.suspended
+                  ? "bg-indigo-500 hover:bg-indigo-600"
+                  : "bg-yellow-500 hover:bg-yellow-600"
+                  } text-white px-3 py-1 rounded-md transition`}
               >
                 {item.suspended ? "Unsuspend" : "Suspend"}
               </button>
@@ -386,28 +386,25 @@ const AdminInspirationBoard = () => {
           {/* Toggle Buttons */}
           <div className="relative flex justify-center mb-8 bg-gray-200 rounded-full p-1 max-w-md mx-auto shadow-inner">
             <div
-              className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${
-                viewMode === "form" ? "translate-x-full" : ""
-              }`}
+              className={`absolute top-1 left-1 w-1/2 h-10 bg-blue-600 rounded-full shadow-md transform transition-transform duration-300 ${viewMode === "form" ? "translate-x-full" : ""
+                }`}
             ></div>
 
             <button
-              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
-                viewMode === "list"
-                  ? "text-white"
-                  : "text-gray-700 hover:text-gray-900 hover:scale-105"
-              }`}
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "list"
+                ? "text-white"
+                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                }`}
               onClick={() => setViewMode("list")}
             >
               <LibraryBooksIcon fontSize="medium" /> View Inspirations
             </button>
 
             <button
-              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${
-                viewMode === "form"
-                  ? "text-white"
-                  : "text-gray-700 hover:text-gray-900 hover:scale-105"
-              }`}
+              className={`relative flex-1 py-2 flex items-center justify-center gap-2 rounded-full font-semibold text-md transition-all duration-300 transform ${viewMode === "form"
+                ? "text-white"
+                : "text-gray-700 hover:text-gray-900 hover:scale-105"
+                }`}
               onClick={() => {
                 setViewMode("form");
                 reset();
@@ -480,9 +477,8 @@ const AdminInspirationBoard = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${
-                      isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className={`py-2 mt-4 bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-6 rounded-lg shadow-lg flex items-center justify-center gap-2 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                   >
                     {isLoading ? (
                       <>
@@ -520,31 +516,6 @@ const AdminInspirationBoard = () => {
                     Inspiration Images
                   </h2>
 
-                  {/* Upload input */}
-                  <div className="mb-6 max-w-md mx-auto">
-                    <form onSubmit={handleUpload} className="space-y-4">
-                      <input
-                        type="text"
-                        name="title"
-                        placeholder="Enter title (optional)"
-                        className="border px-3 py-2 rounded w-full"
-                      />
-                      <input
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        className="border px-3 py-2 rounded w-full"
-                      />
-                      <button
-                        type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 w-full font-semibold"
-                        disabled={loading}
-                      >
-                        {loading ? "Uploading..." : "Upload"}
-                      </button>
-                    </form>
-                  </div>
-
                   {/* Images grid */}
                   <div className="grid grid-cols-3 gap-4">
                     {inspirationImages.length === 0 && (
@@ -570,27 +541,37 @@ const AdminInspirationBoard = () => {
                           className="w-full h-32 object-cover rounded"
                         />
 
-                        <button
-                          onClick={async () => {
-                            const confirm = await Swal.fire({
-                              title: "Are you sure?",
-                              text: "This will permanently delete the image!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#b91c1c",
-                              cancelButtonColor: "#2563eb",
-                              confirmButtonText: "Yes, delete it!",
-                            });
-                            if (confirm.isConfirmed) {
-                              // call delete API for inspiration image
+                        <div className="flex justify-center mt-2">
+                          <button
+                            onClick={async () => {
+                              const confirm = await Swal.fire({
+                                title: "Are you sure?",
+                                text: "This will permanently delete the image!",
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#b91c1c",
+                                cancelButtonColor: "#2563eb",
+                                confirmButtonText: "Yes, delete it!",
+                              });
+
+                              if (!confirm.isConfirmed) return;
+
                               try {
-                                const res = await fetch(`${BACKEND_BASE_URL}/api/inspiration-images/${img._id}`, {
-                                  method: "DELETE",
-                                  headers: {
-                                    Authorization: `Bearer ${token}`,
-                                  },
-                                });
+                                // mark this image as deleting
+                                setDeletingId(img._id);
+
+                                const res = await fetch(
+                                  `${BACKEND_BASE_URL}/api/inspiration-images/${img._id}`,
+                                  {
+                                    method: "DELETE",
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  }
+                                );
+
                                 const result = await res.json();
+
                                 if (res.ok) {
                                   Swal.fire("Deleted!", "Image deleted.", "success");
                                   fetchInspirationImages();
@@ -600,15 +581,72 @@ const AdminInspirationBoard = () => {
                               } catch (err) {
                                 console.error(err);
                                 Swal.fire("Error", "Failed to delete", "error");
+                              } finally {
+                                setDeletingId(null);
                               }
-                            }
-                          }}
-                          className="text-xs text-red-600 hover:underline mt-2 block text-center"
-                        >
-                          Delete
-                        </button>
+                            }}
+                            disabled={deletingId === img._id}
+                            className={`bg-red-500 text-white py-1 px-3 rounded-[6px] text-sm flex items-center justify-center gap-2 ${deletingId === img._id
+                                ? "opacity-50 cursor-not-allowed"
+                                : "hover:bg-red-600"
+                              }`}
+                          >
+                            {deletingId === img._id ? (
+                              <>
+                                <svg
+                                  className="animate-spin h-4 w-4 text-white"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v8H4z"
+                                  ></path>
+                                </svg>
+                                Deleting...
+                              </>
+                            ) : (
+                              "Delete"
+                            )}
+                          </button>
+                        </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Upload input */}
+                  <div className="mb-6 mt-6 max-w-xs mx-auto">
+                    <form onSubmit={handleUpload} className="space-y-4">
+                      <input
+                        type="text"
+                        name="title"
+                        placeholder="Enter title (optional)"
+                        className="border px-3 py-2 rounded w-full"
+                      />
+                      <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        className="border px-3 py-2 rounded w-full"
+                      />
+                      <button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 w-full font-semibold"
+                        disabled={loading}
+                      >
+                        {loading ? "Uploading..." : "Upload"}
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
