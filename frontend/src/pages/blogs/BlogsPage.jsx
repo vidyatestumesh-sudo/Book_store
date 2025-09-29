@@ -28,7 +28,7 @@ const BlogsPage = () => {
       const data = await res.json();
       setBlogs(
         data
-          .filter((blog) => !blog.suspended) // <-- Only active blogs
+          .filter((blog) => blog.type === "blogs" && !blog.suspended)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       );
     } catch (err) {

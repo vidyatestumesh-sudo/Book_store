@@ -22,7 +22,7 @@ const CMSModule = () => {
     
     { name: "Author Content", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/edit-author" },
     { name: "Sufi corners", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/admin-sufi-corner" },
-
+    { name: "manage-inspiration", icon: <PersonIcon className="w-10 h-10 text-teal-600" />, route: "/dashboard/manage-inspiration" },
   ];
 
   const isCardActive = (route) => location.pathname === route;

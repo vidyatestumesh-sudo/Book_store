@@ -33,7 +33,7 @@ const AddBlogs = () => {
       const data = await res.json();
 
       // ✅ Filter to include only blogs with type === 'blogs'
-      const filtered = data.filter((blog) => blog.type === "blogs");
+      const filtered = data.filter((blog) => blog.type && blog.type === "blogs");
 
       setBlogs(filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (err) {

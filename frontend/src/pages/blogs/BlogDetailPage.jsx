@@ -53,32 +53,39 @@ const BlogDetailPage = () => {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      try {
-        const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`);
-        const data = await res.json();
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/api/blogs/${id}`);
+    const data = await res.json();
 
-        if (data.suspended) {
-          setBlog(null); // Block suspended blog
-        } else {
-          setBlog(data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch blog", err);
-      }
-    };
+    // ✅ Make sure it's a blog and not suspended
+    if (data.suspended || data.type !== "blogs") {
+      setBlog(null);
+    } else {
+      setBlog(data);
+    }
+  } catch (err) {
+    console.error("Failed to fetch blog", err);
+  }
+};
 
-    const fetchLatestBlogs = async () => {
-      try {
-        const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
-        const data = await res.json();
-        const sorted = data
-          .filter((b) => b._id !== id && !b.suspended) // Only active blogs
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setLatestBlogs(sorted);
-      } catch (err) {
-        console.error("Failed to fetch latest blogs", err);
-      }
-    };
+const fetchLatestBlogs = async () => {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/api/blogs`);
+    const data = await res.json();
+
+    // ✅ Filter only blogs and exclude suspended ones
+    const sorted = data
+      .filter(
+        (b) => b._id !== id && !b.suspended && b.type === "blogs"
+      )
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    setLatestBlogs(sorted);
+  } catch (err) {
+    console.error("Failed to fetch latest blogs", err);
+  }
+};
+
 
     fetchBlog();
     fetchLatestBlogs();
