@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -11,36 +11,35 @@ const Corners = () => {
   const cardRefs = useRef({}); // Hold refs to each visible slide
   const bottomControlsRefs = useRef({}); // Hold refs to bottom controls for each slide
 
-useEffect(() => {
-  const fetchCorners = async () => {
-    try {
-      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/home/corners`);
-      if (!res.ok) throw new Error("Failed to fetch corners");
-      const data = await res.json();
+  useEffect(() => {
+    const fetchCorners = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/home/corners`);
+        if (!res.ok) throw new Error("Failed to fetch corners");
+        const data = await res.json();
 
-      const params = new URLSearchParams(window.location.search);
-      const cornerParam = parseInt(params.get("corner"));
-      const slideParam = parseInt(params.get("slide"));
+        const params = new URLSearchParams(window.location.search);
+        const cornerParam = parseInt(params.get("corner"));
+        const slideParam = parseInt(params.get("slide"));
 
-      const initialIndexes = data.map(() => 0);
-      if (
-        !isNaN(cornerParam) &&
-        !isNaN(slideParam) &&
-        data[cornerParam]?.slides?.[slideParam]
-      ) {
-        initialIndexes[cornerParam] = slideParam;
+        const initialIndexes = data.map(() => 0);
+        if (
+          !isNaN(cornerParam) &&
+          !isNaN(slideParam) &&
+          data[cornerParam]?.slides?.[slideParam]
+        ) {
+          initialIndexes[cornerParam] = slideParam;
+        }
+
+        setCorners(data);
+        setSlideIndexes(initialIndexes);
+      } catch (err) {
+        console.error("Error fetching corners:", err);
       }
-
-      setCorners(data);
-      setSlideIndexes(initialIndexes);
-    } catch (err) {
-      console.error("Error fetching corners:", err);
-    }
-  };
-  fetchCorners();
-}, []);
-
+    };
+    fetchCorners();
+  }, []);
 
   const handleSlideChange = (cornerIndex, direction) => {
     setSlideIndexes((prev) => {
@@ -126,8 +125,7 @@ useEffect(() => {
                   viewBox="0 0 100 50"
                   className="w-15 h-14 -mt-1 z-10"
                   preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
+                  aria-hidden="true">
                   <line
                     x1="50"
                     y1="0"
@@ -152,8 +150,7 @@ useEffect(() => {
                 <div
                   ref={(el) => (cardRefs.current[cardKey] = el)}
                   className="rounded-lg shadow-md text-white overflow-hidden w-full max-w-[600px] h-[700px] sm:h-[750px] mx-auto flex flex-col justify-between"
-                  style={{ backgroundColor: corner.bgColor }}
-                >
+                  style={{ backgroundColor: corner.bgColor }}>
                   <div className="flex-1 flex flex-col px-6 pt-8 pb-4 gap-6">
                     <div className="relative text-center">
                       <h3 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light leading-tight mt-3 mb-3">
@@ -200,8 +197,7 @@ useEffect(() => {
                   {/* Bottom Controls */}
                   <div
                     className="px-5 pb-[20px] flex items-center justify-between mt-auto"
-                    ref={(el) => (bottomControlsRefs.current[cardKey] = el)}
-                  >
+                    ref={(el) => (bottomControlsRefs.current[cardKey] = el)}>
                     <div className="flex items-center gap-4">
                       <div className="share">
                         <a
@@ -215,9 +211,13 @@ useEffect(() => {
                             display: "inline-flex",
                             alignItems: "center",
                           }}
-                          aria-label={`Share slide ${slideIndex + 1} of ${corner.title}`}
-                        >
-                          <ShareOutlinedIcon className="share-icon" />
+                          aria-label={`Share slide ${slideIndex + 1} of ${
+                            corner.title
+                          }`}>
+                          <ShareOutlinedIcon
+                            className="share-icon"
+                            style={{ color: "white" }}
+                          />
                         </a>
                       </div>
                       {corner.readMoreUrl && (
@@ -225,8 +225,7 @@ useEffect(() => {
                           href={corner.readMoreUrl}
                           className="inline-flex items-center gap-1 !no-underline text-white text-[16px] hover:underline group"
                           target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                          rel="noopener noreferrer">
                           <span>Read More</span>
                           <ArrowRight size={20} />
                         </a>
@@ -237,15 +236,13 @@ useEffect(() => {
                       <button
                         aria-label={`Previous slide in ${corner.title}`}
                         onClick={() => handleSlideChange(index, -1)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
-                      >
+                        className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition">
                         <FiChevronLeft size={20} />
                       </button>
                       <button
                         aria-label={`Next slide in ${corner.title}`}
                         onClick={() => handleSlideChange(index, 1)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition"
-                      >
+                        className="w-8 h-8 flex items-center justify-center rounded-full border border-white hover:bg-white hover:text-[#8c2f24] transition">
                         <FiChevronRight size={20} />
                       </button>
                     </div>
