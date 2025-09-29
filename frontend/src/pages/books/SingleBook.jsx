@@ -1,8 +1,8 @@
 import "./SingleBook.css";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/features/cart/cartSlice";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, clearCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { useAuth } from "../../context/AuthContext";
@@ -12,8 +12,9 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
-import { clearCart } from "../../redux/features/cart/cartSlice";
-import { useNavigate } from "react-router-dom";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 
 const SingleBook = () => {
   const { id } = useParams();
@@ -21,6 +22,9 @@ const SingleBook = () => {
   const dispatch = useDispatch();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  // ✅ Cart from Redux (auto re-renders)
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
   const [showMore, setShowMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -71,10 +75,28 @@ const SingleBook = () => {
   }, [book, currentUser]);
 
   const handleAddToCart = (product) => {
+    if (product.stock <= 0) {
+      alert("Out of Stock");
+      return;
+    }
+    const exists = cartItems.find((item) => item._id === product._id);
+    if (exists) {
+      navigate("/cart");
+      return;
+    }
     dispatch(addToCart(product));
   };
 
   const handleBuyNow = (product) => {
+    if (product.stock <= 0) {
+      alert("Out of Stock");
+      return;
+    }
+    const exists = cartItems.find((item) => item._id === product._id);
+    if (exists) {
+      navigate("/cart");
+      return;
+    }
     dispatch(clearCart());
     dispatch(addToCart(product));
     navigate("/checkout");
@@ -93,24 +115,23 @@ const SingleBook = () => {
 
     try {
       const res = await fetch(`/api/reviews/${id}/review`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    bookId: id,
-    userId: currentUser.uid,
-    userName: currentUser.displayName || currentUser.email || "Anonymous User",
-    rating,
-    comment,
-  }),
-});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: id,
+          userId: currentUser.uid,
+          userName: currentUser.displayName || currentUser.email || "Anonymous User",
+          rating,
+          comment,
+        }),
+      });
 
       if (res.ok) {
-  const data = await res.json();
-  setIsEditingReview(false);
-  setRating(0);
-  setComment("");
-  refetch?.();
-} else {
+        setIsEditingReview(false);
+        setRating(0);
+        setComment("");
+        refetch?.();
+      } else {
         const err = await res.json();
         console.error("Failed to submit review:", err);
       }
@@ -134,6 +155,8 @@ const SingleBook = () => {
     ?.filter((rev) => rev.userId !== currentUser?.uid)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 2);
+
+  const inCart = cartItems.find((item) => item._id === book._id);
 
   return (
     <div className="container">
@@ -177,13 +200,32 @@ const SingleBook = () => {
                 {selectedImage && <img src={selectedImage} alt={book.title} />}
               </div>
             </div>
+
+            {/* Action Buttons */}
             <div className="book-buttons">
-              <button className="add-to-cart" onClick={() => handleAddToCart(book)}>
-                ADD TO CART
-              </button>
-              <button className="buy-now" onClick={() => handleBuyNow(book)}>
-                BUY NOW
-              </button>
+              {book.stock <= 0 ? (
+                <button className="out-of-stock" disabled>
+                  Out of Stock
+                </button>
+              ) : inCart ? (
+                <>
+                  <button className="add-to-cart" onClick={() => navigate("/cart")}>
+                    <StorefrontOutlinedIcon fontSize="small" /> Go to Cart
+                  </button>
+                  <button className="buy-now" onClick={() => handleBuyNow(book)}>
+                    <ShoppingBagOutlinedIcon fontSize="small" /> Buy Now
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="add-to-cart" onClick={() => handleAddToCart(book)}>
+                    <ShoppingCartOutlinedIcon fontSize="small" /> Add to Cart
+                  </button>
+                  <button className="buy-now" onClick={() => handleBuyNow(book)}>
+                    <ShoppingBagOutlinedIcon fontSize="small" /> Buy Now
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
@@ -206,6 +248,7 @@ const SingleBook = () => {
         <div className="col-lg-8 col-md-12 col-sm-12 col-12 book-details ">
           <h2>{book.title}</h2>
 
+          {/* Ratings */}
           <div className="book-rating">
             {Array.from({ length: 5 }, (_, i) => {
               if (i < Math.floor(avgRating)) {
@@ -221,19 +264,18 @@ const SingleBook = () => {
             </span>
           </div>
 
+          {/* Price */}
           <div className="price">
             <span className="current-price">₹ {book.newPrice}</span>
             <span className="old-price">₹ {book.oldPrice}</span>
             {book.oldPrice > book.newPrice && (
               <span className="discount">
-                {Math.round(
-                  ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
-                )}
-                % off
+                {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
               </span>
             )}
           </div>
 
+          {/* Description */}
           <p className="book-desc">
             {shortText}
             {showMore && <span className="extra-text"> {longText}</span>}
@@ -253,6 +295,7 @@ const SingleBook = () => {
             )}
           </p>
 
+          {/* Meta */}
           <div className="book-meta">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Author</div>
@@ -278,10 +321,10 @@ const SingleBook = () => {
             </a>
           </div>
 
+          {/* Reviews Section */}
           <div className="review-section">
             <h3>Leave a Review</h3>
-
-            {/* If user has a review and not editing, show it read-only with Edit button */}
+            {/* Current User Review */}
             {currentUser && currentUserReview && !isEditingReview && (
               <div className="review user-review">
                 <div className="review-rating">
@@ -299,7 +342,7 @@ const SingleBook = () => {
               </div>
             )}
 
-            {/* Show form if editing or if user hasn't submitted */}
+            {/* Review Form */}
             {(isEditingReview || !currentUserReview) && currentUser && (
               <form onSubmit={handleReviewSubmit}>
                 <div className="rating-input">
@@ -326,9 +369,7 @@ const SingleBook = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        // Cancel edit mode
                         setIsEditingReview(false);
-                        // Reset comment & rating to existing review if present
                         if (currentUserReview) {
                           setRating(currentUserReview.rating);
                           setComment(currentUserReview.comment);
@@ -345,6 +386,7 @@ const SingleBook = () => {
               </form>
             )}
 
+            {/* Other Reviews */}
             <div className="recent-reviews">
               <h4>Recent Reviews</h4>
               {otherReviews && otherReviews.length > 0 ? (
@@ -352,10 +394,7 @@ const SingleBook = () => {
                   <div key={idx} className="review">
                     <div className="review-rating">
                       {Array.from({ length: 5 }, (_, i) => (
-                        <span
-                          key={i}
-                          className={i < rev.rating ? "star filled" : "star"}
-                        >
+                        <span key={i} className={i < rev.rating ? "star filled" : "star"}>
                           ★
                         </span>
                       ))}
@@ -372,6 +411,7 @@ const SingleBook = () => {
         </div>
       </div>
 
+      {/* Recently Viewed */}
       <div className="recently-viewed">
         <h3>Recently Viewed</h3>
         <div className="row">
@@ -387,10 +427,7 @@ const SingleBook = () => {
                       <span className="current-price">₹ {rv.newPrice}</span>{" "}
                       {rv.oldPrice > rv.newPrice && (
                         <span className="discount">
-                          {Math.round(
-                            ((rv.oldPrice - rv.newPrice) / rv.oldPrice) * 100
-                          )}
-                          % off
+                          {Math.round(((rv.oldPrice - rv.newPrice) / rv.oldPrice) * 100)}% off
                         </span>
                       )}
                     </p>

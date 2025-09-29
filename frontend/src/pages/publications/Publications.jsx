@@ -2,221 +2,227 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart, clearCart } from "../../redux/features/cart/cartSlice";
+
+// MUI Icons
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 
 const Publications = () => {
-    const { data: books = [] } = useFetchAllBooksQuery();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const { data: books = [] } = useFetchAllBooksQuery();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    // Only show active (not suspended) books
-    const activeBooks = books.filter((book) => !book.suspended);
+  // ✅ Use Redux store (auto re-renders on cart change)
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
-    const handleAddToCart = (book) => {
-        if (book.stock <= 0) {
-            alert("Out of Stock");
-            return;
-        }
+  // Only show active (not suspended) books
+  const activeBooks = books.filter((book) => !book.suspended);
 
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        const exists = cartItems.find((item) => item._id === book._id);
+  const handleAddToCart = (book) => {
+    if (book.stock <= 0) {
+      alert("Out of Stock");
+      return;
+    }
 
-        if (exists) {
-            // Already in cart, go to cart page
-            navigate("/cart");
-            return;
-        }
+    const exists = cartItems.find((item) => item._id === book._id);
+    if (exists) {
+      navigate("/cart");
+      return;
+    }
 
-        dispatch(addToCart(book));
-    };
+    dispatch(addToCart(book));
+  };
 
-    const handleBuyNow = (book) => {
-        if (book.stock <= 0) {
-            alert("Out of Stock");
-            return;
-        }
+  const handleBuyNow = (book) => {
+    if (book.stock <= 0) {
+      alert("Out of Stock");
+      return;
+    }
 
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        const exists = cartItems.find((item) => item._id === book._id);
+    const exists = cartItems.find((item) => item._id === book._id);
+    if (exists) {
+      navigate("/cart");
+      return;
+    }
 
-        if (exists) {
-            navigate("/cart");
-            return;
-        }
+    dispatch(clearCart()); // Remove other items
+    dispatch(addToCart(book)); // Add only this book
+    navigate("/checkout"); // Go to checkout
+  };
 
-        dispatch(clearCart()); // Remove other items
-        dispatch(addToCart(book)); // Add only this book
-        navigate("/checkout"); // Go to checkout
-    };
-
-
-    return (
-        <div className="container">
-            <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4 mb-20">
-                <div className="breadcrumb-container w-full text-left mb-0 font-figtree font-lite">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb m-0 p-0">
-                            <li className="breadcrumb-item">
-                                <a href="/" className="text-gray">Home</a>
-                            </li>
-                            <li className="breadcrumb-item">
-                                <a href="/publications" className="!text-gray-600">Publications</a>
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-
-                <div className="relative inline-block">
-                    <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
-                        Publications
-                    </h1>
-                    <img
-                        src="/motif.webp"
-                        alt="feather"
-                        className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-1"
-                    />
-                </div>
-
-                <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-10">
-                    {activeBooks.map((book, index) => (
-                        <div key={index} className="group relative bg-white mb-2 overflow-hidden transition-all duration-500">
-                            <Link to={`/books/${book._id}`}>
-                                <div className="relative w-full aspect-[2/3] max-w-[280px] mx-auto overflow-hidden group">
-                                    <img
-                                        src={getImgUrl(book?.coverImage)}
-                                        alt={book?.title}
-                                        className="object-cover w-full h-full z-0"
-                                    />
-
-                                    <div
-                                        className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
-                                        style={{
-                                            backgroundColor: "rgba(0,0,0,0)",
-                                            transition: "background-color 0.5s ease",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
-                                            e.currentTarget.firstChild.style.opacity = "1";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
-                                            e.currentTarget.firstChild.style.opacity = "0";
-                                        }}
-                                    >
-                                        <span
-                                            className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer"
-                                            style={{
-                                                opacity: 0,
-                                                transition: "opacity 0.5s ease",
-                                            }}
-                                        >
-                                            VIEW BOOK
-                                        </span>
-                                    </div>
-
-                                    <div className="book-border absolute inset-5 z-20 pointer-events-none">
-                                        <span className="top"></span>
-                                        <span className="right"></span>
-                                        <span className="bottom"></span>
-                                        <span className="left"></span>
-                                    </div>
-                                </div>
-                            </Link>
-
-                            <div className="text-center mt-2 px-0">
-                                <h3
-                                    className="text-lg md:text-lg font-medium text-gray-700 mb-2  font-figtree break-words"
-                                    style={{
-                                        height: "3rem",
-                                        overflow: "hidden",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    {book?.title}
-                                </h3>
-
-                                <div className="inline-flex justify-center items-center gap-2 w-full flex-wrap md:flex-nowrap mb-3">
-                                    <span className="text-gray-500 line-through text-sm sm:text-base md:text-md lg:text-base font-figtree font-light">
-                                        ₹{book?.oldPrice}
-                                    </span>
-                                    <span className="text-[#993333] font-figtree font-light text-base sm:text-lg md:text-lg lg:text-xl">
-                                        ₹{book?.newPrice}
-                                    </span>
-                                    {book?.oldPrice > book?.newPrice && (
-                                        <span className="text-xs sm:text-sm md:text-md lg:text-lg bg-[#993333] text-white px-1 py-0 font-figtree font-light rounded-sm">
-                                            {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="text-center mt-0 px-1">
-                                <div className="flex justify-center gap-2 mt-1 px-0 flex-nowrap">
-                                    {book.stock <= 0 ? (
-                                        <button
-                                            className="flex w-full items-center justify-center gap-1 px-3 py-1.5 text-sm bg-gray-400 text-white rounded"
-                                            disabled
-                                        >
-                                            Out of Stock
-                                        </button>
-                                    ) : (() => {
-                                        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-                                        const inCart = cartItems.find((item) => item._id === book._id);
-                                        if (inCart) {
-                                            return (
-                                                <>
-                                                    <button
-                                                        onClick={() => navigate("/cart")}
-                                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
-                                                    >
-                                                        <StorefrontOutlinedIcon fontSize="small" />
-                                                        Go to Cart
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleBuyNow(book)}
-                                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
-                                                    >
-                                                        <ShoppingBagOutlinedIcon fontSize="small" />
-                                                        Buy Now
-                                                    </button>
-                                                </>
-                                            );
-                                        } else {
-                                            return (
-                                                <>
-                                                    <button
-                                                        onClick={() => handleAddToCart(book)}
-                                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
-                                                    >
-                                                        <ShoppingCartOutlinedIcon fontSize="small" />
-                                                        Add to Cart
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleBuyNow(book)}
-                                                        className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
-                                                    >
-                                                        <ShoppingBagOutlinedIcon fontSize="small" />
-                                                        Buy Now
-                                                    </button>
-                                                </>
-                                            );
-                                        }
-                                    })()}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+  return (
+    <div className="container">
+      <div className="max-w-8xl mx-auto py-0 text-center flex flex-col justify-center items-center px-4 mb-20">
+        {/* Breadcrumb */}
+        <div className="breadcrumb-container w-full text-left mb-0 font-figtree font-lite">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb m-0 p-0">
+              <li className="breadcrumb-item">
+                <a href="/" className="text-gray">Home</a>
+              </li>
+              <li className="breadcrumb-item">
+                <a href="/publications" className="!text-gray-600">Publications</a>
+              </li>
+            </ol>
+          </nav>
         </div>
-    );
+
+        {/* Title */}
+        <div className="relative inline-block">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
+            Publications
+          </h1>
+          <img
+            src="/motif.webp"
+            alt="feather"
+            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-1"
+          />
+        </div>
+
+        {/* Books Grid */}
+        <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-10">
+          {activeBooks.map((book, index) => {
+            const inCart = cartItems.find((item) => item._id === book._id);
+
+            return (
+              <div
+                key={index}
+                className="group relative bg-white mb-2 overflow-hidden transition-all duration-500"
+              >
+                {/* Book Cover */}
+                <Link to={`/books/${book._id}`}>
+                  <div className="relative w-full aspect-[2/3] max-w-[280px] mx-auto overflow-hidden group">
+                    <img
+                      src={getImgUrl(book?.coverImage)}
+                      alt={book?.title}
+                      className="object-cover w-full h-full z-0"
+                    />
+
+                    {/* Hover View Book */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center transition-all duration-500 z-10"
+                      style={{
+                        backgroundColor: "rgba(0,0,0,0)",
+                        transition: "background-color 0.5s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
+                        e.currentTarget.firstChild.style.opacity = "1";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(0,0,0,0)";
+                        e.currentTarget.firstChild.style.opacity = "0";
+                      }}
+                    >
+                      <span
+                        className="!text-white !text-lg !font-semibold hover:!text-[#cc6633] !cursor-pointer"
+                        style={{
+                          opacity: 0,
+                          transition: "opacity 0.5s ease",
+                        }}
+                      >
+                        VIEW BOOK
+                      </span>
+                    </div>
+
+                    <div className="book-border absolute inset-5 z-20 pointer-events-none">
+                      <span className="top"></span>
+                      <span className="right"></span>
+                      <span className="bottom"></span>
+                      <span className="left"></span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Book Title */}
+                <div className="text-center mt-2 px-0">
+                  <h3
+                    className="text-lg md:text-lg font-medium text-gray-700 mb-2 font-figtree break-words"
+                    style={{
+                      height: "3rem",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {book?.title}
+                  </h3>
+
+                  {/* Price */}
+                  <div className="inline-flex justify-center items-center gap-2 w-full flex-wrap md:flex-nowrap mb-3">
+                    <span className="text-gray-500 line-through text-sm sm:text-base md:text-md lg:text-base font-figtree font-light">
+                      ₹{book?.oldPrice}
+                    </span>
+                    <span className="text-[#993333] font-figtree font-light text-base sm:text-lg md:text-lg lg:text-xl">
+                      ₹{book?.newPrice}
+                    </span>
+                    {book?.oldPrice > book?.newPrice && (
+                      <span className="text-xs sm:text-sm md:text-md lg:text-lg bg-[#993333] text-white px-1 py-0 font-figtree font-light rounded-sm">
+                        {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="text-center mt-0 px-1">
+                  <div className="flex justify-center gap-2 mt-1 px-0 flex-nowrap">
+                    {book.stock <= 0 ? (
+                      <button
+                        className="flex w-full items-center justify-center gap-1 px-3 py-1.5 text-sm bg-gray-400 text-white rounded"
+                        disabled
+                      >
+                        Out of Stock
+                      </button>
+                    ) : inCart ? (
+                      <>
+                        <button
+                          onClick={() => navigate("/cart")}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
+                        >
+                          <StorefrontOutlinedIcon fontSize="small" />
+                          Go to Cart
+                        </button>
+                        <button
+                          onClick={() => handleBuyNow(book)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
+                        >
+                          <ShoppingBagOutlinedIcon fontSize="small" />
+                          Buy Now
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleAddToCart(book)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
+                        >
+                          <ShoppingCartOutlinedIcon fontSize="small" />
+                          Add to Cart
+                        </button>
+                        <button
+                          onClick={() => handleBuyNow(book)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
+                        >
+                          <ShoppingBagOutlinedIcon fontSize="small" />
+                          Buy Now
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Publications;

@@ -119,6 +119,21 @@ p {
   color: #fff;
 }
 
+.out-of-stock {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* gap-1 */
+  padding: 6px 12px; /* px-3 py-1.5 */
+  font-size: 14px; /* text-sm */
+  background-color: #9ca3af; /* Tailwind bg-gray-400 */
+  color: #fff; /* text-white */
+  border-radius: 6px; /* rounded */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
 .about-book {
   margin-top: 30px;
 }
