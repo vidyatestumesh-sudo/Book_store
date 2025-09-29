@@ -152,13 +152,15 @@ const SingleBook = () => {
   if (isError || !book)
     return <div className="error">Failed to load book details.</div>;
 
-  const currentUserReview = book.reviews?.find(
-    (rev) => rev.userId === currentUser?.uid
-  );
-  const otherReviews = book.reviews
-    ?.filter((rev) => rev.userId !== currentUser?.uid)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 2);
+const safeReviews = Array.isArray(book.reviews) ? book.reviews : [];
+const currentUserReview = safeReviews.find(
+  (rev) => rev.userId === currentUser?.uid
+);
+const otherReviews = safeReviews
+  .filter((rev) => rev.userId !== currentUser?.uid)
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  .slice(0, 2);
+
 
   const inCart = cartItems.find((item) => item._id === book._id);
 
