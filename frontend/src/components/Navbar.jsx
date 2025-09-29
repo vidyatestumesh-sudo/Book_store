@@ -305,58 +305,62 @@ const Navbar = () => {
                 </li>
                 <li className="navbar-blogs-menu">
                   <Link to="/blogs" className="blogs-link">
-                    BLOGS
+                    BLOGS{" "}
+                    <span
+                      className="blogs-dropdown-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleBlogsDesktopClick(e);
+                      }}>
+                      <ExpandMoreIcon fontSize="small" />
+                    </span>
                   </Link>
-                  <IconButton
-                    className="blogs-dropdown-btn"
-                    onClick={handleBlogsDesktopClick}
-                    size="small">
-                    <ExpandMoreIcon fontSize="small" />
-                  </IconButton>
-                  <Menu
-                    anchorEl={blogsDesktopAnchor}
-                    open={isBlogsDesktopOpen}
-                    onClose={handleBlogsDesktopClose}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                    transformOrigin={{ vertical: "top", horizontal: "left" }}
-                    classes={{ paper: "navbar-menu-dropdown" }}>
-                    <MenuItem
-                      component={Link}
-                      to="/blogs"
-                      onClick={handleBlogsDesktopClose}
-                      className="navbar-menu-item">
-                      Blogs
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/inspiration-board"
-                      onClick={handleBlogsDesktopClose}
-                      className="navbar-menu-item">
-                      Inspiration Board
-                    </MenuItem>
-                    {/* <MenuItem
+                </li>
+                <Menu
+                  anchorEl={blogsDesktopAnchor}
+                  open={isBlogsDesktopOpen}
+                  onClose={handleBlogsDesktopClose}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                  transformOrigin={{ vertical: "top", horizontal: "left" }}
+                  classes={{ paper: "navbar-menu-dropdown" }}>
+                  <MenuItem
+                    component={Link}
+                    to="/blogs"
+                    onClick={handleBlogsDesktopClose}
+                    className="navbar-menu-item">
+                    Blogs
+                  </MenuItem>
+                  <MenuItem
+                    component={Link}
+                    to="/inspiration-board"
+                    onClick={handleBlogsDesktopClose}
+                    className="navbar-menu-item">
+                    Inspiration Board
+                  </MenuItem>
+                  {/* <MenuItem
                       component={Link}
                       to="/positivity-corner"
                       onClick={handleBlogsDesktopClose}
                       className="navbar-menu-item">
                       Positivity Corner
                     </MenuItem> */}
-                    <MenuItem
-                      component={Link}
-                      to="/sufi-corner"
-                      onClick={handleBlogsDesktopClose}
-                      className="navbar-menu-item">
-                      Sufi Corner
-                    </MenuItem>
-                    {/* <MenuItem
+                  <MenuItem
+                    component={Link}
+                    to="/sufi-corner"
+                    onClick={handleBlogsDesktopClose}
+                    className="navbar-menu-item">
+                    Sufi Corner
+                  </MenuItem>
+                  {/* <MenuItem
                       component={Link}
                       to="/events"
                       onClick={handleBlogsDesktopClose}
                       className="navbar-menu-item">
                       Events
                     </MenuItem> */}
-                  </Menu>
-                </li>
+                </Menu>
+
                 <li>
                   <Link to="/letters">LETTER FROM LANGSHOTT</Link>
                 </li>
