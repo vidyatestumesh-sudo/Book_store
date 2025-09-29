@@ -63,7 +63,9 @@ const SingleBook = () => {
   // Preload current user's review data (if exists)
   useEffect(() => {
     if (book?.reviews && currentUser) {
-      const userReview = book.reviews.find((rev) => rev.userId === currentUser.uid);
+      const userReview = book.reviews.find(
+        (rev) => rev.userId === currentUser.uid
+      );
       if (userReview) {
         setRating(userReview.rating);
         setComment(userReview.comment);
@@ -120,7 +122,8 @@ const SingleBook = () => {
         body: JSON.stringify({
           bookId: id,
           userId: currentUser.uid,
-          userName: currentUser.displayName || currentUser.email || "Anonymous User",
+          userName:
+            currentUser.displayName || currentUser.email || "Anonymous User",
           rating,
           comment,
         }),
@@ -146,7 +149,8 @@ const SingleBook = () => {
       : 0;
 
   if (isLoading) return <div className="loading">Loading...</div>;
-  if (isError || !book) return <div className="error">Failed to load book details.</div>;
+  if (isError || !book)
+    return <div className="error">Failed to load book details.</div>;
 
   const currentUserReview = book.reviews?.find(
     (rev) => rev.userId === currentUser?.uid
@@ -164,8 +168,12 @@ const SingleBook = () => {
       <div className="breadcrumb-container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
-            <li className="breadcrumb-item"><a href="/">Home</a></li>
-            <li className="breadcrumb-item"><a href="/publications">Publications</a></li>
+            <li className="breadcrumb-item">
+              <a href="/">Home</a>
+            </li>
+            <li className="breadcrumb-item">
+              <a href="/publications">Publications</a>
+            </li>
             <li className="breadcrumb-item active" aria-current="page">
               {book.title}
             </li>
@@ -209,19 +217,27 @@ const SingleBook = () => {
                 </button>
               ) : inCart ? (
                 <>
-                  <button className="add-to-cart" onClick={() => navigate("/cart")}>
+                  <button
+                    className="add-to-cart"
+                    onClick={() => navigate("/cart")}>
                     <StorefrontOutlinedIcon fontSize="small" /> Go to Cart
                   </button>
-                  <button className="buy-now" onClick={() => handleBuyNow(book)}>
+                  <button
+                    className="buy-now"
+                    onClick={() => handleBuyNow(book)}>
                     <ShoppingBagOutlinedIcon fontSize="small" /> Buy Now
                   </button>
                 </>
               ) : (
                 <>
-                  <button className="add-to-cart" onClick={() => handleAddToCart(book)}>
+                  <button
+                    className="add-to-cart"
+                    onClick={() => handleAddToCart(book)}>
                     <ShoppingCartOutlinedIcon fontSize="small" /> Add to Cart
                   </button>
-                  <button className="buy-now" onClick={() => handleBuyNow(book)}>
+                  <button
+                    className="buy-now"
+                    onClick={() => handleBuyNow(book)}>
                     <ShoppingBagOutlinedIcon fontSize="small" /> Buy Now
                   </button>
                 </>
@@ -248,20 +264,29 @@ const SingleBook = () => {
         <div className="col-lg-8 col-md-12 col-sm-12 col-12 book-details ">
           <h2>{book.title}</h2>
 
-          {/* Ratings */}
-          <div className="book-rating">
-            {Array.from({ length: 5 }, (_, i) => {
-              if (i < Math.floor(avgRating)) {
-                return <StarIcon key={i} className="star filled" />;
-              } else if (i < avgRating) {
-                return <StarHalfIcon key={i} className="star half" />;
-              } else {
-                return <StarBorderIcon key={i} className="star empty" />;
-              }
-            })}
-            <span className="rating-text">
-              ({avgRating.toFixed(1)} / 5 from {book?.reviews?.length || 0} reviews)
-            </span>
+          {/* Ratings + Share in one row */}
+          <div className="rating-share-row">
+            <div className="book-rating">
+              {Array.from({ length: 5 }, (_, i) => {
+                if (i < Math.floor(avgRating)) {
+                  return <StarIcon key={i} className="star filled" />;
+                } else if (i < avgRating) {
+                  return <StarHalfIcon key={i} className="star half" />;
+                } else {
+                  return <StarBorderIcon key={i} className="star empty" />;
+                }
+              })}
+              <span className="rating-text">
+                ({avgRating.toFixed(1)} / 5 from {book?.reviews?.length || 0}{" "}
+                reviews)
+              </span>
+            </div>
+            <div className="share">
+              <a>
+                <ShareOutlinedIcon className="share-icon" />
+                Share
+              </a>
+            </div>
           </div>
 
           {/* Price */}
@@ -270,7 +295,10 @@ const SingleBook = () => {
             <span className="old-price">₹ {book.oldPrice}</span>
             {book.oldPrice > book.newPrice && (
               <span className="discount">
-                {Math.round(((book.oldPrice - book.newPrice) / book.oldPrice) * 100)}% off
+                {Math.round(
+                  ((book.oldPrice - book.newPrice) / book.oldPrice) * 100
+                )}
+                % off
               </span>
             )}
           </div>
@@ -281,7 +309,9 @@ const SingleBook = () => {
             {showMore && <span className="extra-text"> {longText}</span>}
             <br />
             {words.length > WORD_LIMIT && (
-              <span className="read-more" onClick={() => setShowMore(!showMore)}>
+              <span
+                className="read-more"
+                onClick={() => setShowMore(!showMore)}>
                 {showMore ? (
                   <>
                     <KeyboardArrowUpIcon /> Read less
@@ -298,11 +328,17 @@ const SingleBook = () => {
           {/* Meta */}
           <div className="book-meta">
             <div className="row">
-              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Author</div>
-              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">{book.author}</div>
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
+                Author
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
+                {book.author}
+              </div>
             </div>
             <div className="row">
-              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">Specifications</div>
+              <div className="col-lg-3 col-md-4 col-sm-4 col-4 label">
+                Specifications
+              </div>
               <div className="col-lg-9 col-md-8 col-sm-8 col-8 value">
                 <p>Language: {book.language}</p>
                 <p>Binding: {book.binding}</p>
@@ -312,13 +348,6 @@ const SingleBook = () => {
                 <p>Pages: {book.pages}</p>
               </div>
             </div>
-          </div>
-
-          <div className="share">
-            <a>
-              <ShareOutlinedIcon className="share-icon" />
-              Share
-            </a>
           </div>
 
           {/* Reviews Section */}
@@ -331,14 +360,17 @@ const SingleBook = () => {
                   {Array.from({ length: 5 }, (_, i) => (
                     <span
                       key={i}
-                      className={i < currentUserReview.rating ? "star filled" : "star"}
-                    >
+                      className={
+                        i < currentUserReview.rating ? "star filled" : "star"
+                      }>
                       ★
                     </span>
                   ))}
                 </div>
                 <p className="review-comment">{currentUserReview.comment}</p>
-                <button onClick={() => setIsEditingReview(true)}>Edit Review</button>
+                <button onClick={() => setIsEditingReview(true)}>
+                  Edit Review
+                </button>
               </div>
             )}
 
@@ -350,8 +382,7 @@ const SingleBook = () => {
                     <span
                       key={i}
                       onClick={() => setRating(i + 1)}
-                      className={i < rating ? "star selected" : "star"}
-                    >
+                      className={i < rating ? "star selected" : "star"}>
                       ★
                     </span>
                   ))}
@@ -359,8 +390,7 @@ const SingleBook = () => {
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="Write your review..."
-                ></textarea>
+                  placeholder="Write your review..."></textarea>
                 <div className="review-buttons">
                   <button type="submit" className="me-3">
                     {currentUserReview ? "Update Review" : "Submit Review"}
@@ -377,8 +407,7 @@ const SingleBook = () => {
                           setRating(0);
                           setComment("");
                         }
-                      }}
-                    >
+                      }}>
                       Cancel
                     </button>
                   )}
@@ -394,7 +423,9 @@ const SingleBook = () => {
                   <div key={idx} className="review">
                     <div className="review-rating">
                       {Array.from({ length: 5 }, (_, i) => (
-                        <span key={i} className={i < rev.rating ? "star filled" : "star"}>
+                        <span
+                          key={i}
+                          className={i < rev.rating ? "star filled" : "star"}>
                           ★
                         </span>
                       ))}
@@ -427,7 +458,10 @@ const SingleBook = () => {
                       <span className="current-price">₹ {rv.newPrice}</span>{" "}
                       {rv.oldPrice > rv.newPrice && (
                         <span className="discount">
-                          {Math.round(((rv.oldPrice - rv.newPrice) / rv.oldPrice) * 100)}% off
+                          {Math.round(
+                            ((rv.oldPrice - rv.newPrice) / rv.oldPrice) * 100
+                          )}
+                          % off
                         </span>
                       )}
                     </p>
