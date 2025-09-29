@@ -41,6 +41,7 @@
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.23.0",
+    "sweetalert2-react-content": "^5.1.0",
     "swiper": "^11.2.10",
     "tailwind-scrollbar-hide": "^4.0.0",
     "uuid": "^13.0.0"
