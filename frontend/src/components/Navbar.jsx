@@ -158,7 +158,7 @@ const Navbar = () => {
                     </Menu>
                   </>
                 ) : (
-                  <Link to="/login" aria-label="Login">
+                  <Link to="/Auth" aria-label="Login">
                     <PersonOutlineIcon className="icon" />
                   </Link>
                 )}
