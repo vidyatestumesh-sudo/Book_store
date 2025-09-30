@@ -121,6 +121,7 @@ const cartSlice = createSlice({
       });
     },
 
+    // ✅ New reducer: keeps cart item details (stock, price) updated with backend
     updateCartProductDetails: (state, action) => {
       const { _id, stock, newPrice, oldPrice } = action.payload;
       const index = state.cartItems.findIndex((item) => item._id === _id);
@@ -139,6 +140,7 @@ const cartSlice = createSlice({
         toast: false,
       });
     },
+
     saveGiftDetails: (state, action) => {
       state.giftDetails = action.payload;
       localStorage.setItem("giftDetails", JSON.stringify(state.giftDetails));
@@ -147,13 +149,19 @@ const cartSlice = createSlice({
     clearGiftDetails: (state) => {
       state.giftDetails = { to: "", from: "", message: "" };
       localStorage.removeItem("giftDetails");
-    }
+    },
   },
 });
 
 export const {
-  addToCart, removeFromCart, clearCart, updateCartQty,
-  removeSoldOut, updateCartStock, updateCartProductDetails, saveGiftDetails,
+  addToCart,
+  removeFromCart,
+  clearCart,
+  updateCartQty,
+  removeSoldOut,
+  updateCartStock,
+  updateCartProductDetails, // ✅ export
+  saveGiftDetails,
   clearGiftDetails,
 } = cartSlice.actions;
 

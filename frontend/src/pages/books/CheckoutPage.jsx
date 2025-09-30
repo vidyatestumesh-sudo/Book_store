@@ -7,8 +7,15 @@ import Swal from 'sweetalert2';
 import getBaseUrl from "../../utils/baseURL";
 import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
-import { updateCartStock, clearCart, clearGiftDetails, saveGiftDetails } from "../../redux/features/cart/cartSlice";
+import { 
+  updateCartProductDetails, // ✅ added
+  clearCart, 
+  clearGiftDetails, 
+  saveGiftDetails 
+} from "../../redux/features/cart/cartSlice";
 
+// ✅ import books API
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -17,10 +24,33 @@ const CheckoutPage = () => {
   const giftDetails = useSelector((state) => state.cart.giftDetails);
   const [isGift, setIsGift] = useState(!!giftDetails?.to);
   const [isChecked, setIsChecked] = useState(false);
+
+  // ✅ fetch all books for stock/price sync
+  const { data: allBooks } = useFetchAllBooksQuery();
+
+  useEffect(() => {
+    if (allBooks && cartItems.length > 0) {
+      cartItems.forEach((cartItem) => {
+        const book = allBooks.find((b) => b._id === cartItem._id);
+        if (book) {
+          dispatch(
+            updateCartProductDetails({
+              _id: book._id,
+              stock: book.stock,
+              newPrice: book.newPrice,
+              oldPrice: book.oldPrice,
+            })
+          );
+        }
+      });
+    }
+  }, [allBooks, cartItems, dispatch]);
+
   const subtotal = cartItems.reduce((acc, item) => acc + item.newPrice * item.qty, 0);
   const originalTotal = cartItems.reduce((acc, item) => acc + (item.oldPrice || item.newPrice) * item.qty, 0);
   const discount = originalTotal - subtotal;
   const finalAmount = subtotal;
+
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [createOrder, { isLoading }] = useCreateOrderMutation();
 
@@ -31,120 +61,116 @@ const CheckoutPage = () => {
   }, [giftDetails]);
 
   const onSubmit = async (data) => {
-  const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+    const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
-  // Check if cart is empty
-  if (totalItems === 0 || finalAmount <= 0) {
-    Swal.fire({
-      title: "Cart is Empty",
-      text: "Please add some products to your cart before placing an order.",
-      icon: "warning",
-      confirmButtonColor: "#C76F3B",
-    });
-    return;
-  }
-
-  // Check Terms & Conditions
-  if (!isChecked) {
-    Swal.fire({
-      title: "Terms Not Agreed",
-      text: "You must agree to the Terms & Conditions before placing an order.",
-      icon: "warning",
-      confirmButtonColor: "#C76F3B",
-    });
-    return;
-  }
-
-  const result = await Swal.fire({
-    title: "Confirm Order",
-    html: `
-      Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
-      Total Items: <strong>${totalItems}</strong>
-    `,
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Yes, place order",
-    cancelButtonText: "Cancel",
-    reverseButtons: true,
-    confirmButtonColor: "#C76F3B",
-    cancelButtonColor: "#888",
-  });
-
-  if (result.isConfirmed) {
-    const newOrder = {
-      name: data.name,
-      email: data.email,
-      address: {
-        city: data.city,
-        country: data.country,
-        state: data.state,
-        zipcode: data.zipcode,
-        street: data.street,
-      },
-      phone: data.phone,
-      productIds: cartItems.map(item => item._id),
-      products: cartItems.map(item => ({
-        bookId: item._id,
-        title: item.title,
-        price: item.newPrice,
-        quantity: item.qty,
-      })),
-      totalPrice: finalAmount,
-      giftTo: isGift ? giftDetails.to : null,
-      giftFrom: isGift ? giftDetails.from : null,
-      giftMessage: isGift ? giftDetails.message : null,
-    };
-
-    try {
-      // 1️⃣ Create the order
-      await createOrder(newOrder).unwrap();
-
-      // 2️⃣ Update stock in backend and Redux
-      for (let item of cartItems) {
-        const newStock = item.stock - item.qty;
-
-        await axios.put(
-          `${getBaseUrl()}/api/books/edit/${item._id}`,
-          { stock: newStock },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      }
-
-      // 3️⃣ Show success alert
-      await Swal.fire({
-        title: "Order Confirmed!",
-        html: `
-          Your order has been placed successfully.<br/>
-          Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
-          Total Items: <strong>${totalItems}</strong>
-        `,
-        icon: "success",
+    if (totalItems === 0 || finalAmount <= 0) {
+      Swal.fire({
+        title: "Cart is Empty",
+        text: "Please add some products to your cart before placing an order.",
+        icon: "warning",
         confirmButtonColor: "#C76F3B",
       });
-
-      // 4️⃣ Clear cart and gift details
-      dispatch(clearCart());
-      dispatch(clearGiftDetails());
-
-      // 5️⃣ Redirect to My Orders
-      navigate("/orders");
-
-    } catch (error) {
-      console.error("Error placing order", error);
-      await Swal.fire({
-        title: "Error",
-        text: "Failed to place an order. Please try again.",
-        icon: "error",
-        confirmButtonColor: "#C76F3B",
-      });
+      return;
     }
-  }
-};
 
+    if (!isChecked) {
+      Swal.fire({
+        title: "Terms Not Agreed",
+        text: "You must agree to the Terms & Conditions before placing an order.",
+        icon: "warning",
+        confirmButtonColor: "#C76F3B",
+      });
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Confirm Order",
+      html: `
+        Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+        Total Items: <strong>${totalItems}</strong>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, place order",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      confirmButtonColor: "#C76F3B",
+      cancelButtonColor: "#888",
+    });
+
+    if (result.isConfirmed) {
+      const newOrder = {
+        name: data.name,
+        email: data.email,
+        address: {
+          city: data.city,
+          country: data.country,
+          state: data.state,
+          zipcode: data.zipcode,
+          street: data.street,
+        },
+        phone: data.phone,
+        productIds: cartItems.map(item => item._id),
+        products: cartItems.map(item => ({
+          bookId: item._id,
+          title: item.title,
+          price: item.newPrice,
+          quantity: item.qty,
+        })),
+        totalPrice: finalAmount,
+        giftTo: isGift ? giftDetails.to : null,
+        giftFrom: isGift ? giftDetails.from : null,
+        giftMessage: isGift ? giftDetails.message : null,
+      };
+
+      try {
+        // 1️⃣ Create the order
+        await createOrder(newOrder).unwrap();
+
+        // 2️⃣ Update stock in backend
+        for (let item of cartItems) {
+          const newStock = item.stock - item.qty;
+          await axios.put(
+            `${getBaseUrl()}/api/books/edit/${item._id}`,
+            { stock: newStock },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+        }
+
+        // 3️⃣ Show success alert
+        await Swal.fire({
+          title: "Order Confirmed!",
+          html: `
+            Your order has been placed successfully.<br/>
+            Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+            Total Items: <strong>${totalItems}</strong>
+          `,
+          icon: "success",
+          confirmButtonColor: "#C76F3B",
+        });
+
+        // 4️⃣ Clear cart and gift details
+        dispatch(clearCart());
+        dispatch(clearGiftDetails());
+
+        // 5️⃣ Redirect
+        navigate("/orders");
+
+      } catch (error) {
+        console.error("Error placing order", error);
+        await Swal.fire({
+          title: "Error",
+          text: "Failed to place an order. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#C76F3B",
+        });
+      }
+    }
+  };
 
   if (isLoading) {
     return <div className="text-center py-10 text-lg font-semibold">Loading....</div>;

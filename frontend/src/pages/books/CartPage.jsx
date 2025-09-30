@@ -9,6 +9,7 @@ import {
   removeSoldOut,
   saveGiftDetails,
   clearGiftDetails,
+  updateCartProductDetails, // ✅ new import
 } from "../../redux/features/cart/cartSlice";
 import IconButton from "@mui/material/IconButton";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
@@ -19,8 +20,11 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
+
+// ✅ import booksApi hook
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -30,6 +34,9 @@ const CartPage = () => {
     Boolean(giftDetails?.to || giftDetails?.from || giftDetails?.message)
   );
 
+  // ✅ fetch all books to sync stock/price
+  const { data: allBooks } = useFetchAllBooksQuery();
+
   useEffect(() => {
     setIsGift(Boolean(giftDetails?.to || giftDetails?.from || giftDetails?.message));
   }, [giftDetails]);
@@ -37,6 +44,25 @@ const CartPage = () => {
   useEffect(() => {
     dispatch(removeSoldOut());
   }, [dispatch]);
+
+  // ✅ sync cart product details (stock/price) with backend
+  useEffect(() => {
+    if (allBooks && cartItems.length > 0) {
+      cartItems.forEach((cartItem) => {
+        const book = allBooks.find((b) => b._id === cartItem._id);
+        if (book) {
+          dispatch(
+            updateCartProductDetails({
+              _id: book._id,
+              stock: book.stock,
+              newPrice: book.newPrice,
+              oldPrice: book.oldPrice,
+            })
+          );
+        }
+      });
+    }
+  }, [allBooks, cartItems, dispatch]);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.newPrice * item.qty, 0);
   const originalTotal = cartItems.reduce(
@@ -50,16 +76,16 @@ const CartPage = () => {
     <Tooltip {...props} classes={{ popper: className }} />
   ))(() => ({
     [`& .MuiTooltip-tooltip`]: {
-      backgroundColor: '#fff',
-      color: '#333',
+      backgroundColor: "#fff",
+      color: "#333",
       fontSize: 12,
-      padding: '8px 14px',
+      padding: "8px 14px",
       borderRadius: 8,
-      border: '1px solid #ddd',
+      border: "1px solid #ddd",
       maxWidth: 320,
-      whiteSpace: 'normal',
+      whiteSpace: "normal",
       lineHeight: 2,
-      textAlign: 'left',
+      textAlign: "left",
     },
   }));
 
