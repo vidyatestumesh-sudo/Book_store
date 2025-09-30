@@ -30,7 +30,7 @@ const CheckoutPage = () => {
     }
   }, [giftDetails]);
 
-  const onSubmit = async (data) => {
+const onSubmit = async (data) => {
   const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   // Check if cart is empty
@@ -55,6 +55,7 @@ const CheckoutPage = () => {
     return;
   }
 
+  // Confirm Order
   const result = await Swal.fire({
     title: "Confirm Order",
     html: `
@@ -70,83 +71,83 @@ const CheckoutPage = () => {
     cancelButtonColor: "#888",
   });
 
-  if (result.isConfirmed) {
-    const newOrder = {
-      name: data.name,
-      email: data.email,
-      address: {
-        city: data.city,
-        country: data.country,
-        state: data.state,
-        zipcode: data.zipcode,
-        street: data.street,
-      },
-      phone: data.phone,
-      productIds: cartItems.map(item => item._id),
-      products: cartItems.map(item => ({
-        bookId: item._id,
-        title: item.title,
-        price: item.newPrice,
-        quantity: item.qty,
-      })),
-      totalPrice: finalAmount,
-      giftTo: isGift ? giftDetails.to : null,
-      giftFrom: isGift ? giftDetails.from : null,
-      giftMessage: isGift ? giftDetails.message : null,
-    };
+  if (!result.isConfirmed) return;
 
-    try {
-      // 1️⃣ Create the order
-      await createOrder(newOrder).unwrap();
+  const newOrder = {
+    name: data.name,
+    email: data.email,
+    address: {
+      city: data.city,
+      country: data.country,
+      state: data.state,
+      zipcode: data.zipcode,
+      street: data.street,
+    },
+    phone: data.phone,
+    productIds: cartItems.map((item) => item._id),
+    products: cartItems.map((item) => ({
+      bookId: item._id,
+      title: item.title,
+      price: item.newPrice,
+      quantity: item.qty,
+    })),
+    totalPrice: finalAmount,
+    giftTo: isGift ? giftDetails.to : null,
+    giftFrom: isGift ? giftDetails.from : null,
+    giftMessage: isGift ? giftDetails.message : null,
+  };
 
-      // 2️⃣ Update stock in backend and Redux
-      for (let item of cartItems) {
-        const newStock = item.stock - item.qty;
+  try {
+    // 1️⃣ Create the order
+    await createOrder(newOrder).unwrap();
 
-        await axios.put(
-          `${getBaseUrl()}/api/books/edit/${item._id}`,
-          { stock: newStock },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+    // 2️⃣ Update stock in backend and Redux
+    for (let item of cartItems) {
+      const newStock = item.stock - item.qty;
 
-        // Update cart Redux state
-        dispatch(updateCartStock({ bookId: item._id, newStock }));
-      }
+      await axios.put(
+        `${getBaseUrl()}/api/books/edit/${item._id}`,
+        { stock: newStock },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-      // 3️⃣ Show success alert
-      await Swal.fire({
-        title: "Order Confirmed!",
-        html: `
-          Your order has been placed successfully.<br/>
-          Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
-          Total Items: <strong>${totalItems}</strong>
-        `,
-        icon: "success",
-        confirmButtonColor: "#C76F3B",
-      });
-
-      // 4️⃣ Clear cart and gift details
-      dispatch(clearCart());
-      dispatch(clearGiftDetails());
-      dispatch(updateCartStock({ bookId: item.bookId, newStock }));
-      // 5️⃣ Redirect to My Orders
-      navigate("/orders");
-
-    } catch (error) {
-      console.error("Error placing order", error);
-      await Swal.fire({
-        title: "Error",
-        text: "Failed to place an order. Please try again.",
-        icon: "error",
-        confirmButtonColor: "#C76F3B",
-      });
+      dispatch(updateCartStock({ bookId: item._id, newStock }));
     }
+
+    // 3️⃣ Show success alert
+    await Swal.fire({
+      title: "Order Confirmed!",
+      html: `
+        Your order has been placed successfully.<br/>
+        Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+        Total Items: <strong>${totalItems}</strong>
+      `,
+      icon: "success",
+      confirmButtonColor: "#C76F3B",
+    });
+
+    // 4️⃣ Clear cart and gift details
+    dispatch(clearCart());
+    dispatch(clearGiftDetails());
+
+    // 5️⃣ Redirect to My Orders
+    navigate("/orders");
+
+  } catch (error) {
+    console.error("Error placing order", error);
+    await Swal.fire({
+      title: "Error",
+      text: "Failed to place an order. Please try again.",
+      icon: "error",
+      confirmButtonColor: "#C76F3B",
+    });
   }
 };
+
 
 
   if (isLoading) {
