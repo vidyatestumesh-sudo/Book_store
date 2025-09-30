@@ -75,14 +75,6 @@ const cartSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = [];
       localStorage.removeItem("cartItems");
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Cart Cleared!",
-        showConfirmButton: false,
-        timer: 1500,
-        toast: false,
-      });
     },
 
     updateCartQty: (state, action) => {
@@ -111,14 +103,6 @@ const cartSlice = createSlice({
         item._id === bookId ? { ...item, stock: newStock } : item
       );
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-      Swal.fire({
-        position: "center",
-        icon: "info",
-        title: "Cart Stock Updated",
-        showConfirmButton: false,
-        timer: 1200,
-        toast: false,
-      });
     },
 
     // ✅ New reducer: keeps cart item details (stock, price) updated with backend
@@ -131,14 +115,6 @@ const cartSlice = createSlice({
         state.cartItems[index].oldPrice = oldPrice;
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-      Swal.fire({
-        position: "center",
-        icon: "info",
-        title: "Product Details Updated",
-        showConfirmButton: false,
-        timer: 1200,
-        toast: false,
-      });
     },
 
     saveGiftDetails: (state, action) => {
