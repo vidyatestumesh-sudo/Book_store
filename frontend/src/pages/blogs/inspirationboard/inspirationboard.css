@@ -124,8 +124,8 @@ p {
   border-radius: 50%;
   background-color: white;
   color: black;
-  width: 33px;
-  height: 33px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,7 +133,7 @@ p {
 }
 
 .inspiration-board-nav-btn-icon {
-  font-size: 18px !important;
+  font-size: 18px;
 }
 
 .inspiration-board-nav-btn:hover {
@@ -173,8 +173,8 @@ p {
   }
 
   .inspiration-board-carousel-text {
-    padding: 0px 0px;
-  }
+  padding: 0px 0px;
+}
 
   .inspiration-board-carousel-text h3 {
     font-size: 20px;
@@ -228,6 +228,11 @@ p {
 
   .inspiration-board-custom-nav {
     margin-top: 0px;
+  }
+
+   .inspiration-board-nav-btn {
+     width: 25px;
+     height: 25px;
   }
 
   .inspiration-board-top-carousel {
