@@ -132,7 +132,7 @@ const CheckoutPage = () => {
       // 4️⃣ Clear cart and gift details
       dispatch(clearCart());
       dispatch(clearGiftDetails());
-
+      dispatch(updateCartStock({ bookId: item.bookId, newStock }));
       // 5️⃣ Redirect to My Orders
       navigate("/orders");
 
