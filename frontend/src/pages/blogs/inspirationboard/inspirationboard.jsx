@@ -116,8 +116,7 @@ const InspirationBoard = () => {
             {inspirationBlogs.map((item, index) => (
               <div
                 className="inspiration-board-carousel-item with-text"
-                key={item._id || index}
-              >
+                key={item._id || index}>
                 <Link to={`/inspiration/${item._id}`} className="block group">
                   <img
                     src={
@@ -126,8 +125,7 @@ const InspirationBoard = () => {
                         : `${BACKEND_BASE_URL}${item.image}`
                     }
                     alt={item.title}
-                    style={{ width: "100%", height: "380px", objectFit: "cover", borderRadius: "8px", transition: "transform 0.3s", }}
-                    className="group-hover:scale-[1.02]"
+                    className="inspiration-board-carousel-img inspiration-board-carousel-image1"
                   />
                 </Link>
               </div>
@@ -135,17 +133,15 @@ const InspirationBoard = () => {
           </Slider>
 
           {/* Custom navigation below top carousel */}
-          <div className="inspiration-board-custom-nav ms-3">
+          <div className="inspiration-board-custom-nav">
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => topSliderRef?.slickPrev()}
-            >
+              onClick={() => topSliderRef?.slickPrev()}>
               <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => topSliderRef?.slickNext()}
-            >
+              onClick={() => topSliderRef?.slickNext()}>
               <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
@@ -155,15 +151,13 @@ const InspirationBoard = () => {
           </div>
         </div>
 
-
         {/* Bottom Carousel */}
         <div className="inspiration-board-bottom-carousel">
           <Slider ref={setBottomSliderRef} {...bottomSettings}>
             {inspirationImages.map((item, index) => (
               <div
                 className="inspiration-board-carousel-item images-only"
-                key={item._id || index}
-              >
+                key={item._id || index}>
                 <img
                   src={
                     item.imageUrl?.startsWith("http")
@@ -171,24 +165,22 @@ const InspirationBoard = () => {
                       : `${BACKEND_BASE_URL}${item.imageUrl}`
                   }
                   alt={`Slide ${index + 1}`}
-                  className="w-full h-56 md:h-64 lg:h-72 xl:h-74 object-cover rounded-[8px]"
+                  className="inspiration-board-carousel-img inspiration-board-carousel-image2"
                 />
               </div>
             ))}
           </Slider>
 
           {/* Custom navigation below bottom carousel */}
-          <div className="inspiration-board-custom-nav ms-3">
+          <div className="inspiration-board-custom-nav">
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => bottomSliderRef?.slickPrev()}
-            >
+              onClick={() => bottomSliderRef?.slickPrev()}>
               <FiArrowLeft className="inspiration-board-nav-btn-icon" />
             </button>
             <button
               className="inspiration-board-nav-btn"
-              onClick={() => bottomSliderRef?.slickNext()}
-            >
+              onClick={() => bottomSliderRef?.slickNext()}>
               <FiArrowRight className="inspiration-board-nav-btn-icon" />
             </button>
             <span className="inspiration-board-slide-counter">
