@@ -7,14 +7,12 @@ import Swal from 'sweetalert2';
 import getBaseUrl from "../../utils/baseURL";
 import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
-import { 
-  updateCartProductDetails, // ✅ added
-  clearCart, 
-  clearGiftDetails, 
-  saveGiftDetails 
+import {
+  updateCartProductDetails,
+  clearCart,
+  clearGiftDetails,
+  saveGiftDetails
 } from "../../redux/features/cart/cartSlice";
-
-// ✅ import books API
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const CheckoutPage = () => {
@@ -24,8 +22,8 @@ const CheckoutPage = () => {
   const giftDetails = useSelector((state) => state.cart.giftDetails);
   const [isGift, setIsGift] = useState(!!giftDetails?.to);
   const [isChecked, setIsChecked] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ local loading state
 
-  // ✅ fetch all books for stock/price sync
   const { data: allBooks } = useFetchAllBooksQuery();
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const CheckoutPage = () => {
   const finalAmount = subtotal;
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [createOrder] = useCreateOrderMutation();
 
   useEffect(() => {
     if (!giftDetails?.to && !giftDetails?.from && !giftDetails?.message) {
@@ -99,6 +97,8 @@ const CheckoutPage = () => {
     });
 
     if (result.isConfirmed) {
+      setLoading(true); // ✅ start loading
+
       const newOrder = {
         name: data.name,
         email: data.email,
@@ -124,24 +124,8 @@ const CheckoutPage = () => {
       };
 
       try {
-        // 1️⃣ Create the order
         await createOrder(newOrder).unwrap();
 
-        // 2️⃣ Update stock in backend
-        for (let item of cartItems) {
-          const newStock = item.stock - item.qty;
-          await axios.put(
-            `${getBaseUrl()}/api/books/edit/${item._id}`,
-            { stock: newStock },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-        }
-
-        // 3️⃣ Show success alert
         await Swal.fire({
           title: "Order Confirmed!",
           html: `
@@ -153,28 +137,44 @@ const CheckoutPage = () => {
           confirmButtonColor: "#C76F3B",
         });
 
-        // 4️⃣ Clear cart and gift details
+        setLoading(false); // stop loader immediately
         dispatch(clearCart());
         dispatch(clearGiftDetails());
-
-        // 5️⃣ Redirect
         navigate("/orders");
+
+        // ✅ Update stock in background without blocking
+        cartItems.forEach(async (item) => {
+          try {
+            const newStock = item.stock - item.qty;
+            await axios.put(
+              `${getBaseUrl()}/api/books/edit/${item._id}`,
+              { stock: newStock },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
+          } catch (err) {
+            console.error("Stock update failed for", item._id, err);
+          }
+        });
 
       } catch (error) {
         console.error("Error placing order", error);
-        await Swal.fire({
+
+        Swal.fire({
           title: "Error",
           text: "Failed to place an order. Please try again.",
           icon: "error",
           confirmButtonColor: "#C76F3B",
         });
+
+        setLoading(false);
       }
+
     }
   };
-
-  if (isLoading) {
-    return <div className="text-center py-10 text-lg font-semibold">Loading....</div>;
-  }
 
   return (
     <div className="container">
@@ -296,10 +296,38 @@ const CheckoutPage = () => {
                 </div>
                 <button
                   type="submit"
-                  disabled={!isChecked}
-                  className={`bg-[#C76F3B] hover:bg-[#A35427] text-white px-6 py-2 rounded-md font-medium transition-colors duration-300 ${!isChecked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={onSubmit}
+                  disabled={!isChecked || loading}
+                  className={`bg-[#C76F3B] hover:bg-[#A35427] text-white px-6 py-2 rounded-md font-medium transition-colors duration-300 flex items-center justify-center gap-2 ${!isChecked || loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 >
-                  Place Order
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Placing Order...
+                    </>
+                  ) : (
+                    "Place Order"
+                  )}
                 </button>
               </div>
 
