@@ -29,106 +29,123 @@ const CheckoutPage = () => {
   }, [giftDetails]);
 
   const onSubmit = async (data) => {
-    const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+  const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
-    // Check if cart is empty
-    if (totalItems === 0 || finalAmount <= 0) {
-      Swal.fire({
-        title: "Cart is Empty",
-        text: "Please add some products to your cart before placing an order.",
-        icon: "warning",
-        confirmButtonColor: "#C76F3B",
-      });
-      return; // Stop the order process
-    }
+  // Check if cart is empty
+  if (totalItems === 0 || finalAmount <= 0) {
+    Swal.fire({
+      title: "Cart is Empty",
+      text: "Please add some products to your cart before placing an order.",
+      icon: "warning",
+      confirmButtonColor: "#C76F3B",
+    });
+    return;
+  }
 
-    // Check Terms & Conditions
-    if (!isChecked) {
-      Swal.fire({
-        title: "Terms Not Agreed",
-        text: "You must agree to the Terms & Conditions before placing an order.",
-        icon: "warning",
-        confirmButtonColor: "#C76F3B",
-      });
-      return;
-    }
+  // Check Terms & Conditions
+  if (!isChecked) {
+    Swal.fire({
+      title: "Terms Not Agreed",
+      text: "You must agree to the Terms & Conditions before placing an order.",
+      icon: "warning",
+      confirmButtonColor: "#C76F3B",
+    });
+    return;
+  }
 
-    const result = await Swal.fire({
-      title: "Confirm Order",
-      html: `
+  const result = await Swal.fire({
+    title: "Confirm Order",
+    html: `
       Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
       Total Items: <strong>${totalItems}</strong>
     `,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, place order",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
-      confirmButtonColor: "#C76F3B",
-      cancelButtonColor: "#888",
-    });
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Yes, place order",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+    confirmButtonColor: "#C76F3B",
+    cancelButtonColor: "#888",
+  });
 
-    if (result.isConfirmed) {
-      const newOrder = {
-        name: data.name,
-        email: data.email,
-        address: {
-          city: data.city,
-          country: data.country,
-          state: data.state,
-          zipcode: data.zipcode,
-          street: data.street,
-        },
-        phone: data.phone,
-        productIds: cartItems.map(item => item._id),
-        products: cartItems.map(item => ({
-          bookId: item._id,
-          title: item.title,
-          price: item.newPrice,
-          quantity: item.qty,
-        })),
-        totalPrice: finalAmount,
-        giftTo: isGift ? giftDetails.to : null,
-        giftFrom: isGift ? giftDetails.from : null,
-        giftMessage: isGift ? giftDetails.message : null,
-      };
+  if (result.isConfirmed) {
+    const newOrder = {
+      name: data.name,
+      email: data.email,
+      address: {
+        city: data.city,
+        country: data.country,
+        state: data.state,
+        zipcode: data.zipcode,
+        street: data.street,
+      },
+      phone: data.phone,
+      productIds: cartItems.map(item => item._id),
+      products: cartItems.map(item => ({
+        bookId: item._id,
+        title: item.title,
+        price: item.newPrice,
+        quantity: item.qty,
+      })),
+      totalPrice: finalAmount,
+      giftTo: isGift ? giftDetails.to : null,
+      giftFrom: isGift ? giftDetails.from : null,
+      giftMessage: isGift ? giftDetails.message : null,
+    };
 
-      try {
-        await createOrder(newOrder).unwrap();
+    try {
+      // 1️⃣ Create the order
+      await createOrder(newOrder).unwrap();
 
-        // 1️⃣ Update stock in cart before clearing it
-        dispatch(updateStockAfterOrder(cartItems.map(item => ({ bookId: item._id, qty: item.qty }))));
+      // 2️⃣ Update stock in backend and Redux
+      for (let item of cartItems) {
+        const newStock = item.stock - item.qty;
 
-        // 2️⃣ Show success message
-        await Swal.fire({
-          title: "Order Confirmed!",
-          html: `
+        await axios.put(
+          `${getBaseUrl()}/api/books/edit/${item._id}`,
+          { stock: newStock },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        // Update cart Redux state
+        dispatch(updateCartStock({ bookId: item._id, newStock }));
+      }
+
+      // 3️⃣ Show success alert
+      await Swal.fire({
+        title: "Order Confirmed!",
+        html: `
           Your order has been placed successfully.<br/>
           Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
           Total Items: <strong>${totalItems}</strong>
         `,
-          icon: "success",
-          confirmButtonColor: "#C76F3B",
-        });
+        icon: "success",
+        confirmButtonColor: "#C76F3B",
+      });
 
-        // 3️⃣ Clear cart and gift details
-        dispatch(clearCart());
-        dispatch(clearGiftDetails());
+      // 4️⃣ Clear cart and gift details
+      dispatch(clearCart());
+      dispatch(clearGiftDetails());
 
-        // 4️⃣ Redirect to My Orders
-        navigate("/orders");
+      // 5️⃣ Redirect to My Orders
+      navigate("/orders");
 
-      } catch (error) {
-        console.error("Error placing order", error);
-        await Swal.fire({
-          title: "Error",
-          text: "Failed to place an order. Please try again.",
-          icon: "error",
-          confirmButtonColor: "#C76F3B",
-        });
-      }
+    } catch (error) {
+      console.error("Error placing order", error);
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to place an order. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#C76F3B",
+      });
     }
-  };
+  }
+};
+
 
   if (isLoading) {
     return <div className="text-center py-10 text-lg font-semibold">Loading....</div>;

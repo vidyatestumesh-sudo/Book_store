@@ -147,35 +147,14 @@ const cartSlice = createSlice({
     clearGiftDetails: (state) => {
       state.giftDetails = { to: "", from: "", message: "" };
       localStorage.removeItem("giftDetails");
-    },
-    // In cartSlice.js
-updateStockAfterOrder: (state, action) => {
-  // action.payload = array of purchased products with { bookId, qty }
-  action.payload.forEach(({ bookId, qty }) => {
-    const item = state.cartItems.find(p => p._id === bookId);
-    if (item) {
-      item.stock = item.stock - qty >= 0 ? item.stock - qty : 0;
     }
-  });
-  localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-  Swal.fire({
-    position: "center",
-    icon: "info",
-    title: "Stock updated after order",
-    showConfirmButton: false,
-    timer: 1200,
-    toast: false,
-  });
-},
-
-    
   },
 });
 
 export const {
   addToCart, removeFromCart, clearCart, updateCartQty,
   removeSoldOut, updateCartStock, updateCartProductDetails, saveGiftDetails,
-  clearGiftDetails, updateStockAfterOrder,
+  clearGiftDetails,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
