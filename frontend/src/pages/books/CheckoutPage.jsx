@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import getBaseUrl from "../../utils/baseURL";
 import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
 import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
-import { clearCart, saveGiftDetails, clearGiftDetails } from "../../redux/features/cart/cartSlice";
+import { updateCartStock, clearCart, clearGiftDetails, saveGiftDetails } from "../../redux/features/cart/cartSlice";
 
 
 const CheckoutPage = () => {
