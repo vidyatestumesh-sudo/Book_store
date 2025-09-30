@@ -127,6 +127,9 @@ const InspirationBoard = () => {
                     alt={item.title}
                     className="inspiration-board-carousel-img inspiration-board-carousel-image1"
                   />
+                  <div className="inspiration-board-carousel-text">
+                    <h3>{item.title}</h3>
+                  </div>
                 </Link>
               </div>
             ))}
