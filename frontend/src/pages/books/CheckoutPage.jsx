@@ -95,6 +95,11 @@ const CheckoutPage = () => {
 
       try {
         await createOrder(newOrder).unwrap();
+
+        // 1️⃣ Update stock in cart before clearing it
+        dispatch(updateStockAfterOrder(cartItems.map(item => ({ bookId: item._id, qty: item.qty }))));
+
+        // 2️⃣ Show success message
         await Swal.fire({
           title: "Order Confirmed!",
           html: `
@@ -106,13 +111,13 @@ const CheckoutPage = () => {
           confirmButtonColor: "#C76F3B",
         });
 
-        // Clear cart and gift details
+        // 3️⃣ Clear cart and gift details
         dispatch(clearCart());
         dispatch(clearGiftDetails());
 
-        // Redirect to My Orders
+        // 4️⃣ Redirect to My Orders
         navigate("/orders");
-        
+
       } catch (error) {
         console.error("Error placing order", error);
         await Swal.fire({
