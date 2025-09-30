@@ -29,6 +29,20 @@ const CheckoutPage = () => {
   }, [giftDetails]);
 
   const onSubmit = async (data) => {
+    const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+
+    // Check if cart is empty
+    if (totalItems === 0 || finalAmount <= 0) {
+      Swal.fire({
+        title: "Cart is Empty",
+        text: "Please add some products to your cart before placing an order.",
+        icon: "warning",
+        confirmButtonColor: "#C76F3B",
+      });
+      return; // Stop the order process
+    }
+
+    // Check Terms & Conditions
     if (!isChecked) {
       Swal.fire({
         title: "Terms Not Agreed",
@@ -38,14 +52,13 @@ const CheckoutPage = () => {
       });
       return;
     }
-    const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
     const result = await Swal.fire({
       title: "Confirm Order",
       html: `
-        Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
-        Total Items: <strong>${totalItems}</strong>
-      `,
+      Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+      Total Items: <strong>${totalItems}</strong>
+    `,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes, place order",
@@ -85,17 +98,21 @@ const CheckoutPage = () => {
         await Swal.fire({
           title: "Order Confirmed!",
           html: `
-            Your order has been placed successfully.<br/>
-            Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
-            Total Items: <strong>${totalItems}</strong>
-          `,
+          Your order has been placed successfully.<br/>
+          Total Amount: <strong>₹${finalAmount.toFixed(2)}</strong><br/>
+          Total Items: <strong>${totalItems}</strong>
+        `,
           icon: "success",
           confirmButtonColor: "#C76F3B",
         });
 
+        // Clear cart and gift details
         dispatch(clearCart());
         dispatch(clearGiftDetails());
+
+        // Redirect to My Orders
         navigate("/orders");
+        
       } catch (error) {
         console.error("Error placing order", error);
         await Swal.fire({
