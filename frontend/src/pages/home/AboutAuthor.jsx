@@ -3,18 +3,21 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 const SectionHeading = ({ children, showMotif = true, motifImage }) => (
-  <div className="relative inline-block mb-6">
-    <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight">
-      {children}
+ <div className="relative w-full flex justify-center lg:justify-start mt-1 mb-4 lg:mt-10 lg:mb-10">
+
+    <h1 className="relative z-10 text-[28px] sm:text-[32px] md:text-[40px] font-playfair font-light text-black leading-tight text-center lg:text-left">
+      <span className="relative inline-block">
+        {children}
+        {showMotif && motifImage?.src && (
+          <img
+            src={motifImage.src}
+            alt={motifImage.alt || ""}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 sm:w-20 md:w-28 lg:w-32 h-auto opacity-15 pointer-events-none z-0"
+            loading="lazy"
+          />
+        )}
+      </span>
     </h1>
-    {showMotif && motifImage?.src && (
-      <img
-        src={motifImage.src}
-        alt={motifImage.alt || ""}
-        className="absolute left-1/2 -bottom-4 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15]"
-        loading="lazy"
-      />
-    )}
   </div>
 );
 
@@ -22,22 +25,22 @@ const AboutAuthor = () => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchContent = async () => {
-    try {
-      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const res = await fetch(`${baseUrl}/api/author`);
-      if (!res.ok) throw new Error("Failed to fetch author content");
-      const data = await res.json();
-      setContent(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchContent();
-}, []);
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/author`);
+        if (!res.ok) throw new Error("Failed to fetch author content");
+        const data = await res.json();
+        setContent(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchContent();
+  }, []);
 
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
@@ -46,20 +49,22 @@ useEffect(() => {
   return (
     <section className="max-w-8xl mx-auto px-4 md:px-6 py-0 md:py-16 font-Figtree space-y-8">
       {/* About Author Section */}
-      <article className="bg-[#e9ebec] rounded-xl p-4 py-5 sm:p-6 md:p-10 px-3 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-10 md:gap-20">
+      <article className="bg-[#e9ebec] rounded-xl p-4 py-5 sm:p-5 md:p-10 px-3 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-10 md:gap-20">
         {/* Left Side - Text */}
-        <div className="flex-1 px-2 md:px-5 md:ml-12">
+        <div className="flex-1 px-2 md:px-5 md:ml-12 flex flex-col items-center lg:items-start text-center lg:text-left">
           <SectionHeading motifImage={content.sectionHeading.motifImage}>
             {content.aboutAuthor.leftText.heading}
           </SectionHeading>
+
           {content.aboutAuthor.leftText.paragraphs.map((para, idx) => (
             <p key={idx} className={para.style}>
               {para.text}
             </p>
           ))}
+
           <Link
             to={content.workingCreed.rightText.link.to}
-            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
+            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px] mt-3"
           >
             <span className="text-black text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
               Read Detailed Profile
@@ -82,7 +87,7 @@ useEffect(() => {
       </article>
 
       {/* Anil's Working Creed Section */}
-      <article className="rounded-xl p-4 sm:p-6 md:p-10 px-0 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-5 sm:gap-6 md:gap-10">
+     <article className="rounded-xl p-4 sm:p-5 md:p-10 px-0 sm:px-6 md:px-10 flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-10">
         {/* Left Image */}
         <figure className="w-full lg:w-1/2 rounded-lg object-cover overflow-hidden">
           <img
@@ -94,18 +99,20 @@ useEffect(() => {
         </figure>
 
         {/* Right Text */}
-        <div className="w-full lg:w-1/2 text-left px-6 md:px-0 lg:py-10 [@media(min-width:2561px)]:py-0">
-           <SectionHeading motifImage={content.sectionHeading.motifImage}>
+        <div className="w-full lg:w-1/2 text-center lg:text-left mt-0 px-6 md:px-0 lg:py-10 [@media(min-width:2561px)]:py-0 flex flex-col items-center lg:items-start">
+          <SectionHeading motifImage={content.sectionHeading.motifImage}>
             {content.workingCreed.rightText.heading}
           </SectionHeading>
+
           {content.workingCreed.rightText.paragraphs.map((para, idx) => (
             <p key={idx} className={para.style}>
               {para.text}
             </p>
           ))}
+
           <Link
             to={content.workingCreed.rightText.link.to}
-            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px]"
+            className="group inline-flex items-center text-sm no-underline font-figtree transition-colors duration-200 text-[18px] mt-3"
           >
             <span className="text-black text-[16px] sm:text-[18px] leading-snug lg:leading-normal">
               {content.workingCreed.rightText.link.text}

@@ -7,15 +7,31 @@ const ReadersFeedback = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const itemsPerPage = 2;
+  const [itemsPerPage, setItemsPerPage] = useState(2); // default 2
 
   // Use dynamic backend URL
   const BASE_URL =
     process.env.NODE_ENV === "production"
-      ? "https://bookstore-backend-hshq.onrender.com" // Replace with your deployed backend URL
+      ? "https://bookstore-backend-hshq.onrender.com"
       : "http://localhost:5000";
 
+  // Handle responsive itemsPerPage
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerPage(1); // mobile: show 1
+      } else {
+        setItemsPerPage(2); // desktop/tablet: show 2
+      }
+    };
+
+    updateItemsPerPage(); // run on mount
+    window.addEventListener("resize", updateItemsPerPage);
+
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
+  // Fetch reviews
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -26,7 +42,6 @@ const ReadersFeedback = () => {
           `${BASE_URL}/api/reviews/all?approved=true`
         );
 
-        // Ensure feedbacks is always an array
         let reviewsArray = [];
         if (Array.isArray(response.data)) {
           reviewsArray = response.data;
@@ -69,7 +84,7 @@ const ReadersFeedback = () => {
     <div className="bg-white font-playfair mt-0 mb-2">
       <div className="w-full max-w-8xl mx-auto pb-5 px-14 xl:px-14">
         {/* Heading */}
-        <div className="relative mb-12 inline-block text-left">
+        <div className="relative mb-10 inline-block text-left">
           <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-2 mt-0">
             Readers Feedback
           </h2>
@@ -98,23 +113,25 @@ const ReadersFeedback = () => {
         )}
 
         {!loading && !error && feedbacks.length > 0 && Array.isArray(feedbacks) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-[450px] sm:h-[280px] md:h-[240px] lg:h-[220px] xl:h-[220px] 2xl:h-[250px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-32 text-left mt-0 gap-8 h-auto">
             {feedbacks
               .slice(currentIndex, currentIndex + itemsPerPage)
               .map((fb) => (
                 <div key={fb._id || fb.id} className="space-y-4">
                   {/* Avatar + Name */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center ">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="w-10 h-10 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 overflow-hidden rounded-full bg-[#993333] text-white flex items-center justify-center">
                       <img
                         src="/readers.webp"
                         alt={fb.userName || fb.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
+
                     <span className="italic text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] font-Figtree font-regular leading-snug leading-tight text-black-900 font-figtree break-words">
                       {fb.userName || fb.name}
                     </span>
+
                     <div className="flex items-center text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[24px] gap-1 mt-0 mb-0">
                       {Array.from({ length: fb.rating }).map((_, i) => (
                         <span key={i} className="text-yellow-500">

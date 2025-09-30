@@ -10,23 +10,23 @@ const ReaderThoughts = () => {
   const [error, setError] = useState(null);
   const animationDuration = 300;
 
-useEffect(() => {
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  useEffect(() => {
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  fetch(`${baseUrl}/api/reader-thoughts`)
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch data");
-      return res.json();
-    })
-    .then((json) => {
-      setData(json);
-      setLoading(false);
-    })
-    .catch((err) => {
-      setError(err.message);
-      setLoading(false);
-    });
-}, []);
+    fetch(`${baseUrl}/api/reader-thoughts`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch data");
+        return res.json();
+      })
+      .then((json) => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
 
   useEffect(() => {
@@ -89,14 +89,14 @@ useEffect(() => {
           <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-l from-[#e6e8da] to-transparent pointer-events-none z-0" />
 
           {/* Title */}
-          <div className="relative inline-block">
-            <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-5 sm:mb-8 mt-4 sm:mt-8 text-left">
+          <div className="relative w-full flex justify-center lg:justify-start">
+            <h1 className="relative z-10 text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-5 sm:mb-8 mt-4 sm:mt-8 text-center lg:text-left">
               <span className="relative inline-block">
                 {title}
                 <img
                   src="/motif.webp"
                   alt="feather"
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 mb-0 pointer-events-none z-0"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 pointer-events-none z-0"
                 />
               </span>
             </h1>
@@ -104,9 +104,8 @@ useEffect(() => {
 
           {/* Thoughts Grid with vertical scroll */}
           <div
-            className={`flex-grow overflow-y-auto overflow-x-hidden z-10 grid ${
-              itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
-            } gap-8 ${fade}`}
+            className={`flex-grow overflow-y-auto overflow-x-hidden z-10 grid ${itemsPerPage === 2 ? "grid-cols-2" : "grid-cols-1"
+              } gap-8 ${fade}`}
             style={{ maxHeight: "100%" }}
           >
             {visibleThoughts.map((thought, idx) => {
