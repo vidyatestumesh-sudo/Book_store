@@ -67,19 +67,21 @@ const BlogsPage = () => {
         </div>
 
         {/* Title */}
-        <div className="relative inline-block">
-          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-4 mt-4">
-            Author: Anil Kumar
+        <div className="relative inline-block w-full text-center mb-4">
+          <h1 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black font-display leading-snug mb-1 mt-5 relative">
+            <span className="relative inline-block">
+              Author: Anil Kumar
+              <img
+                src="/motif.webp"
+                alt="feather"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto opacity-15 pointer-events-none z-0"
+              />
+            </span>
           </h1>
-          <img
-            src="/motif.webp"
-            alt="feather"
-            className="absolute left-1/2 -bottom-1 transform -translate-x-1/2 w-20 sm:w-24 md:w-32 lg:w-32 h-auto [opacity:0.15] mb-1"
-          />
         </div>
 
         {/* Blogs */}
-        <div className="max-w-8xl mx-auto min-h-screen mt-4">
+        <div className="max-w-8xl mx-auto min-h-screen mt-0">
           {blogs.length === 0 ? (
             <p className="text-center text-gray-500">No blogs found.</p>
           ) : (

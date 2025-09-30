@@ -83,7 +83,8 @@ const Publications = () => {
         </div>
 
         {/* Books Grid */}
-        <div className="grid gap-x-4 gap-y-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-5 mt-10">
+        <div className="grid w-full mt-10 gap-5 sm:gap-6 md:gap-8 lg:gap-10 
+                grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {activeBooks.map((book, index) => {
             const inCart = cartItems.find((item) => item._id === book._id);
 
@@ -174,7 +175,7 @@ const Publications = () => {
                   <div className="flex justify-center gap-2 mt-1 px-0 flex-nowrap">
                     {book.stock <= 0 ? (
                       <button
-                        className="flex w-full items-center justify-center gap-1 px-3 py-1.5 text-sm bg-gray-400 text-white rounded"
+                        className="flex w-full items-center justify-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm bg-gray-400 text-white rounded"
                         disabled
                       >
                         Out of Stock
@@ -183,14 +184,14 @@ const Publications = () => {
                       <>
                         <button
                           onClick={() => navigate("/cart")}
-                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
+                          className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors min-w-[100px]"
                         >
                           <StorefrontOutlinedIcon fontSize="small" />
                           Go to Cart
                         </button>
                         <button
                           onClick={() => handleBuyNow(book)}
-                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
+                          className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors min-w-[100px]"
                         >
                           <ShoppingBagOutlinedIcon fontSize="small" />
                           Buy Now
@@ -200,14 +201,14 @@ const Publications = () => {
                       <>
                         <button
                           onClick={() => handleAddToCart(book)}
-                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors"
+                          className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm bg-[#C76F3B] text-white rounded hover:bg-[#A35427] transition-colors min-w-[100px]"
                         >
                           <ShoppingCartOutlinedIcon fontSize="small" />
                           Add to Cart
                         </button>
                         <button
                           onClick={() => handleBuyNow(book)}
-                          className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors"
+                          className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm bg-[#993333] text-white rounded hover:bg-[#662222] transition-colors min-w-[100px]"
                         >
                           <ShoppingBagOutlinedIcon fontSize="small" />
                           Buy Now
@@ -216,6 +217,7 @@ const Publications = () => {
                     )}
                   </div>
                 </div>
+
               </div>
             );
           })}

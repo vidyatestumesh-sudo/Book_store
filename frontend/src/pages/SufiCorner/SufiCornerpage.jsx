@@ -161,7 +161,7 @@ useEffect(() => {
                     style={{ backgroundColor: cardBg }}
                   >
                     <div className="w-full flex justify-center">
-                      <div className="w-full max-w-[700px] h-[300px] sm:h-[350px] md:h-[390px] lg:h-[460px] overflow-hidden rounded-md p-5 relative">
+                      <div className="w-full max-w-[700px] h-[300px] sm:h-[350px] md:h-[390px] lg:h-[460px] overflow-hidden rounded-md p-4 relative">
                         <motion.img
                           key={slide.image}
                           src={slide.image}
@@ -203,7 +203,7 @@ useEffect(() => {
         </section>
 
         {/* ===================== SECTION 2 : PRECEPTS ===================== */}
-        <section className="py-16 w-full">
+        <section className="py-14 w-full">
           <div className="relative inline-block mb-8">
             <h2 className="text-[32px] sm:text-[34px] md:text-[50px] font-playfair font-light text-black leading-tight mb-4">
               Precepts of Spirituality

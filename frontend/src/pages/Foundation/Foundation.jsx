@@ -105,11 +105,11 @@ const Foundation = () => {
                     {/* Left Text */}
                     <div className="relative bg-transparent px-4 pt-5 text-center flex flex-col justify-center items-center max-w-[700px] xl:max-w-[800px] mx-auto h-full order-1 lg:order-1">
                         {/* Logo */}
-                        <div className="mb-3 sm:mb-5">
+                        <div className="mb-2 sm:mb-5">
                             <img
                                 src={data.logoUrl}
                                 alt={data.title}
-                                className="h-26 sm:h-30 max-h-34 w-auto block select-none mx-auto mt-0"
+                                className="h-24 sm:h-30 max-h-32 w-auto block select-none mx-auto mt-0"
                             />
                         </div>
 
@@ -147,17 +147,18 @@ const Foundation = () => {
 
             {/* --- Recent Letters Section --- */}
             <div className="max-w-8xl mx-auto px-4 py-12 mt-10 text-center flex flex-col items-center">
-                <div className="relative inline-block mb-6">
-                    <h2 className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[48px] font-playfair font-light text-black">
+                <div className="relative inline-block mb-6 w-full text-center">
+                    <h2 className="text-[28px] sm:text-[32px] md:text-[40px] lg:text-[48px] font-playfair font-light text-black relative z-10">
                         Recent Letters from Langshott
                     </h2>
+                    {/** Motif centered below the text **/}
                     <img
                         src="/motif.webp"
                         alt="feather"
-                        className="absolute left-1/2 -bottom-5 transform  -translate-x-1/2 w-20 sm:w-28 md:w-32 h-auto opacity-15"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-28 md:w-32 h-auto opacity-15 pointer-events-none z-0"
                     />
                 </div>
-
+                
                 {loading ? (
                     <p className="text-center py-10">Loading...</p>
                 ) : letters.length === 0 ? (
