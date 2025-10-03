@@ -6,7 +6,7 @@ import { AuthProvide } from './context/AuthContext'
 import { useEffect, useState } from 'react'
 import Loading from './components/Loading'
 import ScrollToTop from './components/ScrollToTop'
-import { clarity } from '@microsoft/clarity'
+import clarity from '@microsoft/clarity';
 
 function App() {
 
